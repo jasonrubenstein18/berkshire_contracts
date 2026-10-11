@@ -91,6 +91,8 @@ class Settings(BaseSettings):
 
     app_username: str | None = None
     app_password: SecretStr | None = None
+    # Bearer token for the remote MCP server used by Claude Tag. Unset locally; set on Fly.
+    mcp_token: SecretStr | None = None
     max_questions_per_minute: int = 6
     max_question_chars: int = 600
     daily_llm_budget_usd: float = 5.0

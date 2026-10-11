@@ -354,9 +354,18 @@ uv run contracts ask "Which contracts auto-renew?"
 uv run python scripts/package_submission.py   # reviewer zip in dist/
 ```
 
-**Optional hosting.** `scripts/deploy_space.py` publishes the app to a protected Hugging Face Space: code and data
-stay private on the Hub, and the app is reachable by URL behind the login. Protected visibility needs a Hugging Face
-PRO account, so this submission isn't hosted. With PRO, set `HF_TOKEN` (write scope), `APP_USERNAME` and
+**Hosting on Fly.** `scripts/deploy_fly.py` publishes the app to `https://berkshire-contracts.fly.dev`. It does
+not use `fly launch`. The image includes the database, index and sample PDFs. Secrets stay in Fly and are not
+printed. `MCP_TOKEN` in `.env` is the bearer token for `https://berkshire-contracts.fly.dev/mcp`, which Claude
+Tag calls. The `claude-tag/` folder is the plugin to attach in the Claude Tag admin console for the Slack
+workspace. `presentation/` is not part of the image.
+
+```bash
+uv run python scripts/deploy_fly.py
+```
+
+**Optional Hugging Face Space.** `scripts/deploy_space.py` publishes a protected Space instead. Protected
+visibility needs a Hugging Face PRO account. With PRO, set `HF_TOKEN` (write scope), `APP_USERNAME` and
 `APP_PASSWORD` in `.env`, then run:
 
 ```bash
@@ -376,6 +385,7 @@ Settings come from environment variables or `.env`; defaults are in
 | `OPENAI_API_KEY` | — | Extraction, chat answers and judged evaluation (without it, chat shows passages) |
 | `HF_TOKEN` | — | Optional hosting only |
 | `APP_USERNAME`, `APP_PASSWORD` | unset | App login (no login screen when unset) |
+| `MCP_TOKEN` | unset | Bearer token for the Fly `/mcp` endpoint (Claude Tag) |
 | `EXTRACTION_MODEL`, `ESCALATION_MODEL`, `ROUTER_MODEL`, `CHAT_MODEL`, `JUDGE_MODEL` | `gpt-5-mini` | Model for each step |
 | `MAX_QUESTIONS_PER_MINUTE` | 6 | Per-session rate limit |
 | `DAILY_LLM_BUDGET_USD` | 5 | Daily cap on chat spend |
@@ -414,7 +424,9 @@ src/berkshire_contracts/
 eval/ground_truth/             labeled test sets
 eval/results/                  report.md, summary.json, per-case CSVs
 scripts/package_submission.py  build the reviewer zip: code plus prebuilt data, no secrets
+scripts/deploy_fly.py          publish to Fly.io (https://berkshire-contracts.fly.dev)
 scripts/deploy_space.py        optional: publish to a protected Hugging Face Space (needs PRO)
+claude-tag/                    plugin and skill for Claude Tag in Slack
 tests/                         offline unit tests (throwaway database, no model calls or downloads)
 data/                          generated, not in version control: database, index, sample PDFs, exports
 ```

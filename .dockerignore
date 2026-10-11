@@ -1,0 +1,20 @@
+.env
+.env.*
+presentation
+contracts.zip
+BP Take-Home_vShare.pdf
+.venv
+.git
+data/cache
+data/tessdata
+data/processed
+data/*.db-wal
+data/*.db-shm
+dist
+build
+tests
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.ruff_cache
+.DS_Store

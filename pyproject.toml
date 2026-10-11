@@ -24,8 +24,10 @@ dependencies = [
     "rapidfuzz>=3.9",
     "rich>=13.7",
     "sqlalchemy>=2.0",
+    "mcp>=1.9",
     "tabulate>=0.9",
     "tenacity>=8.2",
+    "torch>=2.6",
     "typer>=0.12",
     "xlsxwriter>=3.2",
 ]
@@ -52,6 +54,17 @@ packages = ["src/berkshire_contracts"]
 
 [tool.uv]
 default-groups = ["dev"]
+
+# The default Linux torch wheel pulls CUDA. Fly's builder is Linux, so that platform uses the CPU index.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", marker = "sys_platform == 'linux'" },
+]
 
 [tool.ruff]
 line-length = 110
