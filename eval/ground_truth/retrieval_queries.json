@@ -1,0 +1,26 @@
+{
+  "version": "retrieval-gt-v1",
+  "method": "Natural-language questions a deal-team user might ask, written from the ground-truth evidence pages. Phrasing deliberately avoids copying the clause text so lexical overlap does not decide the result. A hit is a retrieved chunk from the listed file and one of the listed pages.",
+  "queries": [
+    {"id": "r01", "query": "Which contract caps the contractor's total liability at twenty million dollars?", "relevant": [{"file_id": "532a78eb47d6", "pages": [7]}]},
+    {"id": "r02", "query": "Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?", "relevant": [{"file_id": "76de4877b8c0", "pages": [1]}]},
+    {"id": "r03", "query": "Where do both parties give up claims for lost profits and consequential damages?", "relevant": [{"file_id": "76de4877b8c0", "pages": [2]}]},
+    {"id": "r04", "query": "Can the radio tower tenant walk away from its site lease early without a reason?", "relevant": [{"file_id": "76de4877b8c0", "pages": [4, 5]}]},
+    {"id": "r05", "query": "Is the architect's duty to indemnify the County limited to what its insurance pays?", "relevant": [{"file_id": "a88a2fbbaf1d", "pages": [4]}]},
+    {"id": "r06", "query": "How much did the juvenile justice complex design contract go up in its third modification?", "relevant": [{"file_id": "3be3d76f3183", "pages": [1]}]},
+    {"id": "r07", "query": "When does the Johnson Controls HVAC cooperative purchasing contract now expire?", "relevant": [{"file_id": "a21f680ab3d9", "pages": [1]}]},
+    {"id": "r08", "query": "Which amendment dropped the community corrections citation software and credited the maintenance invoice?", "relevant": [{"file_id": "45077a43180c", "pages": [1]}]},
+    {"id": "r09", "query": "What is the new billing rate for a project manager on the water facilities engineering contract?", "relevant": [{"file_id": "37ef9dac1cb9", "pages": [2]}]},
+    {"id": "r10", "query": "What was the estimated value of the job order contracting award to the demolition company?", "relevant": [{"file_id": "414aa6ac10c0", "pages": [1]}]},
+    {"id": "r11", "query": "Through what date was the courtroom audio-visual contract extended in 2020?", "relevant": [{"file_id": "065d16803269", "pages": [1]}]},
+    {"id": "r12", "query": "Can the County cancel the employee engagement assessment consulting agreement without cause?", "relevant": [{"file_id": "63032717dd43", "pages": [8]}]},
+    {"id": "r13", "query": "What is the yearly spending ceiling on wastewater engineering task orders?", "relevant": [{"file_id": "1ad3db68c1bc", "pages": [2]}]},
+    {"id": "r14", "query": "Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?", "relevant": [{"file_id": "1ad3db68c1bc", "pages": [2]}]},
+    {"id": "r15", "query": "How much does the LogicMonitor monitoring implementation statement of work cost?", "relevant": [{"file_id": "d7fa2b1aa526", "pages": [15]}]},
+    {"id": "r16", "query": "Which vendor's master service agreement is governed by Virginia law?", "relevant": [{"file_id": "5a57b7dfcf16", "pages": [403]}]},
+    {"id": "r17", "query": "How much notice does the County need to end the inmate phone and video visitation contract?", "relevant": [{"file_id": "5a57b7dfcf16", "pages": [7]}]},
+    {"id": "r18", "query": "What commission does the Sheriff get on premium inmate tablet usage?", "relevant": [{"file_id": "5a57b7dfcf16", "pages": [3]}]},
+    {"id": "r19", "query": "Who signed the Health Department's ethics disclosure form for contract 22046?", "relevant": [{"file_id": "47450092d658", "pages": [1]}]},
+    {"id": "r20", "query": "What insurance does the DEI assessment consultant have to carry for umbrella coverage?", "relevant": [{"file_id": "63032717dd43", "pages": [4]}]}
+  ]
+}

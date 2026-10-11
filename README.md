@@ -1,0 +1,430 @@
+# Contract Intelligence PoC
+
+Berkshire Partners take-home. The pipeline turns 100 Lake County, Illinois procurement contracts into an inspectable
+database of 19 evidence-backed fields. A non-technical deal team can then ask questions in plain English and get
+data cuts with charts, clause answers with page citations, or a plain statement that the documents don't say.
+
+- **Late-interaction retrieval** (ColBERT-style, via PyLate and FastPLAID) answers clause questions, chosen for its
+  precision on contract wording.
+- **Evidence-first extraction**: every value carries a verbatim quote, a page number, a confidence level, and the
+  model and prompt version that produced it.
+- **No model-written SQL**: the model fills in a validated query plan and deterministic code runs it.
+- **Measured end to end**: extraction, retrieval and chat are scored against labeled test sets
+  ([`eval/results/report.md`](eval/results/report.md)).
+
+## Try it
+
+The app runs locally. You need [uv](https://docs.astral.sh/uv/getting-started/installation/), which installs
+Python 3.12 if it's missing. From the unzipped submission folder:
+
+```bash
+uv sync                    # virtualenv with all dependencies; a few minutes the first time (PyTorch is large)
+cp .env.example .env       # add OPENAI_API_KEY; set APP_USERNAME/APP_PASSWORD to require a login
+uv run python app.py       # prints the local URL, normally http://127.0.0.1:7860
+```
+
+The first start downloads the retrieval model (about 130 MB) from Hugging Face. Without an OpenAI key, the
+overview, explorer and data-quality tabs work fully, and chat shows the most relevant passages instead of a written
+answer. Developed and tested on macOS with Apple silicon. The dependencies also publish wheels for x86-64 Linux and
+Windows, but those haven't been tested; Intel Macs aren't supported because current PyTorch has no build for them.
+
+The submission includes `data/`: the database, the index, the 100 sampled PDFs and the exports. It is generated and
+kept out of version control because it contains contract text. `uv run python scripts/package_submission.py` builds
+the submission zip (`dist/contract-intelligence.zip`) and refuses to include `.env`, `contracts.zip`, the brief or
+any secret value set in `.env`. To rebuild `data/` from `contracts.zip`, see
+[Rebuild from the raw contracts](#rebuild-from-the-raw-contracts).
+
+The app has four tabs:
+
+| Tab | What it does |
+|---|---|
+| Executive overview | Headline counts; charts of document types, renewal control, term ends, vendors, risk terms and field coverage; upcoming term ends with the date to act on notice |
+| Ask the contracts | Chat. Answers cite file and page, and the cited page opens beside the answer with the quote highlighted. Data cuts add a table, a chart and a CSV download. |
+| Contract explorer | Filter the documents, open any one to see every field with its quote, page image and original PDF |
+| Data quality & evaluation | Parse and extraction status, review flags, evaluation results, model cost by purpose; downloads of the exports and the SQLite database |
+
+Example questions: "Which contracts have auto-renewal clauses?", "Which contracts expire in 2026? Show a timeline.",
+"What does the Motorola site lease say about renewal and notice?", "Total stated award value by vendor".
+
+## The database
+
+`data/contracts.db` is SQLite and opens in any SQLite browser or with `sqlite3`. It has one row per contract file,
+and every value can be traced back to its source.
+
+| Table | Rows | Contents |
+|---|---|---|
+| `contracts` | 100 | One row per sampled file: the 19 fields, parse and extraction status, review flags, model and prompt version |
+| `field_evidence` | 1,900 | One row per file and field: value, verbatim quote, page, confidence, whether the quote was found in the source |
+| `pages` | 1,488 | Page text, whether it came from the text layer or OCR, OCR confidence |
+| `chunks` | 4,278 | Retrieval passages with page and section heading |
+| `corpus_files` | 389 | Inventory of the whole archive: text profile, encryption, contract family, duplicates, sample stratum |
+| `llm_calls` | — | Every model call: purpose, model, prompt version, tokens, cost, latency, cache hit |
+| `chat_logs` | — | Every question: route, query plan, retrieved passages, answer |
+| `pipeline_runs` | — | Every pipeline step with status and statistics |
+
+The same data is exported to `data/exports/contracts.csv` (one row per file), `contracts.xlsx` (with a data
+dictionary) and `field_evidence.csv`. The exports and the database file can all be downloaded from the app's Data
+quality tab.
+
+## The 19 fields
+
+The fields answer the four questions a deal team asks of any contract book. Definitions, extraction instructions and
+business use are in [`src/berkshire_contracts/extraction/fields.py`](src/berkshire_contracts/extraction/fields.py).
+
+| Question | Fields | Decision it drives |
+|---|---|---|
+| What is it, and with whom? | contract number, document type, vendor, description | Spend map, vendor concentration, linking letters and amendments into contract families |
+| When does it end, and who decides? | effective date, expiration date, renewal type, renewal options, auto-renewal, renewal notice days | Renewal calendar and act-by dates; which revenue sits at the customer's discretion |
+| What is it worth? | award amount, pricing basis | Committed versus stated value, price benchmarking |
+| What if it goes wrong? | termination for convenience, termination notice days, liability cap, indemnification, insurance requirements, governing law, assignment / change of control | Revenue durability, risk transfer, change-of-control consents in a transaction |
+
+**Non-negotiable:** term end, renewal mechanism, notice periods and termination rights, because they create dated
+actions; the evidence behind every value; and refusing to answer rather than guessing. **Roadmap fields:** pricing
+schedules and escalators, SLAs and penalties, insurance by coverage line, payment terms, key personnel.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph build["Build once: contracts CLI"]
+    zip["contracts.zip (389 PDFs)"] --> sample["Inventory and stratified sample (100 files)"]
+    sample --> parse["Parse: text layer, Tesseract OCR for scans"]
+    parse --> extract["Evidence-first extraction (gpt-5-mini, strict JSON)"]
+    parse --> chunks["Page-aware chunks"]
+    extract --> db[("SQLite: contracts.db")]
+    chunks --> index["Late-interaction index (PLAID + token vectors) and BM25"]
+  end
+  subgraph app["Answer on demand: Gradio app"]
+    q["Question"] --> guard["Guardrails: login, rate limit, budget"]
+    guard --> router["Router: validated QueryPlan"]
+    router -->|data cut| structured["Deterministic filters over SQLite: table, chart, evidence"]
+    router -->|clause question| clause["Late-interaction search, then a grounded answer with citations"]
+    router -->|off-topic| decline["Decline"]
+  end
+  db --> structured
+  index --> clause
+```
+
+### Offline pipeline
+
+Every step is resumable and logged to `pipeline_runs`.
+
+1. **Inventory**: profile all 389 PDFs inside the zip. This records text layer versus scan, encryption, upload
+   wrappers, malformed files, exact duplicates, and contract families inferred from file-name contract numbers.
+2. **Sample**: draw a deterministic stratified sample of 100 files (fixed seed). Edge cases are always included:
+   wrapped, encrypted and malformed files, exact duplicates, the longest text and the largest scan. The two largest
+   contract families contribute one file per document type, so a contract's lifecycle is visible. The remaining
+   slots are allocated across document type × text profile, spread along document length.
+3. **Parse**: read the PyMuPDF text layer first, then run Tesseract OCR (LSTM, 300 dpi, orientation detection) on
+   pages with little or garbled text. 599 of the 1,488 pages were OCR'd. 5 documents parsed partially and were
+   flagged; none failed.
+4. **Chunk**: build page-bounded, heading-aware passages (at most 230 tokens, 40 overlapping) sized to the
+   retrieval model's 300-token window.
+5. **Extract**: make one structured-output call per document. Documents over 160k characters instead get their
+   first and last pages plus the pages that best match each field. Each field returns a status, value, verbatim
+   quote, page and confidence. Quotes are checked against the page text, dates and renewal terms are checked for
+   consistency, and flagged fields are re-read once with more reasoning effort (5 documents). Exact duplicates copy
+   their twin's values. Eight documents carry review flags: unverified quote, low confidence, inconsistent dates,
+   contract number differing from the file name, partial parse, or low OCR confidence.
+6. **Index**: encode passages with `lightonai/answerai-colbert-small-v1`, which keeps a 96-dimensional vector per
+   token (714,538 vectors, 223 MB on disk). Build a FastPLAID index for candidate search and a BM25 index as the
+   baseline.
+7. **Export** the CSV and XLSX files, then **evaluate**.
+
+### Answering a question
+
+- **Router** (gpt-5-mini, low reasoning effort): returns a Pydantic-validated `QueryPlan`. The plan holds the route,
+  filters on an allowlist of fields and operators, grouping, metric, named contracts or vendors, the fields the
+  answer needs, and a search query. If the router fails, the app searches the text directly.
+- **Data cuts**: deterministic filters over the `contracts` table. Award totals are de-duplicated by contract family
+  and vendor, so restatements and task orders count once. Documents that don't state a field are reported as
+  unknown, never counted as "no". Small results list each document with the asked-for value and its quote. If a
+  named contract isn't in the extracted data, the app searches the contract text instead.
+- **Clause questions**: PLAID returns 200 candidates, which are re-scored with exact MaxSim on full-precision token
+  vectors. The top 8 passages (capped per file for diversity) pass a relevance gate before the answer model sees
+  them. The answer model (gpt-5-mini) must use only those sources, cite every sentence as `[S#]`, and say so when the
+  sources don't answer. Citations are checked against the passages actually provided.
+- **Hybrid**: filter in the database first, then search clauses within the matching documents (for example,
+  "for leases, what happens to the equipment at the end?").
+
+### Design decisions
+
+- **Late interaction over single-vector or keyword search.** Contract questions hinge on exact terms: notice days,
+  party roles, dollar caps. MaxSim compares every query token with every passage token, so specific wording isn't
+  averaged away, and paraphrases still match. "Twenty million dollars" finds "$20,000,000", and "walk away early
+  without a reason" finds the termination-for-convenience clause; BM25 misses both. The cost is memory: one vector
+  per token instead of one per passage. PLAID compression keeps candidate search scalable, and the exact rerank
+  restores full precision on the shortlist.
+- **A relevance gate that measures the question's own words.** Full MaxSim scores include about 25 query-expansion
+  ([MASK]) tokens that match almost anything, so off-topic questions scored about as high (≈0.95 normalized) as
+  answerable ones. The gate instead uses the mean best match over the question's own tokens. Its threshold (0.88)
+  sits below every answerable test question (the lowest is 0.897), so it only skips clearly off-topic questions;
+  the answer model's evidence check handles the rest.
+- **Evidence before values.** The model has to quote the clause and page before giving a value. This makes every
+  value checkable in one click and lets the pipeline verify quotes automatically (99.9% of the 974 extracted values
+  verify). A blank is preferred to a guess.
+- **No generated SQL.** The model only fills a typed plan; code executes it. Counts are reproducible, the database
+  can't be injected into, and the plan is logged for audit.
+- **Inspectable storage.** SQLite plus CSV/XLSX: reviewers can open the data without any infrastructure.
+- **Cheap by design.** gpt-5-mini for every step, a response cache, client-side rate pacing and a daily budget cap
+  (see [Cost](#cost)). gpt-6-luna is cheaper per token, but this account's OpenAI tier limits it to about 9 requests
+  a minute. Once the tier allows, switch back with one setting per step, e.g. `EXTRACTION_MODEL=gpt-6-luna`.
+
+## Error handling and graceful failure
+
+- **Files**: encrypted PDFs are opened with the empty user password, upload wrappers (bytes before the PDF header)
+  are stripped, and malformed files are repaired. Pages with no usable text are OCR'd; documents that still have
+  gaps are marked `partial` and flagged. No file in the sample failed to load.
+- **Model calls**: retried with backoff and paced under the account's request and token limits. Failures are
+  recorded per document without stopping the run, and every call is logged with cost and latency.
+- **Questions**: empty, overlong (over 600 characters) and too-frequent (over 6 a minute per session) questions get a
+  clear message. Off-topic questions are declined. Weak evidence produces "the documents provided don't cover it",
+  usually naming the closest documents. An answer that cites nothing carries a warning.
+- **Outages and budget**: if the router fails, the app searches the text directly. If answer synthesis fails, or the
+  daily AI budget is reached, the app shows the most relevant passages instead of an answer. Without an API key,
+  the overview, explorer and data-quality tabs keep working and chat degrades to passage search.
+- **UI**: stack traces are never shown to users; errors are logged on the server.
+
+## Evaluation
+
+Test sets are in [`eval/ground_truth/`](eval/ground_truth); results are in [`eval/results/`](eval/results). Re-run
+with `uv run contracts evaluate`.
+
+| Test set | Size | Coverage |
+|---|---|---|
+| Extraction | 261 labeled values, 14 documents | Native, OCR, long-form, amendments, renewals, encrypted, wrapped and mostly blank documents, including fields that should stay blank |
+| Retrieval | 20 questions | Paraphrased questions with known answer pages |
+| Chat | 13 cases | Data cuts, clause lookups, hybrid, unanswerable and off-topic questions |
+
+**Metrics and why.**
+
+- **Extraction**
+  - Accuracy, including correct blanks: does the table say the right thing?
+  - Precision, recall and F1 on stated values.
+  - Hallucination rate on fields the document doesn't state: a wrong value costs more than a blank.
+  - Quote verification and page accuracy: can a reviewer check the value in one click?
+  - Dates, amounts, enums and booleans are compared deterministically; an LLM judge grades only the free-text
+    fields.
+- **Retrieval**: page recall@1/5/10, file recall@5, MRR@10 and latency, against a BM25 baseline.
+- **Chat**
+  - Routing accuracy.
+  - Judge-rated correctness and groundedness.
+  - Correct refusals on unanswerable questions, scored separately because a confident wrong answer is the costly
+    failure.
+  - Whether the expected source was cited, plan correctness for data cuts, and latency and cost per question.
+
+| Area | Metric | Result |
+|---|---|---|
+| Extraction | Accuracy, including correct blanks (strict) | 93% (91%) |
+| | Precision / recall / F1 on stated values | 91% / 88% / 89% |
+| | Values invented for fields the document doesn't state | 3% |
+| | Quotes verified verbatim / cited page exact | 100% / 97% |
+| Retrieval | Page recall@5, late interaction vs BM25 | 75% vs 65% |
+| | File recall@5 / MRR@10 | 95% vs 85% / 0.54 vs 0.48 |
+| Chat | Judged answers correct / grounded | 11 of 11 / 9 of 11 |
+| | Correct refusals (unknown contract, clause absent, off-topic) | 3 of 3 |
+| | Routed as labeled | 11 of 13 (both exceptions still answered correctly) |
+| | Median / p90 latency, mean cost | 2.5 s / 7.5 s, $0.0013 per question |
+
+**What the results say.**
+
+- **Weakest fields.**
+  - Dates (77%): handwritten signature dates are garbled by OCR, and some end dates have to be computed from a
+    duration.
+  - Insurance requirements (71%): summaries drop statutory workers' compensation.
+  - Pricing basis (86%).
+
+  Human review should focus on these.
+- **Confidence alone is not a review trigger.** Reviewing every value below "high" confidence (10% of values) would
+  catch only 36% of the errors. The review queue should also target OCR'd and computed dates and high-value fields.
+- **Retrieval.** Late interaction wins on paraphrase; BM25 wins on exact names ("Virginia law"), which points to a
+  hybrid of the two. Compressed PLAID search scores the same as exact MaxSim. At 100 documents exact search is
+  actually faster (77 ms vs 200 ms); PLAID is there for scale.
+
+**Caveats.**
+
+- The test labels were drafted from the source text by the AI assistant that built the pipeline, before extraction
+  results were seen, and have not yet been audited by a person.
+- The judge is the same model family as the extractor. It grades only free-text fields and chat answers; set
+  `JUDGE_MODEL` to another family when quota allows.
+- Rubric `judge-v2` added guidance for descriptions and insurance after reviewing `judge-v1` disagreements. No
+  labels were edited after results were seen; the report discloses this.
+- The test sets are small, so treat every figure as directional.
+
+### Monitoring in production
+
+- **Regression gate**: rerun the test sets on every prompt, model or parser change, and block the release on any drop.
+- **Drift signals, weekly**, all derivable from `field_evidence`, `llm_calls` and `chat_logs`:
+  - per-field fill rate and quote-verified rate;
+  - OCR share and OCR confidence;
+  - document-type mix;
+  - the retrieval relevance distribution;
+  - refusal and routing mix;
+  - cost and latency per question.
+- **Human signals**: reviewer corrections and thumbs-down answers become new test cases (proposed), plus a monthly
+  audit of a 5% sample.
+
+## Guardrails and human checkpoints
+
+Built:
+
+- Evidence on every value, and a one-click source page.
+- Refusal over guessing: a relevance gate, the answer model's insufficient-evidence flag, citation validation, and a
+  warning on uncited answers.
+- Query plans restricted to an allowlist, with no generated SQL.
+- Document text treated as data in every prompt, as a prompt-injection defense.
+- Review flags, which the explorer can filter on.
+- Login, a per-session rate limit, a question length limit and a daily AI budget.
+- Audit logs of every question, plan, source and model call.
+
+Proposed:
+
+- Human sign-off before an extracted value enters an investment committee memo.
+- A second reviewer for award, termination and liability values.
+- A review queue in the app.
+
+## Security and confidentiality
+
+- **Secrets** live only in `.env`, which is git-ignored and never packaged. They are loaded as `SecretStr` and never
+  logged.
+- **Source material** stays on the local machine. `contracts.zip` and the brief are git-ignored. The packaging
+  script ships only the 100 processed sample PDFs and data derived from them, leaves out the response cache, and
+  refuses to write the zip if it would contain `.env`, any `.zip`, the brief, or a secret value set in `.env`.
+- **Model provider**: OpenAI Responses API calls use `store=false`. For production, use a zero-data-retention
+  agreement or Azure OpenAI inside the firm's tenant, over private networking.
+- **Access**: the app listens on 127.0.0.1, so only the machine running it can reach it. `APP_USERNAME` and
+  `APP_PASSWORD` add a login, which becomes the real gate if the app is ever exposed (`GRADIO_SERVER_NAME=0.0.0.0`
+  or hosting) and then needs a strong password. A per-session rate limit and a daily AI budget cap limit the damage
+  a leaked login could do. For production: SSO with per-deal access control, encryption at rest, retention limits,
+  and the existing audit tables.
+
+These are public procurement records, but the design assumes deal-confidential documents.
+
+## Limitations
+
+- Only 100 of the 389 files were processed, so findings hold at sample level.
+- The test labels are AI-drafted and not yet audited, the judge shares the extractor's model family, and the test
+  sets are small.
+- On scanned pages, the quote is shown above the page image rather than highlighted on it.
+- De-duplicating awards across restatements and task orders (by family and vendor, keeping the largest) is a
+  heuristic.
+- Each document is extracted on its own. There is no "current state" per contract family yet: an amendment that
+  extends an agreement doesn't update that agreement's end date.
+- The router follows the labeled route 85% of the time; fallbacks catch the misses tested so far.
+- The app is a single local process on SQLite with on-device model inference: fine for a demo, not for many
+  concurrent users.
+
+## Top three improvements
+
+1. **A human review queue and audited test labels.** Send flagged values (OCR'd and computed dates, low confidence,
+   unverified quotes, high-value fields) to reviewers who confirm or correct them in the app. Corrections update the
+   database and become test cases. Audit the existing labels first.
+2. **A contract-family "current state".** Merge each agreement with its amendments, renewal letters and task orders
+   into one current term, value and notice date. That is the basis for an act-by calendar and for committed rather
+   than stated value.
+3. **A production platform**, consisting of:
+   - hybrid retrieval (BM25 plus late interaction, since each wins different questions);
+   - the full 389-file run;
+   - Postgres with a managed vector index;
+   - SSO with per-deal access;
+   - an in-tenant model endpoint;
+   - a Microsoft Teams bot on the same API;
+   - continuous integration gated on the evaluation.
+
+## Rebuild from the raw contracts
+
+Put `contracts.zip` in the project root. OCR is an optional dependency group because only the parse step uses it.
+Its `tesserocr` wheel bundles Tesseract on macOS 15+ and Linux; elsewhere, `uv sync --group ocr` builds it from
+source, which needs Tesseract and its headers installed first (`brew install tesseract`, or
+`apt install libtesseract-dev`).
+
+```bash
+uv sync --group ocr
+uv run contracts setup-ocr     # English LSTM and orientation models into data/tessdata
+uv run contracts inventory     # profile all 389 PDFs in the zip
+uv run contracts sample        # stage the deterministic 100-file sample in data/sample_pdfs
+uv run contracts parse         # text layer plus OCR
+uv run contracts chunk
+uv run contracts extract       # about $1.10 with gpt-5-mini; cached and resumable
+uv run contracts index         # downloads the retrieval model on first run
+uv run contracts export
+uv run contracts evaluate      # about $0.07 of judge calls
+uv run contracts status        # what is in the database, including total model spend
+uv run contracts ask "Which contracts auto-renew?"
+uv run python scripts/package_submission.py   # reviewer zip in dist/
+```
+
+**Optional hosting.** `scripts/deploy_space.py` publishes the app to a protected Hugging Face Space: code and data
+stay private on the Hub, and the app is reachable by URL behind the login. Protected visibility needs a Hugging Face
+PRO account, so this submission isn't hosted. With PRO, set `HF_TOKEN` (write scope), `APP_USERNAME` and
+`APP_PASSWORD` in `.env`, then run:
+
+```bash
+uv run python scripts/deploy_space.py --repo-id <user>/contract-intelligence
+```
+
+The script uploads the code, database, index, sample PDFs, exports and evaluation results, and sets the secrets from
+`.env` without printing them.
+
+## Configuration
+
+Settings come from environment variables or `.env`; defaults are in
+[`src/berkshire_contracts/config.py`](src/berkshire_contracts/config.py).
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `OPENAI_API_KEY` | — | Extraction, chat answers and judged evaluation (without it, chat shows passages) |
+| `HF_TOKEN` | — | Optional hosting only |
+| `APP_USERNAME`, `APP_PASSWORD` | unset | App login (no login screen when unset) |
+| `EXTRACTION_MODEL`, `ESCALATION_MODEL`, `ROUTER_MODEL`, `CHAT_MODEL`, `JUDGE_MODEL` | `gpt-5-mini` | Model for each step |
+| `MAX_QUESTIONS_PER_MINUTE` | 6 | Per-session rate limit |
+| `DAILY_LLM_BUDGET_USD` | 5 | Daily cap on chat spend |
+| `LLM_RATE_LIMITS` | per model | Client-side requests and tokens per minute, matched to the OpenAI tier |
+| `RETRIEVAL_MODE` | `plaid_rerank` | `plaid_rerank`, `plaid`, `exact` or `bm25` |
+| `COLBERT_DEVICE` | auto | Force `cpu`, `cuda` or `mps` for the retrieval model |
+
+## Cost
+
+Building and evaluating everything cost **$1.24** in OpenAI usage across 235 API calls (cache hits excluded):
+
+| Item | Cost |
+|---|---|
+| Extraction of 100 documents, including escalations | $1.12 |
+| Judge calls during evaluation | $0.07 |
+| Routing and answers across all testing | $0.05 |
+
+A typical question costs about $0.0013. `uv run contracts status` and the app's data-quality tab show live totals.
+
+## Repository layout
+
+```
+app.py                         Gradio app (four tabs)
+src/berkshire_contracts/
+  cli.py                       `contracts` pipeline commands
+  config.py                    settings from the environment or .env, model prices
+  db.py                        SQLite schema (SQLAlchemy)
+  schemas.py                   Pydantic schemas for model outputs and query plans
+  ingestion/                   inventory, sampling, PDF repair, parsing and OCR, chunking
+  extraction/                  field definitions, prompts, OpenAI client (structured outputs, cache, cost), extractor
+  retrieval/                   late-interaction encoder; PLAID, exact MaxSim and BM25 search
+  chat/                        router, deterministic filters, grounded answers, assistant service
+  evaluation/                  scoring against the test sets, retriever comparison, report
+  app_support.py               overview charts, page rendering with highlights
+  exports.py                   CSV and XLSX exports
+eval/ground_truth/             labeled test sets
+eval/results/                  report.md, summary.json, per-case CSVs
+scripts/package_submission.py  build the reviewer zip: code plus prebuilt data, no secrets
+scripts/deploy_space.py        optional: publish to a protected Hugging Face Space (needs PRO)
+tests/                         offline unit tests (throwaway database, no model calls or downloads)
+data/                          generated, not in version control: database, index, sample PDFs, exports
+```
+
+Run the tests with `uv run pytest`.
+
+## Troubleshooting
+
+- **`ModuleNotFoundError: berkshire_contracts` on macOS.** The editable install's `.pth` file can end up with the
+  hidden file flag, and Python skips hidden `.pth` files. Either prefix commands with `PYTHONPATH=src` or clear the
+  flag with `chflags nohidden .venv/lib/python3.12/site-packages/*.pth`.
+- **The first question is slow.** The retrieval model loads on first use; the app warms it up at start.
+- **OpenAI 429 errors.** Lower `LLM_RATE_LIMITS` to your account's tier; calls retry with backoff.

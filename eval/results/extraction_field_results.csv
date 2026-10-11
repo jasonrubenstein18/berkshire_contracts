@@ -1,0 +1,262 @@
+file_id,filename,categories,field,expected,predicted,gt_page,pred_page,verified,confidence,outcome,judged
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",contract_number,16069,16069,1.0,1.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",document_type,agreement,agreement,1.0,1.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",vendor_name,Conference Technologies Inc.,Conference Technologies Inc.,1.0,1.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",contract_description,"Design, sourcing and installation of courtroom technology and audio-visual systems for the Depke juvenile justice facility",Courtroom technology and miscellaneous audio/visual systems for Lake County,1.0,1.0,True,high,correct,True
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",effective_date,,,,,,,correct_null,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",expiration_date,,,,,,,correct_null,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",renewal_type,county_option,county_option,2.0,2.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",renewal_options,"Three additional one-year renewal periods at the County's option, plus a possible 60-day extension",Three additional one-year renewals; County may extend the contract for sixty (60) days at the end of any term.,2.0,2.0,True,high,correct,True
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",auto_renewal,False,False,2.0,2.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",renewal_notice_days,,,,,,,correct_null,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",award_amount_usd,98075.95,98075.95,2.0,2.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",pricing_basis,fixed_price,fixed_price,2.0,2.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",termination_for_convenience,True,True,6.0,6.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",termination_notice_days,30,30,6.0,6.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",liability_cap,"Contractor's aggregate liability capped at $20,000,000; no indirect, consequential or punitive damages","Aggregate liability capped at $20,000,000; excludes indirect, consequential, and punitive damages.",7.0,7.0,True,high,correct,True
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",indemnification,vendor_indemnifies_county,vendor_indemnifies_county,3.0,3.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",insurance_requirements,Workers comp statutory; employers liability $1M; CGL $1M per occurrence / $2M aggregate; auto $1M; professional $1M per claim / $2M aggregate; umbrella $2M,"CGL $1,000,000 each occurrence / $2,000,000 general aggregate; Products/Completed Ops $1,000,000; Personal & Advertising injury $1,000,000; Employers' Liability $1,000,000; Auto $1,000,000 combined single limit; Professional Liability $1,000,000 per claim / $2,000,000 aggregate; Excess/Umbrella $2,000,000.",4.0,4.0,True,high,wrong,True
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",governing_law,Illinois,Illinois,5.0,5.0,True,high,correct,False
+532a78eb47d6,16069_Agreement_fully_executed.pdf,"ocr,agreement",assignment_change_of_control,consent_required,consent_required,6.0,6.0,True,high,correct,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",contract_number,16069,16069,1.0,1.0,True,high,correct,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",document_type,renewal_extension,renewal_extension,1.0,1.0,True,high,correct,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",vendor_name,"Conference Technologies, Inc.","Conference Technologies, Inc.",1.0,1.0,True,high,correct,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",contract_description,Courtroom technology and miscellaneous A/V systems,Courtroom Technology and Misc A/V Systems,1.0,1.0,True,high,correct,True
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",effective_date,2020-07-12,2020-07-12,1.0,1.0,True,high,correct,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",expiration_date,2021-07-11,2021-07-11,1.0,1.0,True,high,correct,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",renewal_type,county_option,county_option,1.0,1.0,True,high,correct,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",renewal_options,"One-year extension from July 12, 2020 through July 11, 2021","One (1) year renewal: July 12, 2020 through July 11, 2021",1.0,1.0,True,high,correct,True
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",auto_renewal,False,,1.0,,,,acceptable_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",renewal_notice_days,,30,,1.0,True,high,correct_alt,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",award_amount_usd,,,,,,,correct_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",pricing_basis,,,,,,,correct_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",termination_for_convenience,,,,,,,correct_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",termination_notice_days,,,,,,,correct_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",liability_cap,,,,,,,correct_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",indemnification,,,,,,,correct_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",insurance_requirements,Vendor must maintain a valid certificate of insurance per the contract and provide a new COI for the renewal period,,1.0,,,,acceptable_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",governing_law,,,,,,,correct_null,False
+065d16803269,16069_Renewal_Letter_20_21.pdf,"native,renewal",assignment_change_of_control,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",contract_number,141301,141301,1.0,1.0,True,high,correct,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",document_type,task_order_sow,task_order_sow,1.0,1.0,True,high,correct,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",vendor_name,CDW Government LLC,CDW Government LLC,1.0,1.0,True,high,correct,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",contract_description,LogicMonitor Accelerate Gold implementation professional services (8-week remote deployment),Gold Accelerate Implementation for LogicMonitor platform.,1.0,2.0,True,medium,correct,True
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",effective_date,2024-10-18,2024-09-10,16.0,1.0,True,high,wrong,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",expiration_date,,2024-11-04,,2.0,True,medium,false_positive,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",renewal_type,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",renewal_options,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",auto_renewal,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",renewal_notice_days,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",award_amount_usd,20300.0,20300.0,15.0,15.0,True,high,correct,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",pricing_basis,fixed_price,fixed_price,15.0,15.0,True,high,correct,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",termination_for_convenience,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",termination_notice_days,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",liability_cap,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",indemnification,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",insurance_requirements,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",governing_law,,,,,,,correct_null,False
+d7fa2b1aa526,141301_CDW_Signed.pdf,"native,task_order_sow",assignment_change_of_control,,,,,,,correct_null,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",contract_number,25158,25158,1.0,1.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",document_type,agreement,agreement,1.0,1.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",vendor_name,"Carter Development Group, LLC","Carter Development Group, LLC",1.0,1.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",contract_description,Employee engagement organizational assessment (DEI operational assessment) consulting services,Diversity Equity and Inclusion (DEI) Operational Assessment,1.0,1.0,True,high,correct,True
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",effective_date,2025-06-11,2025-06-11,10.0,10.0,True,medium,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",expiration_date,,2026-06-10,,2.0,True,low,false_positive,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",renewal_type,county_option,county_option,2.0,2.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",renewal_options,County may extend up to 60 days at the end of the term to negotiate a new agreement,Lake County may extend the Agreement up to 60 days to negotiate a new or extended agreement,2.0,2.0,True,high,correct,True
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",auto_renewal,False,,2.0,,,,acceptable_null,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",renewal_notice_days,,,,,,,correct_null,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",award_amount_usd,108340.0,108340.0,2.0,2.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",pricing_basis,fixed_price,fixed_price,2.0,2.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",termination_for_convenience,True,True,8.0,8.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",termination_notice_days,30,30,8.0,8.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",liability_cap,,,,,,,correct_null,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",indemnification,vendor_indemnifies_county,vendor_indemnifies_county,4.0,4.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",insurance_requirements,CGL $1M per occurrence / $2M aggregate; umbrella $2M; auto $1M; workers comp statutory; employers liability $1M,"CGL $1,000,000 each occurrence / $2,000,000 aggregate; Products-Completed Ops $1,000,000; Personal & Advertising $1,000,000; Excess/Umbrella $2,000,000 min; Auto $1,000,000 CSL; Workers' Comp statutory; Employers' Liability $1,000,000",4.0,4.0,True,high,correct,True
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",governing_law,Illinois,Illinois,7.0,7.0,True,high,correct,False
+63032717dd43,2025_06_11_Contract_25158_EXECUTED.pdf,"native,agreement,malformed",assignment_change_of_control,consent_required,consent_required,8.0,8.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",contract_number,21164,21164,1.0,1.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",document_type,agreement,agreement,1.0,1.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",vendor_name,DLR Group Inc.,DLR Group inc.,1.0,1.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",contract_description,Architectural master plan update and design for the Robert W. Depke Juvenile Justice Complex Phase 2 bridge projects,Professional services for the Robert W. Depke Juvenile Justice Complex expansion.,1.0,1.0,True,high,wrong,True
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",effective_date,,,,,,,correct_null,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",expiration_date,,,,,,,correct_null,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",renewal_type,county_option,county_option,3.0,3.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",renewal_options,County may extend the agreement for up to 60 days at the end of the term,Up to sixty (60) day County option to extend,3.0,3.0,True,high,correct,True
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",auto_renewal,False,False,3.0,3.0,True,medium,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",renewal_notice_days,,,,,,,correct_null,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",award_amount_usd,,,,,,,correct_null,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",pricing_basis,fixed_price,fixed_price,3.0,3.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",termination_for_convenience,True,True,6.0,6.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",termination_notice_days,30,30,6.0,6.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",liability_cap,Consultant's indemnity obligation limited to available insurance proceeds up to the required coverage amounts,Consultant indemnity limited to the available proceeds of required insurance coverage,4.0,4.0,True,high,correct,True
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",indemnification,vendor_indemnifies_county,vendor_indemnifies_county,4.0,4.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",insurance_requirements,CGL $1M per occurrence / $2M aggregate; auto $1M; umbrella $3M; workers comp statutory; employers liability $1M; professional liability $3M,"CGL $1,000,000 per occurrence / $2,000,000 general aggregate; Products/Completed Operations $1,000,000; Personal/Advertising $1,000,000; Auto $1,000,000 combined single limit; Employers Liability $1,000,000; Professional Liability $3,000,000 per claim/$3,000,000 aggregate; Excess/Umbrella $3,000,000; Workers' Comp statutory.",4.0,4.0,True,high,correct,True
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",governing_law,Illinois,Illinois,6.0,6.0,True,high,correct,False
+a88a2fbbaf1d,21164_Fully_Executed_Agreement.pdf,"ocr,agreement",assignment_change_of_control,consent_required,consent_required,6.0,6.0,True,high,correct,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",contract_number,21164,21164,1.0,1.0,True,high,correct,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",document_type,amendment_modification,amendment_modification,1.0,1.0,True,high,correct,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",vendor_name,"DLR Group, Inc.","DLR Group, Inc.",1.0,1.0,True,high,correct,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",contract_description,Modification adding two additional service items to the Depke Juvenile Justice Complex Expansion professional services agreement,Professional services for the Robert W. Depke Juvenile Justice Complex Expansion.,1.0,1.0,True,high,correct,True
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",effective_date,2025-06-11,2025-06-11,2.0,2.0,True,medium,correct,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",expiration_date,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",renewal_type,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",renewal_options,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",auto_renewal,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",renewal_notice_days,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",award_amount_usd,1755883.0,1755883.0,1.0,1.0,True,high,correct,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",pricing_basis,not_to_exceed,,1.0,,,,miss,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",termination_for_convenience,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",termination_notice_days,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",liability_cap,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",indemnification,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",insurance_requirements,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",governing_law,,,,,,,correct_null,False
+3be3d76f3183,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf,"native,amendment",assignment_change_of_control,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",contract_number,070121-JHN,070121-JHN,1.0,1.0,True,high,correct,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",document_type,renewal_extension,renewal_extension,1.0,1.0,True,high,correct,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",vendor_name,Johnson Controls,Johnson Controls,1.0,1.0,True,high,correct,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",contract_description,HVAC systems and related services (Sourcewell cooperative contract),HVAC Systems and Related Services,1.0,1.0,True,high,correct,True
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",effective_date,,2025-08-12,,1.0,True,medium,false_positive,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",expiration_date,2026-08-12,2026-08-12,1.0,1.0,True,high,correct,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",renewal_type,mutual_agreement,mutual_agreement,1.0,1.0,True,high,correct,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",renewal_options,Extension by mutual consent to a new expiration date of 2026-08-12,Extend the Contract for an additional period to new expiration 2026-08-12,1.0,1.0,True,medium,correct,True
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",auto_renewal,False,False,1.0,1.0,True,high,correct,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",renewal_notice_days,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",award_amount_usd,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",pricing_basis,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",termination_for_convenience,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",termination_notice_days,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",liability_cap,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",indemnification,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",insurance_requirements,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",governing_law,,,,,,,correct_null,False
+a21f680ab3d9,070121_JHN_Johnson_Controls_Contract_Extension.pdf,"native,renewal,upload_wrapper,form_fields",assignment_change_of_control,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",contract_number,20027,20027,1.0,1.0,True,high,correct,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",document_type,amendment_modification,amendment_modification,1.0,1.0,True,high,correct,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",vendor_name,"Tyler Technologies, Inc.","Tyler Technologies, Inc.",1.0,1.0,True,high,correct,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",contract_description,Amendment removing the CBCC enforcement mobile software and applying maintenance and support credits for RMS/JMS public-safety software,Maintenance and support services for Tyler software.,1.0,1.0,True,high,correct,True
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",effective_date,2023-08-25,2023-08-25,2.0,3.0,True,medium,correct,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",expiration_date,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",renewal_type,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",renewal_options,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",auto_renewal,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",renewal_notice_days,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",award_amount_usd,,109295.0,,2.0,True,high,correct_alt,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",pricing_basis,subscription_license,,1.0,,,,acceptable_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",termination_for_convenience,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",termination_notice_days,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",liability_cap,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",indemnification,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",insurance_requirements,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",governing_law,,,,,,,correct_null,False
+45077a43180c,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf,"mixed,amendment,encrypted",assignment_change_of_control,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",contract_number,22128-1,22128-1,1.0,1.0,True,high,correct,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",document_type,price_adjustment,price_adjustment,1.0,1.0,True,high,correct,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",vendor_name,Ciorba Group,Ciorba Group,1.0,1.0,True,high,correct,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",contract_description,"Rate adjustment for water facilities analysis, design and construction oversight services",Water Facilities Analysis Design and Construction Oversight,1.0,1.0,True,high,correct,True
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",effective_date,2024-10-19,2024-10-19,1.0,1.0,True,high,correct,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",expiration_date,2025-10-18,2025-10-18,1.0,1.0,True,high,correct,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",renewal_type,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",renewal_options,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",auto_renewal,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",renewal_notice_days,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",award_amount_usd,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",pricing_basis,hourly_rate,hourly_rate,2.0,2.0,True,medium,correct,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",termination_for_convenience,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",termination_notice_days,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",liability_cap,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",indemnification,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",insurance_requirements,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",governing_law,,,,,,,correct_null,False
+37ef9dac1cb9,2024_09_16_Rate_Adjustment_for_Contract_22128_1.pdf,"native,price_adjustment",assignment_change_of_control,,,,,,,correct_null,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",contract_number,23159,23159,1.0,1.0,True,high,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",document_type,award_notice,award_notice,1.0,1.0,True,high,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",vendor_name,"McDonagh Demolition, Inc.","McDonagh Demolition, Inc.",1.0,1.0,True,high,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",contract_description,Job order contracting for Lake County,Job Order Contracting for Lake County,1.0,1.0,True,high,correct,True
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",effective_date,2024-01-01,2024-01-01,1.0,1.0,True,high,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",expiration_date,2024-12-31,2024-12-31,1.0,1.0,True,high,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",renewal_type,county_option,county_option,2.0,2.0,True,medium,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",renewal_options,Option to renew for four additional one-year periods,Four additional one-year renewal periods,2.0,2.0,True,high,correct,True
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",auto_renewal,False,False,2.0,2.0,True,medium,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",renewal_notice_days,,,,,,,correct_null,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",award_amount_usd,2000000.0,2000000.0,1.0,1.0,True,high,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",pricing_basis,unit_price,,2.0,,,,miss,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",termination_for_convenience,,,,,,,correct_null,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",termination_notice_days,,,,,,,correct_null,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",liability_cap,,,,,,,correct_null,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",indemnification,,,,,,,correct_null,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",insurance_requirements,"Certificate of insurance as defined in the bid, plus performance and payment bonds of 100% of the bid",Performance and payment bonds 100% of bid; certificate of insurance as defined in this bid.,1.0,1.0,True,high,correct,True
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",governing_law,Illinois,Illinois,1.0,1.0,True,high,correct,False
+414aa6ac10c0,23159_Award_Letter__McDonagh_Demolition_Inc.pdf,"native,award_notice",assignment_change_of_control,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",contract_number,22046,22046,1.0,1.0,True,high,correct,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",document_type,vendor_disclosure,vendor_disclosure,1.0,1.0,True,high,correct,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",vendor_name,Lake County Health Department and Community Health Center,,1.0,,,,miss,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",contract_description,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",effective_date,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",expiration_date,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",renewal_type,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",renewal_options,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",auto_renewal,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",renewal_notice_days,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",award_amount_usd,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",pricing_basis,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",termination_for_convenience,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",termination_notice_days,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",liability_cap,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",indemnification,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",insurance_requirements,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",governing_law,,,,,,,correct_null,False
+47450092d658,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf,"ocr,vendor_disclosure,null_heavy",assignment_change_of_control,,,,,,,correct_null,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",contract_number,23173-1,23173-1,1.0,1.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",document_type,agreement,agreement,1.0,1.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",vendor_name,"Applied Technologies, Inc.","Applied Technologies, Inc.",1.0,1.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",contract_description,"Engineering and consulting services for wastewater reclamation facilities: master planning, risk assessments, design and construction oversight","Professional consulting and engineering services for wastewater reclamation facilities master planning, risk assessments, design, and construction oversight.",1.0,1.0,True,high,correct,True
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",effective_date,2024-03-18,2024-02-12,10.0,10.0,True,medium,wrong,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",expiration_date,2025-03-17,2025-02-11,1.0,1.0,True,medium,wrong,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",renewal_type,county_option,county_option,1.0,42.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",renewal_options,"Four additional one-year renewal periods, plus a possible 60-day County extension",Option to renew for four additional one-year periods; County may extend the contract 60 days for negotiating a new or extended agreement.,1.0,1.0,True,high,correct,True
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",auto_renewal,False,,1.0,,,,miss,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",renewal_notice_days,,,,,,,correct_null,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",award_amount_usd,1000000.0,1000000.0,2.0,2.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",pricing_basis,hourly_rate,hourly_rate,2.0,2.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",termination_for_convenience,True,True,8.0,8.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",termination_notice_days,30,30,8.0,8.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",liability_cap,,,,,,,correct_null,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",indemnification,vendor_indemnifies_county,vendor_indemnifies_county,4.0,4.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",insurance_requirements,CGL $1M per occurrence / $2M aggregate; umbrella $2M; auto $1M; workers comp statutory; employers liability $1M; professional liability $1M per claim,"CGL $1,000,000 per occurrence; Products/Completed Operations $1,000,000; Personal & Advertising $1,000,000; General Aggregate $2,000,000; Automobile $1,000,000 CSL; Employers Liability $1,000,000; Professional Liability $1,000,000 per claim; Umbrella $2,000,000 minimum.",4.0,4.0,True,high,wrong,True
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",governing_law,Illinois,Illinois,7.0,7.0,True,high,correct,False
+1ad3db68c1bc,23173_1_Fully_Executed_Agreement_with_Exhibits.pdf,"mixed,agreement,long_form",assignment_change_of_control,consent_required,consent_required,8.0,8.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",contract_number,,,,,,,correct_null,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",document_type,lease,agreement,1.0,1.0,True,high,wrong,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",vendor_name,"Motorola Solutions, Inc.","Motorola Solutions, Inc.",1.0,1.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",contract_description,"Wireless communications site lease of tower and interior space at 18 N County St, Waukegan for public-safety radio equipment","Lease of tower and interior space to install and operate communications equipment including antennae, radios, cabinets, and backup power.",1.0,1.0,True,high,correct,True
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",effective_date,2016-07-01,2016-07-01,1.0,1.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",expiration_date,2021-06-30,2021-06-30,1.0,1.0,True,medium,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",renewal_type,vendor_option,vendor_option,1.0,1.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",renewal_options,Five successive five-year renewal terms at the lessee's option,Up to five successive five-year renewal terms; Lessee must notify Lessor at least 30 days prior to expiration.,1.0,1.0,True,high,correct,True
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",auto_renewal,False,False,1.0,1.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",renewal_notice_days,30,30,1.0,1.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",award_amount_usd,10.0,10.0,1.0,1.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",pricing_basis,fixed_price,fixed_price,1.0,1.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",termination_for_convenience,True,True,5.0,5.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",termination_notice_days,60,60,5.0,5.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",liability_cap,Mutual waiver of consequential damages; each party's total liability limited to direct damages (except personal injury or death),Total liability limited to direct damages recoverable under law; waiver of consequential damages.,2.0,2.0,True,high,wrong,True
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",indemnification,vendor_indemnifies_county,vendor_indemnifies_county,2.0,2.0,True,high,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",insurance_requirements,"Lessee: CGL $1M per occurrence / $2M aggregate, all-risk property, workers comp statutory, employers liability $1M; Lessor named additional insured","CGL $1,000,000 per occurrence / $2,000,000 aggregate; Workers' Compensation and Employer's Liability $1,000,000; Lessee must carry all-risk physical damage on its property.",2.0,2.0,True,high,wrong,True
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",governing_law,Illinois,Illinois,7.0,7.0,True,medium,correct,False
+76de4877b8c0,16249_Motorola_Lease__Waukegan.pdf,"ocr,lease,partial",assignment_change_of_control,consent_required,consent_required,4.0,4.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",contract_number,21019,21019,1.0,1.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",document_type,agreement,agreement,1.0,1.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",vendor_name,Global Tel*Link Corporation,Global Tel*Link (GTL),1.0,1.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",contract_description,"Inmate phone, tablet, bail, kiosk and video visitation services for the Lake County Jail","Inmate phone, tablet, bail, kiosk, and video visitation services.",1.0,1.0,True,high,correct,True
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",renewal_type,county_option,county_option,1.0,1.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",renewal_options,"Three additional one-year renewal periods at the County's option, plus a possible 60-day extension",Up to three additional one-year renewals.,1.0,1.0,True,high,wrong,True
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",auto_renewal,False,False,1.0,1.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",pricing_basis,percentage_fee,percentage_fee,1.0,2.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",termination_for_convenience,True,True,7.0,7.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",termination_notice_days,90,90,7.0,7.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",indemnification,vendor_indemnifies_county,vendor_indemnifies_county,4.0,4.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",insurance_requirements,Workers comp statutory; employers liability; CGL $1M per occurrence / $2M aggregate; auto $1M; professional $1M; cyber $1M; umbrella $2M,"CGL $1,000,000 per occurrence / $2,000,000 general aggregate; Employers Liability $1,000,000; Auto $1,000,000 CSL; Professional/Cyber/Tech $1,000,000 per occurrence; Excess/Umbrella $2,000,000 (minimum).",4.0,4.0,True,high,wrong,True
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",governing_law,Illinois,Illinois,6.0,6.0,True,high,correct,False
+5a57b7dfcf16,21019_Agreement__Final_Executed1.pdf,"mixed,agreement,long_form,selected_context",assignment_change_of_control,consent_required,consent_required,6.0,6.0,True,high,correct,False

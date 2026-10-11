@@ -1,0 +1,68 @@
+[project]
+name = "berkshire-contracts"
+version = "0.1.0"
+description = "Contract intelligence PoC: evidence-backed extraction, late-interaction retrieval, and a chat UI over procurement contracts."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "bm25s>=0.2.6",
+    "gradio>=5.0",
+    "huggingface-hub>=0.30",
+    "numpy>=1.26",
+    "openai>=1.60",
+    "pandas>=2.2",
+    "pikepdf>=9.0",
+    "pillow>=10.0",
+    "plotly>=5.22",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "pylate>=1.2",
+    "pymupdf>=1.24",
+    "pystemmer>=2.2",
+    "python-dateutil>=2.9",
+    "python-dotenv>=1.0",
+    "rapidfuzz>=3.9",
+    "rich>=13.7",
+    "sqlalchemy>=2.0",
+    "tabulate>=0.9",
+    "tenacity>=8.2",
+    "typer>=0.12",
+    "xlsxwriter>=3.2",
+]
+
+[project.scripts]
+contracts = "berkshire_contracts.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "ruff>=0.6",
+]
+# Only `contracts parse` needs OCR; tesserocr has no Windows or pre-macOS-15 wheels.
+ocr = [
+    "tesserocr>=2.7",
+]
+
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/berkshire_contracts"]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501", "RUF001", "RUF002", "RUF003", "B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"

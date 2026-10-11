@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Source material (confidential inputs never leave this machine)
+contracts.zip
+BP Take-Home_vShare.pdf
+
+# Local presentation (deck, assets, and generator stay on this machine)
+presentation/
+
+# Generated data (rebuild with the `contracts` pipeline in the README; packed for reviewers by scripts/package_submission.py)
+data/
+!data/.gitkeep
+
+# Python / tooling
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

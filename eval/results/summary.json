@@ -1,0 +1,690 @@
+{
+  "meta": {
+    "generated_at": "2026-10-10 23:04 UTC",
+    "extraction_model": "gpt-5-mini",
+    "judge_model": "gpt-5-mini",
+    "judge_prompt_version": "judge-v2",
+    "colbert_model": "lightonai/answerai-colbert-small-v1",
+    "gt_documents": 14,
+    "retrieval_queries": 20
+  },
+  "extraction": {
+    "overall": {
+      "labels": 261,
+      "accuracy": 0.931,
+      "strict_accuracy": 0.908,
+      "value_precision": 0.909,
+      "value_recall": 0.879,
+      "value_f1": 0.894,
+      "hallucination_rate": 0.029,
+      "misses": 4,
+      "wrong": 11,
+      "false_positives": 3,
+      "evidence_verified": 1.0,
+      "citation_page_exact": 0.971,
+      "citation_page_within_1": 0.993,
+      "review_load_below_high": 0.104,
+      "errors_caught_below_high": 0.357
+    },
+    "by_field": [
+      {
+        "field": "Contract #",
+        "labels": 14,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Document type",
+        "labels": 14,
+        "accuracy": 0.929,
+        "value_precision": 0.929,
+        "value_recall": 0.929,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Vendor",
+        "labels": 14,
+        "accuracy": 0.929,
+        "value_precision": 1.0,
+        "value_recall": 0.929,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Description",
+        "labels": 14,
+        "accuracy": 0.929,
+        "value_precision": 0.923,
+        "value_recall": 0.923,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Effective date",
+        "labels": 13,
+        "accuracy": 0.769,
+        "value_precision": 0.7,
+        "value_recall": 0.778,
+        "hallucination_rate": 0.25
+      },
+      {
+        "field": "Expiration date",
+        "labels": 13,
+        "accuracy": 0.769,
+        "value_precision": 0.625,
+        "value_recall": 0.833,
+        "hallucination_rate": 0.286
+      },
+      {
+        "field": "Renewal type",
+        "labels": 14,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Renewal options",
+        "labels": 14,
+        "accuracy": 0.929,
+        "value_precision": 0.889,
+        "value_recall": 0.889,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Auto-renewal",
+        "labels": 14,
+        "accuracy": 0.929,
+        "value_precision": 1.0,
+        "value_recall": 0.667,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Renewal notice (days)",
+        "labels": 13,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Award amount (USD)",
+        "labels": 13,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Pricing basis",
+        "labels": 14,
+        "accuracy": 0.857,
+        "value_precision": 1.0,
+        "value_recall": 0.727,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Termination for convenience",
+        "labels": 14,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Termination notice (days)",
+        "labels": 14,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Liability cap",
+        "labels": 13,
+        "accuracy": 0.923,
+        "value_precision": 0.667,
+        "value_recall": 0.667,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Indemnification",
+        "labels": 14,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Insurance requirements",
+        "labels": 14,
+        "accuracy": 0.714,
+        "value_precision": 0.429,
+        "value_recall": 0.375,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Governing law",
+        "labels": 14,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      },
+      {
+        "field": "Assignment / change of control",
+        "labels": 14,
+        "accuracy": 1.0,
+        "value_precision": 1.0,
+        "value_recall": 1.0,
+        "hallucination_rate": 0.0
+      }
+    ],
+    "by_category": [
+      {
+        "category": "agreement",
+        "documents": 5,
+        "labels": 90,
+        "accuracy": 0.9,
+        "value_f1": 0.89
+      },
+      {
+        "category": "amendment",
+        "documents": 2,
+        "labels": 38,
+        "accuracy": 0.974,
+        "value_f1": 0.917
+      },
+      {
+        "category": "award_notice",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.947,
+        "value_f1": 0.96
+      },
+      {
+        "category": "encrypted",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 1.0,
+        "value_f1": 0.909
+      },
+      {
+        "category": "form_fields",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.947,
+        "value_f1": 0.941
+      },
+      {
+        "category": "lease",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.842,
+        "value_f1": 0.833
+      },
+      {
+        "category": "long_form",
+        "documents": 2,
+        "labels": 33,
+        "accuracy": 0.818,
+        "value_f1": 0.82
+      },
+      {
+        "category": "malformed",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.947,
+        "value_f1": 0.938
+      },
+      {
+        "category": "mixed",
+        "documents": 3,
+        "labels": 52,
+        "accuracy": 0.885,
+        "value_f1": 0.835
+      },
+      {
+        "category": "native",
+        "documents": 7,
+        "labels": 133,
+        "accuracy": 0.955,
+        "value_f1": 0.926
+      },
+      {
+        "category": "null_heavy",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.947,
+        "value_f1": 0.8
+      },
+      {
+        "category": "ocr",
+        "documents": 4,
+        "labels": 76,
+        "accuracy": 0.921,
+        "value_f1": 0.893
+      },
+      {
+        "category": "partial",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.842,
+        "value_f1": 0.833
+      },
+      {
+        "category": "price_adjustment",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 1.0,
+        "value_f1": 1.0
+      },
+      {
+        "category": "renewal",
+        "documents": 2,
+        "labels": 38,
+        "accuracy": 0.974,
+        "value_f1": 0.916
+      },
+      {
+        "category": "selected_context",
+        "documents": 1,
+        "labels": 14,
+        "accuracy": 0.857,
+        "value_f1": 0.857
+      },
+      {
+        "category": "task_order_sow",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.895,
+        "value_f1": 0.8
+      },
+      {
+        "category": "upload_wrapper",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.947,
+        "value_f1": 0.941
+      },
+      {
+        "category": "vendor_disclosure",
+        "documents": 1,
+        "labels": 19,
+        "accuracy": 0.947,
+        "value_f1": 0.8
+      }
+    ],
+    "by_confidence": [
+      {
+        "confidence": "high",
+        "values": 138,
+        "accuracy": 0.935
+      },
+      {
+        "confidence": "medium",
+        "values": 15,
+        "accuracy": 0.733
+      },
+      {
+        "confidence": "low",
+        "values": 1,
+        "accuracy": 0.0
+      }
+    ]
+  },
+  "retrieval": [
+    {
+      "retriever": "BM25 (lexical baseline)",
+      "page_recall@1": 0.35,
+      "page_recall@5": 0.65,
+      "page_recall@10": 0.65,
+      "file_recall@5": 0.85,
+      "MRR@10": 0.479,
+      "median_latency_ms": 0.1
+    },
+    {
+      "retriever": "PLAID only (compressed late interaction)",
+      "page_recall@1": 0.4,
+      "page_recall@5": 0.75,
+      "page_recall@10": 0.75,
+      "file_recall@5": 0.95,
+      "MRR@10": 0.538,
+      "median_latency_ms": 207.0
+    },
+    {
+      "retriever": "Exact MaxSim (brute-force late interaction)",
+      "page_recall@1": 0.4,
+      "page_recall@5": 0.75,
+      "page_recall@10": 0.75,
+      "file_recall@5": 0.95,
+      "MRR@10": 0.538,
+      "median_latency_ms": 76.8
+    },
+    {
+      "retriever": "PLAID + exact MaxSim rerank (deployed)",
+      "page_recall@1": 0.4,
+      "page_recall@5": 0.75,
+      "page_recall@10": 0.75,
+      "file_recall@5": 0.95,
+      "MRR@10": 0.538,
+      "median_latency_ms": 199.9
+    }
+  ],
+  "chat": {
+    "cases": 13,
+    "route_accuracy": 0.846,
+    "judge_correct": 1.0,
+    "judge_correct_or_partial": 1.0,
+    "judge_grounded": 0.818,
+    "abstention_correct": 1.0,
+    "source_cited": 1.0,
+    "plan_correct": 1.0,
+    "median_latency_s": 2.51,
+    "p90_latency_s": 7.45,
+    "mean_cost_usd": 0.00132,
+    "errors": 0,
+    "structured_set_precision": 1.0,
+    "structured_set_recall": 1.0
+  },
+  "headline_markdown": "**Extraction:** 93% field accuracy on 261 labeled fields (14 documents), 3% hallucination rate on absent fields, 100% of quotes verified in the source.  \n**Retrieval:** answer page in top 5 for 75% of questions with late interaction vs 65% with BM25.  \n**Chat:** 100% judged correct or partially correct, 100% correct refusals, median 2.51s per answer.  \n<sub>Judge: gpt-5-mini. Ground truth labeled by the build agent; see eval/results/report.md.</sub>",
+  "extraction_by_field": [
+    {
+      "field": "Contract #",
+      "labels": 14,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Document type",
+      "labels": 14,
+      "accuracy": 0.929,
+      "value_precision": 0.929,
+      "value_recall": 0.929,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Vendor",
+      "labels": 14,
+      "accuracy": 0.929,
+      "value_precision": 1.0,
+      "value_recall": 0.929,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Description",
+      "labels": 14,
+      "accuracy": 0.929,
+      "value_precision": 0.923,
+      "value_recall": 0.923,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Effective date",
+      "labels": 13,
+      "accuracy": 0.769,
+      "value_precision": 0.7,
+      "value_recall": 0.778,
+      "hallucination_rate": 0.25
+    },
+    {
+      "field": "Expiration date",
+      "labels": 13,
+      "accuracy": 0.769,
+      "value_precision": 0.625,
+      "value_recall": 0.833,
+      "hallucination_rate": 0.286
+    },
+    {
+      "field": "Renewal type",
+      "labels": 14,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Renewal options",
+      "labels": 14,
+      "accuracy": 0.929,
+      "value_precision": 0.889,
+      "value_recall": 0.889,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Auto-renewal",
+      "labels": 14,
+      "accuracy": 0.929,
+      "value_precision": 1.0,
+      "value_recall": 0.667,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Renewal notice (days)",
+      "labels": 13,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Award amount (USD)",
+      "labels": 13,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Pricing basis",
+      "labels": 14,
+      "accuracy": 0.857,
+      "value_precision": 1.0,
+      "value_recall": 0.727,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Termination for convenience",
+      "labels": 14,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Termination notice (days)",
+      "labels": 14,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Liability cap",
+      "labels": 13,
+      "accuracy": 0.923,
+      "value_precision": 0.667,
+      "value_recall": 0.667,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Indemnification",
+      "labels": 14,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Insurance requirements",
+      "labels": 14,
+      "accuracy": 0.714,
+      "value_precision": 0.429,
+      "value_recall": 0.375,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Governing law",
+      "labels": 14,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "field": "Assignment / change of control",
+      "labels": 14,
+      "accuracy": 1.0,
+      "value_precision": 1.0,
+      "value_recall": 1.0,
+      "hallucination_rate": 0.0
+    }
+  ],
+  "chat_cases": [
+    {
+      "id": "c01",
+      "type": "structured",
+      "question": "Which contracts have auto-renewal clauses?",
+      "route": "structured",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": null,
+      "source_cited": null,
+      "latency_s": 2.05
+    },
+    {
+      "id": "c02",
+      "type": "structured",
+      "question": "How many renewal or extension letters are in the sample?",
+      "route": "structured",
+      "judge_correctness": null,
+      "judge_grounded": null,
+      "abstained_ok": null,
+      "source_cited": null,
+      "latency_s": 2.12
+    },
+    {
+      "id": "c03",
+      "type": "structured",
+      "question": "Which contracts expire in 2026?",
+      "route": "structured",
+      "judge_correctness": null,
+      "judge_grounded": null,
+      "abstained_ok": null,
+      "source_cited": null,
+      "latency_s": 2.18
+    },
+    {
+      "id": "c04",
+      "type": "clause",
+      "question": "What is the cap on the contractor's liability in the Conference Technologies courtroom AV agreement?",
+      "route": "structured",
+      "judge_correctness": "correct",
+      "judge_grounded": false,
+      "abstained_ok": null,
+      "source_cited": true,
+      "latency_s": 2.5
+    },
+    {
+      "id": "c05",
+      "type": "clause",
+      "question": "How much notice does Motorola need to give to renew its Waukegan site lease, and how long are the renewal terms?",
+      "route": "clause_search",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": null,
+      "source_cited": true,
+      "latency_s": 7.59
+    },
+    {
+      "id": "c06",
+      "type": "clause",
+      "question": "Which state's law governs the GTL inmate phone and video visitation agreement?",
+      "route": "structured",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": null,
+      "source_cited": true,
+      "latency_s": 2.51
+    },
+    {
+      "id": "c07",
+      "type": "clause",
+      "question": "What did Modification 3 to agreement 21164 add, and how much did it cost?",
+      "route": "hybrid",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": null,
+      "source_cited": true,
+      "latency_s": 8.39
+    },
+    {
+      "id": "c08",
+      "type": "clause",
+      "question": "When does the Johnson Controls HVAC cooperative contract now expire?",
+      "route": "structured",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": null,
+      "source_cited": true,
+      "latency_s": 3.5
+    },
+    {
+      "id": "c09",
+      "type": "hybrid",
+      "question": "For agreements the County can terminate for convenience, how much notice is required?",
+      "route": "structured",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": null,
+      "source_cited": null,
+      "latency_s": 2.76
+    },
+    {
+      "id": "c10",
+      "type": "negative",
+      "question": "What is the force majeure clause in the Starbucks coffee supply agreement?",
+      "route": "clause_search",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": true,
+      "source_cited": null,
+      "latency_s": 6.88
+    },
+    {
+      "id": "c11",
+      "type": "negative",
+      "question": "What liability cap applies in the McDonagh Demolition award letter?",
+      "route": "structured",
+      "judge_correctness": "correct",
+      "judge_grounded": false,
+      "abstained_ok": true,
+      "source_cited": null,
+      "latency_s": 2.35
+    },
+    {
+      "id": "c12",
+      "type": "out_of_scope",
+      "question": "What's the weather forecast for Chicago tomorrow?",
+      "route": "out_of_scope",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": true,
+      "source_cited": null,
+      "latency_s": 1.82
+    },
+    {
+      "id": "c13",
+      "type": "clause",
+      "question": "Does the Sympro agreement auto-renew, and what notice is needed to stop it?",
+      "route": "structured",
+      "judge_correctness": "correct",
+      "judge_grounded": true,
+      "abstained_ok": null,
+      "source_cited": true,
+      "latency_s": 2.58
+    }
+  ]
+}
