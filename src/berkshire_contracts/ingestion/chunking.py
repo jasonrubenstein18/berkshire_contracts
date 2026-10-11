@@ -12,8 +12,6 @@ from sqlalchemy import delete
 from berkshire_contracts.config import get_settings
 from berkshire_contracts.db import Chunk, Contract, Page, session_scope
 
-CHUNKER_VERSION = "chunk-v2"
-
 _HEADING = re.compile(
     r"^(?:"
     r"(?i:(?:section|article|exhibit|schedule|attachment|appendix|part)\s+[\dA-Z][\w.\-]*\b.{0,80})"

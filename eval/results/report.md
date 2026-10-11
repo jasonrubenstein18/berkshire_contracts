@@ -1,6 +1,6 @@
 # Evaluation report
 
-Generated 2026-10-10 23:04 UTC · extraction model `gpt-5-mini` · judge `gpt-5-mini` (rubric judge-v2) · retriever `lightonai/answerai-colbert-small-v1`.
+Generated 2026-10-11 21:12 UTC · extraction model `gpt-5-mini` · judge `gpt-5-mini` (rubric judge-v2) · retriever `lightonai/answerai-colbert-small-v1`.
 
 Ground truth was labeled from the source text by the AI assistant that built the pipeline, before extraction results were viewed; it has not yet been independently audited. Labels were not edited after results were seen; rubric judge-v2 added field guidance for descriptions after reviewing judge-v1 disagreements.
 
@@ -69,34 +69,34 @@ Ground truth was labeled from the source text by the AI assistant that built the
 
 | retriever                                   |   page_recall@1 |   page_recall@5 |   page_recall@10 |   file_recall@5 |   MRR@10 |   median_latency_ms |
 |:--------------------------------------------|----------------:|----------------:|-----------------:|----------------:|---------:|--------------------:|
-| BM25 (lexical baseline)                     |            0.35 |            0.65 |             0.65 |            0.85 |    0.479 |                 0.1 |
-| PLAID only (compressed late interaction)    |            0.4  |            0.75 |             0.75 |            0.95 |    0.538 |               207   |
-| Exact MaxSim (brute-force late interaction) |            0.4  |            0.75 |             0.75 |            0.95 |    0.538 |                76.8 |
-| PLAID + exact MaxSim rerank (deployed)      |            0.4  |            0.75 |             0.75 |            0.95 |    0.538 |               199.9 |
+| BM25 (lexical baseline)                     |            0.25 |            0.55 |             0.55 |            0.75 |    0.388 |                 0.3 |
+| PLAID only (compressed late interaction)    |            0.25 |            0.6  |             0.6  |            0.75 |    0.36  |               204.8 |
+| Exact MaxSim (brute-force late interaction) |            0.3  |            0.6  |             0.6  |            0.75 |    0.393 |               203.3 |
+| PLAID + exact MaxSim rerank (deployed)      |            0.3  |            0.6  |             0.6  |            0.75 |    0.393 |               194.4 |
 
-Late interaction (deployed) finds the answer page in the top 5 for 75% of questions versus 65% for BM25 (MRR 0.54 vs 0.48).
+Late interaction (deployed) finds the answer page in the top 5 for 60% of questions versus 55% for BM25 (MRR 0.39 vs 0.39).
 
 Best retriever on page recall@5: PLAID only (compressed late interaction).
 
 ## End-to-end chat
 
 - 13 cases (structured, clause lookup, hybrid, negative and out-of-scope).
-- Routing accuracy 85%; judge-rated correct 100% (correct or partially correct 100%); grounded 82%.
-- Correct abstention on unanswerable questions: 100%; expected source cited: 100%.
-- Median latency 2.51s (p90 7.45s); mean cost $0.0013 per question.
+- Routing accuracy 85%; judge-rated correct 91% (correct or partially correct 91%); grounded 64%.
+- Correct abstention on unanswerable questions: 67%; expected source cited: 83%.
+- Median latency 2.93s (p90 6.85s); mean cost $0.0014 per question.
 
 | id   | type         | route         | route_ok   | judge_correctness   |   judge_grounded |   abstained_ok |   source_cited |   set_recall |   plan_ok |   latency_s |
 |:-----|:-------------|:--------------|:-----------|:--------------------|-----------------:|---------------:|---------------:|-------------:|----------:|------------:|
-| c01  | structured   | structured    | True       | correct             |                1 |            nan |            nan |            1 |       nan |        2.05 |
-| c02  | structured   | structured    | True       | nan                 |              nan |            nan |            nan |          nan |         1 |        2.12 |
-| c03  | structured   | structured    | True       | nan                 |              nan |            nan |            nan |          nan |         1 |        2.18 |
-| c04  | clause       | structured    | False      | correct             |                0 |            nan |              1 |          nan |       nan |        2.5  |
-| c05  | clause       | clause_search | True       | correct             |                1 |            nan |              1 |          nan |       nan |        7.59 |
-| c06  | clause       | structured    | True       | correct             |                1 |            nan |              1 |          nan |       nan |        2.51 |
-| c07  | clause       | hybrid        | True       | correct             |                1 |            nan |              1 |          nan |       nan |        8.39 |
-| c08  | clause       | structured    | True       | correct             |                1 |            nan |              1 |          nan |       nan |        3.5  |
-| c09  | hybrid       | structured    | True       | correct             |                1 |            nan |            nan |          nan |       nan |        2.76 |
-| c10  | negative     | clause_search | True       | correct             |                1 |              1 |            nan |          nan |       nan |        6.88 |
-| c11  | negative     | structured    | False      | correct             |                0 |              1 |            nan |          nan |       nan |        2.35 |
-| c12  | out_of_scope | out_of_scope  | True       | correct             |                1 |              1 |            nan |          nan |       nan |        1.82 |
-| c13  | clause       | structured    | True       | correct             |                1 |            nan |              1 |          nan |       nan |        2.58 |
+| c01  | structured   | structured    | True       | correct             |                1 |            nan |            nan |            1 |       nan |        3.77 |
+| c02  | structured   | structured    | True       | nan                 |              nan |            nan |            nan |          nan |         1 |        1.96 |
+| c03  | structured   | structured    | True       | nan                 |              nan |            nan |            nan |          nan |         1 |        2.89 |
+| c04  | clause       | structured    | False      | correct             |                1 |            nan |              1 |          nan |       nan |        2.93 |
+| c05  | clause       | clause_search | True       | correct             |                1 |            nan |              1 |          nan |       nan |        6.76 |
+| c06  | clause       | structured    | True       | correct             |                1 |            nan |              1 |          nan |       nan |        2.82 |
+| c07  | clause       | hybrid        | True       | correct             |                1 |            nan |              1 |          nan |       nan |        6.87 |
+| c08  | clause       | clause_search | True       | incorrect           |                0 |            nan |              0 |          nan |       nan |       13.08 |
+| c09  | hybrid       | structured    | True       | correct             |                1 |            nan |            nan |          nan |       nan |        3.38 |
+| c10  | negative     | clause_search | True       | correct             |                0 |              1 |            nan |          nan |       nan |        6.37 |
+| c11  | negative     | structured    | False      | correct             |                0 |              0 |            nan |          nan |       nan |        2.51 |
+| c12  | out_of_scope | out_of_scope  | True       | correct             |                0 |              1 |            nan |          nan |       nan |        2.72 |
+| c13  | clause       | structured    | True       | correct             |                1 |            nan |              1 |          nan |       nan |        2.49 |

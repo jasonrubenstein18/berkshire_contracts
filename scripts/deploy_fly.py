@@ -1,6 +1,6 @@
 """Deploy the app to Fly.io as berkshire-contracts. Does not run `fly launch`.
 
-Stages code, a checkpoint of the database, the index, the sample PDFs, exports and evaluation
+Stages code, a checkpoint of the database, the index, the staged PDFs, exports and evaluation
 results. Never stages .env, contracts.zip, the brief, or presentation/. Secrets are sent to Fly
 on stdin and are never printed. MCP_TOKEN is written to .env when it is missing.
 
@@ -37,7 +37,7 @@ COPY_FILES = (
     "fly.toml",
     ".dockerignore",
 )
-DATA_DIRS = ("index", "sample_pdfs", "exports")
+DATA_DIRS = ("index", "pdfs", "exports")
 EVAL_DIRS = ("ground_truth", "results")
 
 

@@ -1,7 +1,7 @@
 """Build the zip a reviewer needs to run the app locally, without rebuilding anything.
 
-Packs the code, tests, lockfile and README with the prebuilt SQLite database, the late-interaction index, the 100
-sampled PDFs, exports and evaluation results. Never packs .env, contracts.zip, the brief, the virtualenv, the LLM
+Packs the code, tests, lockfile and README with the prebuilt SQLite database, the late-interaction index, the
+staged PDFs, exports and evaluation results. Never packs .env, contracts.zip, the brief, the virtualenv, the LLM
 cache or OCR scratch files, and refuses to write the zip if any packed file contains a secret set in .env.
 
     uv run python scripts/package_submission.py
@@ -23,7 +23,7 @@ from berkshire_contracts.db import snapshot_db  # noqa: E402
 
 FILES = ("app.py", "pyproject.toml", "uv.lock", "README.md", ".env.example", ".gitignore")
 CODE_DIRS = ("src/berkshire_contracts", "tests", "scripts")
-DATA_DIRS = ("index", "sample_pdfs", "exports")
+DATA_DIRS = ("index", "pdfs", "exports")
 EVAL_DIRS = ("ground_truth", "results")
 SKIP_PARTS = {"__pycache__", ".DS_Store"}
 
@@ -57,7 +57,7 @@ def _is_forbidden(name: str) -> bool:
 
 def _secret_values() -> list[bytes]:
     settings = get_settings()
-    secrets = (settings.openai_api_key, settings.hf_token, settings.app_password)
+    secrets = (settings.openai_api_key, settings.app_password)
     values = [s.get_secret_value().strip() for s in secrets if s is not None]
     return [v.encode() for v in values if len(v) >= 8]
 

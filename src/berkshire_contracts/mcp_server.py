@@ -69,7 +69,7 @@ def require_bearer(app: ASGIApp, token: str) -> ASGIApp:
 
 
 def ask_contracts(question: str) -> str:
-    """Answer a question about the Lake County contract sample.
+    """Answer a question about these contracts.
 
     Use this for any question about these contracts: which ones match a condition, what a
     named contract says, dates, amounts, renewal, termination, or liability. The reply cites

@@ -31,7 +31,7 @@ log = logging.getLogger(__name__)
 
 CHAT_PURPOSES = ("route", "answer")
 OUT_OF_SCOPE_MESSAGE = (
-    "I can only answer questions about the Lake County contract sample: renewal terms, expirations, award "
+    "I can only answer questions about these contracts: renewal terms, expirations, award "
     "amounts, termination and liability clauses, insurance, vendors, and so on. Try “Which contracts "
     "auto-renew?” or “What does the Motorola lease say about renewal notice?”"
 )
@@ -213,7 +213,7 @@ class ContractAssistant:
                 assert structured is not None
                 if structured.matched == 0:
                     response.answer = (
-                        f"None of the documents in the sample match ({plan.explanation.rstrip('.')}), so there is "
+                        f"None of these contracts match ({plan.explanation.rstrip('.')}), so there is "
                         "no clause to quote. Browse vendors and contract numbers in the Contract explorer tab."
                     )
                     response.insufficient_evidence = True

@@ -73,7 +73,7 @@ def kpis(df: pd.DataFrame | None = None) -> dict[str, str]:
         )
     expiring = df[(df["expiration_date"] >= today) & (df["expiration_date"] <= horizon)]
     return {
-        "Files in sample": f"{files}",
+        "Files": f"{files}",
         "Unique documents": f"{len(df)}",
         "Contract families": f"{df['family_id'].nunique()}",
         "Stated award value": money(dedupe_awards(df)["award_amount_usd"].sum()),
@@ -363,7 +363,7 @@ def _highlight_rects(page: pymupdf.Page, text: str | None) -> list[pymupdf.Rect]
 def render_page(
     filename: str, page_no: int, highlight: str | None = None, dpi: int = 110
 ) -> Image.Image | None:
-    path = get_settings().sample_pdf_dir / filename
+    path = get_settings().pdf_dir / filename
     if not path.exists():
         return None
     with pymupdf.open(path) as doc:
@@ -399,7 +399,7 @@ def _with_quote_banner(image: Image.Image, quote: str) -> Image.Image:
 
 
 def pdf_path(filename: str) -> str | None:
-    path = get_settings().sample_pdf_dir / filename
+    path = get_settings().pdf_dir / filename
     return str(path) if path.exists() else None
 
 
@@ -412,7 +412,7 @@ def quality_tables() -> dict[str, pd.DataFrame]:
     unique = contracts[contracts["duplicate_of"].isna()]
     parse = pd.DataFrame(
         [
-            {"Metric": "Files in sample", "Value": len(contracts)},
+            {"Metric": "Files", "Value": len(contracts)},
             {"Metric": "Unique documents (exact duplicates indexed once)", "Value": len(unique)},
             {"Metric": "Pages processed", "Value": len(pages)},
             {"Metric": "Pages read with OCR", "Value": int((pages["method"] == "ocr").sum())},

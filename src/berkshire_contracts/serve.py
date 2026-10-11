@@ -43,7 +43,7 @@ def _start_gradio() -> None:
         theme=gradio_app.THEME,
         css=gradio_app.CSS,
         allowed_paths=[
-            str(settings.sample_pdf_dir),
+            str(settings.pdf_dir),
             str(settings.exports_dir),
             str(settings.db_path),
         ],

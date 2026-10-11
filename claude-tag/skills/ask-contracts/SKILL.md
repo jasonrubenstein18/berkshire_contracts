@@ -1,6 +1,6 @@
 ---
 name: ask-contracts
-description: Answer questions about the Lake County contract sample by calling ask_contracts.
+description: Answer questions about these contracts by calling ask_contracts.
 ---
 
 When someone asks about these contracts, call the `ask_contracts` tool. That includes counts, lists, dates, amounts, renewal, termination, liability, and what a named contract says.

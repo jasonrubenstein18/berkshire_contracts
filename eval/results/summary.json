@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-10-10 23:04 UTC",
+    "generated_at": "2026-10-11 21:12 UTC",
     "extraction_model": "gpt-5-mini",
     "judge_model": "gpt-5-mini",
     "judge_prompt_version": "judge-v2",
@@ -336,58 +336,58 @@
   "retrieval": [
     {
       "retriever": "BM25 (lexical baseline)",
-      "page_recall@1": 0.35,
-      "page_recall@5": 0.65,
-      "page_recall@10": 0.65,
-      "file_recall@5": 0.85,
-      "MRR@10": 0.479,
-      "median_latency_ms": 0.1
+      "page_recall@1": 0.25,
+      "page_recall@5": 0.55,
+      "page_recall@10": 0.55,
+      "file_recall@5": 0.75,
+      "MRR@10": 0.388,
+      "median_latency_ms": 0.3
     },
     {
       "retriever": "PLAID only (compressed late interaction)",
-      "page_recall@1": 0.4,
-      "page_recall@5": 0.75,
-      "page_recall@10": 0.75,
-      "file_recall@5": 0.95,
-      "MRR@10": 0.538,
-      "median_latency_ms": 207.0
+      "page_recall@1": 0.25,
+      "page_recall@5": 0.6,
+      "page_recall@10": 0.6,
+      "file_recall@5": 0.75,
+      "MRR@10": 0.36,
+      "median_latency_ms": 204.8
     },
     {
       "retriever": "Exact MaxSim (brute-force late interaction)",
-      "page_recall@1": 0.4,
-      "page_recall@5": 0.75,
-      "page_recall@10": 0.75,
-      "file_recall@5": 0.95,
-      "MRR@10": 0.538,
-      "median_latency_ms": 76.8
+      "page_recall@1": 0.3,
+      "page_recall@5": 0.6,
+      "page_recall@10": 0.6,
+      "file_recall@5": 0.75,
+      "MRR@10": 0.393,
+      "median_latency_ms": 203.3
     },
     {
       "retriever": "PLAID + exact MaxSim rerank (deployed)",
-      "page_recall@1": 0.4,
-      "page_recall@5": 0.75,
-      "page_recall@10": 0.75,
-      "file_recall@5": 0.95,
-      "MRR@10": 0.538,
-      "median_latency_ms": 199.9
+      "page_recall@1": 0.3,
+      "page_recall@5": 0.6,
+      "page_recall@10": 0.6,
+      "file_recall@5": 0.75,
+      "MRR@10": 0.393,
+      "median_latency_ms": 194.4
     }
   ],
   "chat": {
     "cases": 13,
     "route_accuracy": 0.846,
-    "judge_correct": 1.0,
-    "judge_correct_or_partial": 1.0,
-    "judge_grounded": 0.818,
-    "abstention_correct": 1.0,
-    "source_cited": 1.0,
+    "judge_correct": 0.909,
+    "judge_correct_or_partial": 0.909,
+    "judge_grounded": 0.636,
+    "abstention_correct": 0.667,
+    "source_cited": 0.833,
     "plan_correct": 1.0,
-    "median_latency_s": 2.51,
-    "p90_latency_s": 7.45,
-    "mean_cost_usd": 0.00132,
+    "median_latency_s": 2.93,
+    "p90_latency_s": 6.85,
+    "mean_cost_usd": 0.00141,
     "errors": 0,
     "structured_set_precision": 1.0,
     "structured_set_recall": 1.0
   },
-  "headline_markdown": "**Extraction:** 93% field accuracy on 261 labeled fields (14 documents), 3% hallucination rate on absent fields, 100% of quotes verified in the source.  \n**Retrieval:** answer page in top 5 for 75% of questions with late interaction vs 65% with BM25.  \n**Chat:** 100% judged correct or partially correct, 100% correct refusals, median 2.51s per answer.  \n<sub>Judge: gpt-5-mini. Ground truth labeled by the build agent; see eval/results/report.md.</sub>",
+  "headline_markdown": "**Extraction:** 93% field accuracy on 261 labeled fields (14 documents), 3% hallucination rate on absent fields, 100% of quotes verified in the source.  \n**Retrieval:** answer page in top 5 for 60% of questions with late interaction vs 55% with BM25.  \n**Chat:** 91% judged correct or partially correct, 67% correct refusals, median 2.93s per answer.  \n<sub>Judge: gpt-5-mini. Ground truth labeled by the build agent; see eval/results/report.md.</sub>",
   "extraction_by_field": [
     {
       "field": "Contract #",
@@ -552,7 +552,7 @@
       "judge_grounded": true,
       "abstained_ok": null,
       "source_cited": null,
-      "latency_s": 2.05
+      "latency_s": 3.77
     },
     {
       "id": "c02",
@@ -563,7 +563,7 @@
       "judge_grounded": null,
       "abstained_ok": null,
       "source_cited": null,
-      "latency_s": 2.12
+      "latency_s": 1.96
     },
     {
       "id": "c03",
@@ -574,7 +574,7 @@
       "judge_grounded": null,
       "abstained_ok": null,
       "source_cited": null,
-      "latency_s": 2.18
+      "latency_s": 2.89
     },
     {
       "id": "c04",
@@ -582,10 +582,10 @@
       "question": "What is the cap on the contractor's liability in the Conference Technologies courtroom AV agreement?",
       "route": "structured",
       "judge_correctness": "correct",
-      "judge_grounded": false,
+      "judge_grounded": true,
       "abstained_ok": null,
       "source_cited": true,
-      "latency_s": 2.5
+      "latency_s": 2.93
     },
     {
       "id": "c05",
@@ -596,7 +596,7 @@
       "judge_grounded": true,
       "abstained_ok": null,
       "source_cited": true,
-      "latency_s": 7.59
+      "latency_s": 6.76
     },
     {
       "id": "c06",
@@ -607,7 +607,7 @@
       "judge_grounded": true,
       "abstained_ok": null,
       "source_cited": true,
-      "latency_s": 2.51
+      "latency_s": 2.82
     },
     {
       "id": "c07",
@@ -618,18 +618,18 @@
       "judge_grounded": true,
       "abstained_ok": null,
       "source_cited": true,
-      "latency_s": 8.39
+      "latency_s": 6.87
     },
     {
       "id": "c08",
       "type": "clause",
       "question": "When does the Johnson Controls HVAC cooperative contract now expire?",
-      "route": "structured",
-      "judge_correctness": "correct",
-      "judge_grounded": true,
+      "route": "clause_search",
+      "judge_correctness": "incorrect",
+      "judge_grounded": false,
       "abstained_ok": null,
-      "source_cited": true,
-      "latency_s": 3.5
+      "source_cited": false,
+      "latency_s": 13.08
     },
     {
       "id": "c09",
@@ -640,7 +640,7 @@
       "judge_grounded": true,
       "abstained_ok": null,
       "source_cited": null,
-      "latency_s": 2.76
+      "latency_s": 3.38
     },
     {
       "id": "c10",
@@ -648,10 +648,10 @@
       "question": "What is the force majeure clause in the Starbucks coffee supply agreement?",
       "route": "clause_search",
       "judge_correctness": "correct",
-      "judge_grounded": true,
+      "judge_grounded": false,
       "abstained_ok": true,
       "source_cited": null,
-      "latency_s": 6.88
+      "latency_s": 6.37
     },
     {
       "id": "c11",
@@ -660,9 +660,9 @@
       "route": "structured",
       "judge_correctness": "correct",
       "judge_grounded": false,
-      "abstained_ok": true,
+      "abstained_ok": false,
       "source_cited": null,
-      "latency_s": 2.35
+      "latency_s": 2.51
     },
     {
       "id": "c12",
@@ -670,10 +670,10 @@
       "question": "What's the weather forecast for Chicago tomorrow?",
       "route": "out_of_scope",
       "judge_correctness": "correct",
-      "judge_grounded": true,
+      "judge_grounded": false,
       "abstained_ok": true,
       "source_cited": null,
-      "latency_s": 1.82
+      "latency_s": 2.72
     },
     {
       "id": "c13",
@@ -684,7 +684,7 @@
       "judge_grounded": true,
       "abstained_ok": null,
       "source_cited": true,
-      "latency_s": 2.58
+      "latency_s": 2.49
     }
   ]
 }

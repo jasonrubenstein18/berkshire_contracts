@@ -1,4 +1,4 @@
-"""Turn sampled PDFs into page text: native text layer first, Tesseract OCR for image-only or garbled pages."""
+"""Turn staged PDFs into page text: native text layer first, Tesseract OCR for image-only or garbled pages."""
 
 from __future__ import annotations
 
@@ -8,7 +8,6 @@ import unicodedata
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass, field
-from pathlib import Path
 
 from rich.progress import Progress
 from sqlalchemy import delete
@@ -18,7 +17,6 @@ from berkshire_contracts.db import Chunk, Contract, CorpusFile, Page, init_db, s
 from berkshire_contracts.ingestion.ocr import OcrResult, ocr_pdf_page
 from berkshire_contracts.ingestion.pdf import PdfOpenError, is_garbled, open_pdf
 
-PARSER_VERSION = "parse-v1"
 LOW_OCR_CONFIDENCE = 55.0
 
 _PAGE_NUMBER_LINE = re.compile(r"^\s*(page\s+)?\d+\s*(of\s+\d+)?\s*$", re.IGNORECASE)
@@ -103,7 +101,7 @@ def summarize(doc: ParsedDocument) -> dict:
     }
 
 
-def parse_sample(force: bool = False, workers: int | None = None) -> dict[str, int]:
+def parse_documents(force: bool = False, workers: int | None = None) -> dict[str, int]:
     settings = get_settings()
     init_db()
     tessdata = str(settings.tessdata_dir) + "/"
@@ -113,19 +111,17 @@ def parse_sample(force: bool = False, workers: int | None = None) -> dict[str, i
         raise RuntimeError("Tesseract language data missing; run `contracts setup-ocr`")
 
     with session_scope() as s:
-        sampled = (
-            s.query(CorpusFile).filter(CorpusFile.in_sample.is_(True)).order_by(CorpusFile.filename).all()
-        )
+        corpus = s.query(CorpusFile).order_by(CorpusFile.filename).all()
         done = {
             c.file_id
             for c in s.query(Contract).filter(
                 Contract.parse_status.in_(["ok", "partial", "no_text", "failed"])
             )
         }
-        sampled = [(cf.file_id, cf.filename, cf.sha256, cf.family_id, cf.page_count) for cf in sampled]
+        corpus = [(cf.file_id, cf.filename, cf.sha256, cf.family_id, cf.page_count) for cf in corpus]
 
     canonical: dict[str, str] = {}
-    for file_id, _filename, sha, _fam, _pc in sorted(sampled, key=lambda r: (len(r[1]), r[1])):
+    for file_id, _filename, sha, _fam, _pc in sorted(corpus, key=lambda r: (len(r[1]), r[1])):
         canonical.setdefault(sha, file_id)
 
     documents: dict[str, ParsedDocument] = {}
@@ -133,7 +129,7 @@ def parse_sample(force: bool = False, workers: int | None = None) -> dict[str, i
     path_to_id: dict[str, str] = {}
 
     with session_scope() as s:
-        for file_id, filename, sha, family_id, _page_count in sampled:
+        for file_id, filename, sha, family_id, _page_count in corpus:
             contract = s.get(Contract, file_id) or Contract(file_id=file_id, filename=filename)
             contract.family_id = family_id
             dup_of = canonical[sha] if canonical[sha] != file_id else None
@@ -141,7 +137,7 @@ def parse_sample(force: bool = False, workers: int | None = None) -> dict[str, i
             s.add(contract)
             if (file_id in done and not force) or dup_of:
                 continue
-            pdf_path = settings.sample_pdf_dir / filename
+            pdf_path = settings.pdf_dir / filename
             doc = ParsedDocument(file_id=file_id, filename=filename)
             documents[file_id] = doc
             try:
@@ -233,13 +229,3 @@ def parse_sample(force: bool = False, workers: int | None = None) -> dict[str, i
             contract.parse_notes = f"exact duplicate of {source.filename}; content indexed once"
             counts["duplicate"] += 1
     return dict(counts)
-
-
-def page_texts(file_id: str) -> list[tuple[int, str]]:
-    with session_scope() as s:
-        rows = s.query(Page).filter(Page.file_id == file_id).order_by(Page.page_no).all()
-        return [(p.page_no, p.text) for p in rows]
-
-
-def sample_pdf_path(filename: str) -> Path:
-    return get_settings().sample_pdf_dir / filename

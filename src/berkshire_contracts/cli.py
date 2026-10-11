@@ -67,7 +67,7 @@ def setup_ocr() -> None:
 
 @app.command()
 def inventory() -> None:
-    """Profile every PDF in contracts.zip (sampling frame, duplicates, encryption, text layer)."""
+    """Profile every PDF in contracts.zip (duplicates, encryption, text layer, contract family)."""
     from berkshire_contracts.ingestion.inventory import run_inventory
 
     frame = _run_step("inventory", run_inventory)
@@ -78,20 +78,19 @@ def inventory() -> None:
 
 
 @app.command()
-def sample() -> None:
-    """Draw the deterministic stratified sample and stage its PDFs under data/sample_pdfs."""
-    from berkshire_contracts.ingestion.sampling import run_sampling
+def stage() -> None:
+    """Copy every PDF out of contracts.zip into data/pdfs, stripping upload wrappers."""
+    from berkshire_contracts.ingestion.staging import run_stage
 
-    frame = _run_step("sample", run_sampling)
-    console.print(frame.sample_reason.str.split(":").str[0].value_counts().to_string())
+    _run_step("stage", run_stage)
 
 
 @app.command()
 def parse(force: bool = typer.Option(False, help="Re-parse documents that already have pages.")) -> None:
     """Extract page text with PyMuPDF and OCR image-only pages with Tesseract."""
-    from berkshire_contracts.ingestion.parsing import parse_sample
+    from berkshire_contracts.ingestion.parsing import parse_documents
 
-    _run_step("parse", lambda: parse_sample(force=force))
+    _run_step("parse", lambda: parse_documents(force=force))
 
 
 @app.command()
@@ -173,9 +172,7 @@ def status() -> None:
     with session_scope() as s:
         table = Table("metric", "value")
         table.add_row("corpus files", str(s.query(CorpusFile).count()))
-        table.add_row(
-            "sampled files", str(s.query(CorpusFile).filter(CorpusFile.in_sample.is_(True)).count())
-        )
+        table.add_row("contract rows", str(s.query(Contract).count()))
         for status_value, n in s.query(Contract.parse_status, func.count()).group_by(Contract.parse_status):
             table.add_row(f"parse: {status_value}", str(n))
         for status_value, n in s.query(Contract.extraction_status, func.count()).group_by(

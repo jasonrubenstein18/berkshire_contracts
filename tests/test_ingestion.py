@@ -1,11 +1,9 @@
-import pandas as pd
 import pymupdf
 import pytest
 
 from berkshire_contracts.ingestion.chunking import chunk_page, heading_of
 from berkshire_contracts.ingestion.filenames import contract_numbers, heuristic_doc_type, parse_filename
 from berkshire_contracts.ingestion.pdf import PdfOpenError, open_pdf, strip_wrapper
-from berkshire_contracts.ingestion.sampling import allocate, systematic_pick
 
 
 def word_count(texts):
@@ -54,24 +52,6 @@ def test_parse_filename_family_and_resolution():
 )
 def test_heuristic_doc_type(filename, doc_type):
     assert heuristic_doc_type(filename) == doc_type
-
-
-def test_allocate_is_proportional_with_floor_of_one():
-    alloc = allocate({"agreement": 60, "renewal": 30, "lease": 1}, 10)
-    assert sum(alloc.values()) == 10
-    assert alloc["lease"] == 1
-    assert alloc["agreement"] > alloc["renewal"]
-    assert allocate({"a": 2, "b": 2}, 10) == {"a": 2, "b": 2}
-    assert allocate({"a": 0}, 5) == {"a": 0}
-
-
-def test_systematic_pick_is_deterministic():
-    members = pd.DataFrame(
-        {"file_id": [f"f{i}" for i in range(20)], "page_count": range(20), "native_chars": 0, "filename": "x"}
-    )
-    first = systematic_pick(members, 5, "seed", "stratum")
-    assert first == systematic_pick(members, 5, "seed", "stratum")
-    assert len(set(first)) == 5
 
 
 def test_strip_wrapper_removes_upload_envelope():

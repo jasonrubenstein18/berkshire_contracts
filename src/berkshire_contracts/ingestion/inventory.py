@@ -127,14 +127,9 @@ def run_inventory(workers: int | None = None) -> pd.DataFrame:
 
     init_db()
     with session_scope() as s:
-        existing = {cf.file_id: cf for cf in s.query(CorpusFile).all()}
-        keep_sample = {
-            fid: (cf.in_sample, cf.sample_stratum, cf.sample_reason) for fid, cf in existing.items()
-        }
         s.execute(delete(CorpusFile))
         for rec in records:
-            in_sample, stratum, reason = keep_sample.get(rec["file_id"], (False, None, None))
-            s.add(CorpusFile(**rec, in_sample=in_sample, sample_stratum=stratum, sample_reason=reason))
+            s.add(CorpusFile(**rec))
 
     frame = pd.DataFrame(records).sort_values("filename")
     frame.to_csv(settings.processed_dir / "inventory.csv", index=False)

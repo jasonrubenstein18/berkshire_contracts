@@ -1,4 +1,4 @@
-"""SQLite schema. `contracts` is the deliverable table: one row per contract file in the processed sample."""
+"""SQLite schema. `contracts` is the deliverable table: one row per contract file."""
 
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ class Base(DeclarativeBase):
 
 
 class CorpusFile(Base):
-    """Every PDF in the archive (the sampling frame), with cheap metadata gathered during inventory."""
+    """Every PDF in the archive, with cheap metadata gathered during inventory."""
 
     __tablename__ = "corpus_files"
 
@@ -61,9 +61,6 @@ class CorpusFile(Base):
     sub_contract_id: Mapped[str | None] = mapped_column(String(24))
     related_contracts: Mapped[list[str]] = mapped_column(JSON, default=list)
     duplicate_group: Mapped[str | None] = mapped_column(String(16))
-    in_sample: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    sample_stratum: Mapped[str | None] = mapped_column(String(64))
-    sample_reason: Mapped[str | None] = mapped_column(String(64))
 
 
 class Contract(Base):

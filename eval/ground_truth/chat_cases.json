@@ -5,8 +5,8 @@
     {
       "id": "c01", "type": "structured", "question": "Which contracts have auto-renewal clauses?",
       "expected_routes": ["structured", "hybrid"],
-      "expected_file_ids": ["dea4a934f7b5", "f5e2758b71e7"],
-      "reference": "Two documents: the Tyler Technologies EnerGov agreement 14234 (the hosting term renews automatically each year) and the Emphasys Sympro agreement 24213 (renews for one-year terms unless either party gives 60 days' notice)."
+      "expected_file_ids": ["dea4a934f7b5", "7e04f03b3d6b", "cee0dfec2d6d", "20fd2a28bab3", "6c4dcbc8e8c6", "84c3ea65ac55", "fa941bc78078", "f5e2758b71e7"],
+      "reference": "Eight documents: the Tyler Technologies EnerGov agreement 14234 (the hosting term renews automatically each year); the HOV Services agreement 19028 and its modification (automatic one-year renewals, not to exceed three additional years); the Tyler Technologies CAD and Mobile agreement (renews automatically for one-year terms unless terminated with 30 days' written notice); the Tyler Technologies NWPS agreement (automatic one-year renewals); the WellSky master license and service agreement 23075 (automatic consecutive one-year renewals, 90 days' notice to not renew); the FacilityForce agreement (successive one-year terms, 90 days' notice of non-renewal); and the Emphasys Sympro agreement 24213 (renews for one-year terms unless either party gives 60 days' notice)."
     },
     {
       "id": "c02", "type": "structured", "question": "How many renewal or extension letters are in the sample?",
@@ -59,7 +59,7 @@
       "id": "c10", "type": "negative", "question": "What is the force majeure clause in the Starbucks coffee supply agreement?",
       "expected_routes": ["clause_search", "hybrid", "out_of_scope"],
       "expect_abstain": true,
-      "reference": "There is no Starbucks agreement in the sample; the assistant should say it cannot find one rather than describe another contract's force majeure clause as Starbucks'."
+      "reference": "There is no Starbucks agreement in these contracts; the assistant should say it cannot find one rather than describe another contract's force majeure clause as Starbucks'."
     },
     {
       "id": "c11", "type": "negative", "question": "What liability cap applies in the McDonagh Demolition award letter?",

@@ -1,81 +1,81 @@
 mode,query_id,query,first_relevant_rank,hit@1,hit@5,hit@10,file_hit@5,rr,latency_ms,top_result
-bm25,r01,Which contract caps the contractor's total liability at twenty million dollars?,,False,False,False,False,0.0,7.3,2024_03_07_Contract_21022_Modification_2_EXECUTED.pdf p.1
-bm25,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",1.0,True,True,True,True,1.0,0.4,16249_Motorola_Lease__Waukegan.pdf p.1
-bm25,r03,Where do both parties give up claims for lost profits and consequential damages?,2.0,False,True,True,True,0.5,0.2,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
-bm25,r04,Can the radio tower tenant walk away from its site lease early without a reason?,,False,False,False,True,0.0,0.2,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.5
-bm25,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,1.0,True,True,True,True,1.0,0.2,21164_Fully_Executed_Agreement.pdf p.4
-bm25,r06,How much did the juvenile justice complex design contract go up in its third modification?,2.0,False,True,True,True,0.5,0.2,21144_Contract_Modification_1_EXECUTED_6_29_23.pdf p.1
-bm25,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,2.0,False,True,True,True,0.5,0.1,18041_Award_Information_Johnson_Controls.pdf p.1
-bm25,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,0.1,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
-bm25,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,,False,False,False,False,0.0,0.1,23173_2_Fully_Executed_Agreement_with_Exhibits.pdf p.61
-bm25,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,0.4,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
-bm25,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,0.1,16069_Renewal_Letter_20_21.pdf p.1
-bm25,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,True,0.0,0.1,2025_06_11_Contract_25158_EXECUTED.pdf p.1
-bm25,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,0.1,23173_1_Task_Order_A__Fully_Executed.pdf p.3
-bm25,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,3.0,False,True,True,True,0.3333333333333333,0.1,2025_08_14_REVISED_Bid_Doc__Printing_and_Mailing_of_Real_Estate_Tax_Bills.pdf p.5
-bm25,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,0.1,141301_CDW_Signed.pdf p.2
-bm25,r16,Which vendor's master service agreement is governed by Virginia law?,1.0,True,True,True,True,1.0,0.1,21019_Agreement__Final_Executed1.pdf p.403
-bm25,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,0.1,21019_Agreement__Final_Executed1.pdf p.101
-bm25,r18,What commission does the Sheriff get on premium inmate tablet usage?,2.0,False,True,True,True,0.5,0.1,21019_Agreement__Final_Executed1.pdf p.206
-bm25,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,1.0,True,True,True,True,1.0,0.1,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf p.1
-bm25,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,4.0,False,True,True,True,0.25,0.1,16069_Agreement_fully_executed.pdf p.4
-plaid,r01,Which contract caps the contractor's total liability at twenty million dollars?,1.0,True,True,True,True,1.0,395.3,16069_Agreement_fully_executed.pdf p.7
-plaid,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",1.0,True,True,True,True,1.0,263.3,16249_Motorola_Lease__Waukegan.pdf p.1
-plaid,r03,Where do both parties give up claims for lost profits and consequential damages?,3.0,False,True,True,True,0.3333333333333333,361.2,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
-plaid,r04,Can the radio tower tenant walk away from its site lease early without a reason?,2.0,False,True,True,True,0.5,381.4,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.3
-plaid,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,2.0,False,True,True,True,0.5,206.5,21119_Fully_Executed_Agreement.pdf p.8
-plaid,r06,How much did the juvenile justice complex design contract go up in its third modification?,1.0,True,True,True,True,1.0,216.0,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf p.1
-plaid,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,1.0,True,True,True,True,1.0,198.7,070121_JHN_Johnson_Controls_Contract_Extension.pdf p.1
-plaid,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,207.5,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
-plaid,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,3.0,False,True,True,True,0.3333333333333333,196.3,23173_1_Task_Order_D__Fully_Executed.pdf p.18
-plaid,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,194.7,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
-plaid,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,187.3,16069_Renewal_Letter_20_21.pdf p.1
-plaid,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,True,0.0,190.0,11_20_2023_SAG_Lake_County_Agreement.pdf p.8
-plaid,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,197.7,23173_1_Task_Order_A__Fully_Executed.pdf p.3
-plaid,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,2.0,False,True,True,True,0.5,197.1,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.2
-plaid,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,210.6,141301_CDW_Signed.pdf p.2
-plaid,r16,Which vendor's master service agreement is governed by Virginia law?,,False,False,False,True,0.0,205.2,21019_Agreement__Final_Executed1.pdf p.297
-plaid,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,204.4,21019_Agreement__Final_Executed1.pdf p.25
-plaid,r18,What commission does the Sheriff get on premium inmate tablet usage?,4.0,False,True,True,True,0.25,254.6,21019_Agreement__Final_Executed1.pdf p.28
-plaid,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,1.0,True,True,True,True,1.0,243.6,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf p.1
-plaid,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,3.0,False,True,True,True,0.3333333333333333,210.9,21164_Fully_Executed_Agreement.pdf p.4
-exact,r01,Which contract caps the contractor's total liability at twenty million dollars?,1.0,True,True,True,True,1.0,115.7,16069_Agreement_fully_executed.pdf p.7
-exact,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",1.0,True,True,True,True,1.0,77.1,16249_Motorola_Lease__Waukegan.pdf p.1
-exact,r03,Where do both parties give up claims for lost profits and consequential damages?,3.0,False,True,True,True,0.3333333333333333,76.3,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
-exact,r04,Can the radio tower tenant walk away from its site lease early without a reason?,2.0,False,True,True,True,0.5,76.2,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.3
-exact,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,2.0,False,True,True,True,0.5,75.3,21119_Fully_Executed_Agreement.pdf p.8
-exact,r06,How much did the juvenile justice complex design contract go up in its third modification?,1.0,True,True,True,True,1.0,76.7,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf p.1
-exact,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,1.0,True,True,True,True,1.0,76.2,070121_JHN_Johnson_Controls_Contract_Extension.pdf p.1
-exact,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,76.8,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
-exact,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,3.0,False,True,True,True,0.3333333333333333,76.5,23173_1_Task_Order_D__Fully_Executed.pdf p.18
-exact,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,78.3,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
-exact,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,76.2,16069_Renewal_Letter_20_21.pdf p.1
-exact,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,True,0.0,76.6,11_20_2023_SAG_Lake_County_Agreement.pdf p.8
-exact,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,76.6,23173_1_Task_Order_A__Fully_Executed.pdf p.3
-exact,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,2.0,False,True,True,True,0.5,75.6,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.2
-exact,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,79.6,141301_CDW_Signed.pdf p.2
-exact,r16,Which vendor's master service agreement is governed by Virginia law?,,False,False,False,True,0.0,78.4,21019_Agreement__Final_Executed1.pdf p.297
-exact,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,80.3,21019_Agreement__Final_Executed1.pdf p.25
-exact,r18,What commission does the Sheriff get on premium inmate tablet usage?,4.0,False,True,True,True,0.25,138.3,21019_Agreement__Final_Executed1.pdf p.46
-exact,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,1.0,True,True,True,True,1.0,105.6,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf p.1
-exact,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,3.0,False,True,True,True,0.3333333333333333,93.4,21164_Fully_Executed_Agreement.pdf p.4
-plaid_rerank,r01,Which contract caps the contractor's total liability at twenty million dollars?,1.0,True,True,True,True,1.0,222.5,16069_Agreement_fully_executed.pdf p.7
-plaid_rerank,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",1.0,True,True,True,True,1.0,280.1,16249_Motorola_Lease__Waukegan.pdf p.1
-plaid_rerank,r03,Where do both parties give up claims for lost profits and consequential damages?,3.0,False,True,True,True,0.3333333333333333,322.8,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
-plaid_rerank,r04,Can the radio tower tenant walk away from its site lease early without a reason?,2.0,False,True,True,True,0.5,328.7,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.3
-plaid_rerank,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,2.0,False,True,True,True,0.5,216.4,21119_Fully_Executed_Agreement.pdf p.8
-plaid_rerank,r06,How much did the juvenile justice complex design contract go up in its third modification?,1.0,True,True,True,True,1.0,198.0,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf p.1
-plaid_rerank,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,1.0,True,True,True,True,1.0,196.7,070121_JHN_Johnson_Controls_Contract_Extension.pdf p.1
-plaid_rerank,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,200.9,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
-plaid_rerank,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,3.0,False,True,True,True,0.3333333333333333,194.2,23173_1_Task_Order_D__Fully_Executed.pdf p.18
-plaid_rerank,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,196.9,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
-plaid_rerank,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,230.7,16069_Renewal_Letter_20_21.pdf p.1
-plaid_rerank,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,True,0.0,196.5,11_20_2023_SAG_Lake_County_Agreement.pdf p.8
-plaid_rerank,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,227.0,23173_1_Task_Order_A__Fully_Executed.pdf p.3
-plaid_rerank,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,2.0,False,True,True,True,0.5,196.3,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.2
-plaid_rerank,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,198.8,141301_CDW_Signed.pdf p.2
-plaid_rerank,r16,Which vendor's master service agreement is governed by Virginia law?,,False,False,False,True,0.0,197.8,21019_Agreement__Final_Executed1.pdf p.297
-plaid_rerank,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,208.9,21019_Agreement__Final_Executed1.pdf p.25
-plaid_rerank,r18,What commission does the Sheriff get on premium inmate tablet usage?,4.0,False,True,True,True,0.25,196.1,21019_Agreement__Final_Executed1.pdf p.46
-plaid_rerank,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,1.0,True,True,True,True,1.0,195.3,2024__2025_Vendor_Disclosure_Statement_LCHD.pdf p.1
-plaid_rerank,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,3.0,False,True,True,True,0.3333333333333333,213.5,21164_Fully_Executed_Agreement.pdf p.4
+bm25,r01,Which contract caps the contractor's total liability at twenty million dollars?,,False,False,False,False,0.0,6.0,2019001564_Kone_MAD_merged_2019_10_02.pdf p.10
+bm25,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",2.0,False,True,True,True,0.5,0.4,16248_Motorola_Lease__Libertyville.pdf p.1
+bm25,r03,Where do both parties give up claims for lost profits and consequential damages?,4.0,False,True,True,True,0.25,0.4,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
+bm25,r04,Can the radio tower tenant walk away from its site lease early without a reason?,,False,False,False,True,0.0,0.3,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.5
+bm25,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,1.0,True,True,True,True,1.0,0.3,21164_Fully_Executed_Agreement.pdf p.4
+bm25,r06,How much did the juvenile justice complex design contract go up in its third modification?,2.0,False,True,True,True,0.5,0.6,21164_modification_1_fully_executed_2_22_23.pdf p.1
+bm25,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,2.0,False,True,True,True,0.5,0.2,18041_Award_Information_Johnson_Controls.pdf p.1
+bm25,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,0.3,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
+bm25,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,,False,False,False,False,0.0,0.3,23039_Fully_Executed_Agreement.pdf p.21
+bm25,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,0.3,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
+bm25,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,0.2,16069_Renewal_Letter_20_21.pdf p.1
+bm25,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,True,0.0,0.3,2024_12_27_Contract_25168__Waukegan_Campus_Security_Risk_Assessment_EXECUTED.pdf p.4
+bm25,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,0.2,23173_1_Task_Order_A__Fully_Executed.pdf p.3
+bm25,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,,False,False,False,False,0.0,0.2,22050_Price_Increase_25_26.pdf p.1
+bm25,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,0.2,141301_CDW_Signed.pdf p.2
+bm25,r16,Which vendor's master service agreement is governed by Virginia law?,1.0,True,True,True,True,1.0,0.2,21019_Agreement__Final_Executed1.pdf p.403
+bm25,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,0.2,21019_Agreement__Final_Executed1.pdf p.101
+bm25,r18,What commission does the Sheriff get on premium inmate tablet usage?,2.0,False,True,True,True,0.5,0.2,21019_Agreement__Final_Executed1.pdf p.206
+bm25,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,2.0,False,True,True,True,0.5,0.1,2024__2025_Contract_Renewal_LCHD.pdf p.2
+bm25,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,,False,False,False,False,0.0,0.4,16069_Agreement_fully_executed.pdf p.4
+plaid,r01,Which contract caps the contractor's total liability at twenty million dollars?,3.0,False,True,True,True,0.3333333333333333,332.9,23173_5_Fully_Executed_Agreement_with_Exhibits.pdf p.4
+plaid,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",2.0,False,True,True,True,0.5,269.3,16248_Motorola_Lease__Libertyville.pdf p.1
+plaid,r03,Where do both parties give up claims for lost profits and consequential damages?,5.0,False,True,True,True,0.2,253.9,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
+plaid,r04,Can the radio tower tenant walk away from its site lease early without a reason?,3.0,False,True,True,True,0.3333333333333333,230.2,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.3
+plaid,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,4.0,False,True,True,True,0.25,201.6,21119_Fully_Executed_Agreement.pdf p.8
+plaid,r06,How much did the juvenile justice complex design contract go up in its third modification?,1.0,True,True,True,True,1.0,193.6,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf p.1
+plaid,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,1.0,True,True,True,True,1.0,214.5,070121_JHN_Johnson_Controls_Contract_Extension.pdf p.1
+plaid,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,199.2,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
+plaid,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,,False,False,False,False,0.0,199.8,22128_1_Fully_Executed_Agreement.pdf p.13
+plaid,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,198.4,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
+plaid,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,186.6,16069_Renewal_Letter_20_21.pdf p.1
+plaid,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,False,0.0,212.0,2024_12_27_Contract_25168__Waukegan_Campus_Security_Risk_Assessment_EXECUTED.pdf p.9
+plaid,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,239.1,23173_1_Task_Order_A__Fully_Executed.pdf p.3
+plaid,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,,False,False,False,False,0.0,212.5,22128_1_Fully_Executed_Agreement.pdf p.2
+plaid,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,191.3,141301_CDW_Signed.pdf p.2
+plaid,r16,Which vendor's master service agreement is governed by Virginia law?,,False,False,False,True,0.0,197.8,21019_Agreement__Final_Executed1.pdf p.297
+plaid,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,208.1,21019_Agreement__Final_Executed1.pdf p.25
+plaid,r18,What commission does the Sheriff get on premium inmate tablet usage?,4.0,False,True,True,True,0.25,189.0,21019_Agreement__Final_Executed1.pdf p.46
+plaid,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,3.0,False,True,True,True,0.3333333333333333,186.0,2024__2025_Contract_Renewal_LCHD.pdf p.2
+plaid,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,,False,False,False,False,0.0,209.4,2025_04_07_RFP_25172_Juvenile_Healthcare_Services_FINAL.pdf p.22
+exact,r01,Which contract caps the contractor's total liability at twenty million dollars?,1.0,True,True,True,True,1.0,295.4,16069_Agreement_fully_executed.pdf p.7
+exact,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",2.0,False,True,True,True,0.5,217.5,16248_Motorola_Lease__Libertyville.pdf p.1
+exact,r03,Where do both parties give up claims for lost profits and consequential damages?,5.0,False,True,True,True,0.2,199.6,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
+exact,r04,Can the radio tower tenant walk away from its site lease early without a reason?,3.0,False,True,True,True,0.3333333333333333,207.4,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.3
+exact,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,4.0,False,True,True,True,0.25,210.9,21119_Fully_Executed_Agreement.pdf p.8
+exact,r06,How much did the juvenile justice complex design contract go up in its third modification?,1.0,True,True,True,True,1.0,200.9,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf p.1
+exact,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,1.0,True,True,True,True,1.0,202.9,070121_JHN_Johnson_Controls_Contract_Extension.pdf p.1
+exact,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,201.7,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
+exact,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,,False,False,False,False,0.0,204.0,22128_1_Fully_Executed_Agreement.pdf p.13
+exact,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,208.2,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
+exact,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,203.0,16069_Renewal_Letter_20_21.pdf p.1
+exact,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,False,0.0,204.0,2024_12_27_Contract_25168__Waukegan_Campus_Security_Risk_Assessment_EXECUTED.pdf p.9
+exact,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,203.8,23173_1_Task_Order_A__Fully_Executed.pdf p.3
+exact,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,,False,False,False,False,0.0,202.6,22128_1_Fully_Executed_Agreement.pdf p.2
+exact,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,202.2,141301_CDW_Signed.pdf p.2
+exact,r16,Which vendor's master service agreement is governed by Virginia law?,,False,False,False,True,0.0,203.7,21019_Agreement__Final_Executed1.pdf p.297
+exact,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,200.4,21019_Agreement__Final_Executed1.pdf p.25
+exact,r18,What commission does the Sheriff get on premium inmate tablet usage?,4.0,False,True,True,True,0.25,207.5,21019_Agreement__Final_Executed1.pdf p.46
+exact,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,3.0,False,True,True,True,0.3333333333333333,200.7,2024__2025_Contract_Renewal_LCHD.pdf p.2
+exact,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,,False,False,False,False,0.0,200.4,2025_04_07_RFP_25172_Juvenile_Healthcare_Services_FINAL.pdf p.22
+plaid_rerank,r01,Which contract caps the contractor's total liability at twenty million dollars?,1.0,True,True,True,True,1.0,226.3,16069_Agreement_fully_executed.pdf p.7
+plaid_rerank,r02,"Which lease lets the tenant keep renewing for five-year terms, and how much advance notice does it need?",2.0,False,True,True,True,0.5,191.9,16248_Motorola_Lease__Libertyville.pdf p.1
+plaid_rerank,r03,Where do both parties give up claims for lost profits and consequential damages?,5.0,False,True,True,True,0.2,225.5,23173_4_Fully_Executed_Agreement_with_Exhibits.pdf p.4
+plaid_rerank,r04,Can the radio tower tenant walk away from its site lease early without a reason?,3.0,False,True,True,True,0.3333333333333333,223.6,2026_01_12_LCSO_Radio_Lease__Final__Executed.pdf p.3
+plaid_rerank,r05,Is the architect's duty to indemnify the County limited to what its insurance pays?,4.0,False,True,True,True,0.25,189.7,21119_Fully_Executed_Agreement.pdf p.8
+plaid_rerank,r06,How much did the juvenile justice complex design contract go up in its third modification?,1.0,True,True,True,True,1.0,187.8,2025_06_11_Contract_21164_Modification_3_EXECUTED.pdf p.1
+plaid_rerank,r07,When does the Johnson Controls HVAC cooperative purchasing contract now expire?,1.0,True,True,True,True,1.0,205.2,070121_JHN_Johnson_Controls_Contract_Extension.pdf p.1
+plaid_rerank,r08,Which amendment dropped the community corrections citation software and credited the maintenance invoice?,1.0,True,True,True,True,1.0,204.8,22027_Amendment_3_RMS_JMS_Maintenance_EXECUTED_8_26_23.pdf p.1
+plaid_rerank,r09,What is the new billing rate for a project manager on the water facilities engineering contract?,,False,False,False,False,0.0,208.8,22128_1_Fully_Executed_Agreement.pdf p.13
+plaid_rerank,r10,What was the estimated value of the job order contracting award to the demolition company?,1.0,True,True,True,True,1.0,193.8,23159_Award_Letter__McDonagh_Demolition_Inc.pdf p.1
+plaid_rerank,r11,Through what date was the courtroom audio-visual contract extended in 2020?,1.0,True,True,True,True,1.0,184.8,16069_Renewal_Letter_20_21.pdf p.1
+plaid_rerank,r12,Can the County cancel the employee engagement assessment consulting agreement without cause?,,False,False,False,False,0.0,208.2,2024_12_27_Contract_25168__Waukegan_Campus_Security_Risk_Assessment_EXECUTED.pdf p.9
+plaid_rerank,r13,What is the yearly spending ceiling on wastewater engineering task orders?,,False,False,False,False,0.0,192.3,23173_1_Task_Order_A__Fully_Executed.pdf p.3
+plaid_rerank,r14,Which wastewater consulting agreement limits annual price increases to 3% or the Midwest CPI?,,False,False,False,False,0.0,199.6,22128_1_Fully_Executed_Agreement.pdf p.2
+plaid_rerank,r15,How much does the LogicMonitor monitoring implementation statement of work cost?,,False,False,False,True,0.0,192.2,141301_CDW_Signed.pdf p.2
+plaid_rerank,r16,Which vendor's master service agreement is governed by Virginia law?,,False,False,False,True,0.0,189.6,21019_Agreement__Final_Executed1.pdf p.297
+plaid_rerank,r17,How much notice does the County need to end the inmate phone and video visitation contract?,,False,False,False,True,0.0,195.0,21019_Agreement__Final_Executed1.pdf p.25
+plaid_rerank,r18,What commission does the Sheriff get on premium inmate tablet usage?,4.0,False,True,True,True,0.25,191.3,21019_Agreement__Final_Executed1.pdf p.46
+plaid_rerank,r19,Who signed the Health Department's ethics disclosure form for contract 22046?,3.0,False,True,True,True,0.3333333333333333,191.2,2024__2025_Contract_Renewal_LCHD.pdf p.2
+plaid_rerank,r20,What insurance does the DEI assessment consultant have to carry for umbrella coverage?,,False,False,False,False,0.0,196.6,2025_04_07_RFP_25172_Juvenile_Healthcare_Services_FINAL.pdf p.22

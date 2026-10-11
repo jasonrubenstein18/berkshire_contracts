@@ -48,9 +48,6 @@ class Settings(BaseSettings):
     data_dir: Path = PROJECT_ROOT / "data"
     eval_dir: Path = PROJECT_ROOT / "eval"
 
-    sample_size: int = 389
-    sample_seed: str = "berkshire-partners-2026"
-
     ocr_dpi: int = 300
     ocr_workers: int = Field(default_factory=lambda: max(1, (os.cpu_count() or 2) - 2))
     # Pages whose native text layer is shorter than this (in non-space characters) are OCR'd.
@@ -62,7 +59,6 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = 40
 
     openai_api_key: SecretStr | None = None
-    hf_token: SecretStr | None = None
     # Escalation re-reads flagged documents with more reasoning effort. The judge only grades free-text fields and
     # chat answers (everything else is scored deterministically); point JUDGE_MODEL at a different model family
     # when quota allows so those grades are not self-assessed.
@@ -102,8 +98,8 @@ class Settings(BaseSettings):
         return self.data_dir / "contracts.db"
 
     @property
-    def sample_pdf_dir(self) -> Path:
-        return self.data_dir / "sample_pdfs"
+    def pdf_dir(self) -> Path:
+        return self.data_dir / "pdfs"
 
     @property
     def processed_dir(self) -> Path:
@@ -143,7 +139,7 @@ class Settings(BaseSettings):
     def ensure_dirs(self) -> None:
         for path in (
             self.data_dir,
-            self.sample_pdf_dir,
+            self.pdf_dir,
             self.processed_dir,
             self.index_dir,
             self.llm_cache_dir,

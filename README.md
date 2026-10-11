@@ -1,8 +1,9 @@
 # Contract Intelligence PoC
 
-Berkshire Partners take-home. The pipeline turns 100 Lake County, Illinois procurement contracts into an inspectable
-database of 19 evidence-backed fields. A non-technical deal team can then ask questions in plain English and get
-data cuts with charts, clause answers with page citations, or a plain statement that the documents don't say.
+Berkshire Partners take-home. The pipeline turns the Lake County, Illinois procurement archive — 389 files,
+381 unique documents — into an inspectable database of 19 evidence-backed fields. A non-technical deal team can
+then ask questions in plain English and get data cuts with charts, clause answers with page citations, or a plain
+statement that the documents don't say.
 
 - **Late-interaction retrieval** (ColBERT-style, via PyLate and FastPLAID) answers clause questions, chosen for its
   precision on contract wording.
@@ -28,7 +29,7 @@ overview, explorer and data-quality tabs work fully, and chat shows the most rel
 answer. Developed and tested on macOS with Apple silicon. The dependencies also publish wheels for x86-64 Linux and
 Windows, but those haven't been tested; Intel Macs aren't supported because current PyTorch has no build for them.
 
-The submission includes `data/`: the database, the index, the 100 sampled PDFs and the exports. It is generated and
+The submission includes `data/`: the database, the index, the staged PDFs and the exports. It is generated and
 kept out of version control because it contains contract text. `uv run python scripts/package_submission.py` builds
 the submission zip (`dist/contract-intelligence.zip`) and refuses to include `.env`, `contracts.zip`, the brief or
 any secret value set in `.env`. To rebuild `data/` from `contracts.zip`, see
@@ -53,11 +54,11 @@ and every value can be traced back to its source.
 
 | Table | Rows | Contents |
 |---|---|---|
-| `contracts` | 100 | One row per sampled file: the 19 fields, parse and extraction status, review flags, model and prompt version |
-| `field_evidence` | 1,900 | One row per file and field: value, verbatim quote, page, confidence, whether the quote was found in the source |
-| `pages` | 1,488 | Page text, whether it came from the text layer or OCR, OCR confidence |
-| `chunks` | 4,278 | Retrieval passages with page and section heading |
-| `corpus_files` | 389 | Inventory of the whole archive: text profile, encryption, contract family, duplicates, sample stratum |
+| `contracts` | 389 | One row per file: the 19 fields, parse and extraction status, review flags, model and prompt version |
+| `field_evidence` | 7,391 | One row per file and field: value, verbatim quote, page, confidence, whether the quote was found in the source |
+| `pages` | 4,530 | Page text, whether it came from the text layer or OCR, OCR confidence |
+| `chunks` | 12,825 | Retrieval passages with page and section heading |
+| `corpus_files` | 389 | Inventory of the whole archive: text profile, encryption, contract family, duplicates |
 | `llm_calls` | — | Every model call: purpose, model, prompt version, tokens, cost, latency, cache hit |
 | `chat_logs` | — | Every question: route, query plan, retrieved passages, answer |
 | `pipeline_runs` | — | Every pipeline step with status and statistics |
@@ -87,8 +88,9 @@ schedules and escalators, SLAs and penalties, insurance by coverage line, paymen
 ```mermaid
 flowchart LR
   subgraph build["Build once: contracts CLI"]
-    zip["contracts.zip (389 PDFs)"] --> sample["Inventory and stratified sample (100 files)"]
-    sample --> parse["Parse: text layer, Tesseract OCR for scans"]
+    zip["contracts.zip (389 PDFs)"] --> inventory["Inventory"]
+    inventory --> stage["Stage every PDF to data/pdfs"]
+    stage --> parse["Parse: text layer, Tesseract OCR for scans"]
     parse --> extract["Evidence-first extraction (gpt-5-mini, strict JSON)"]
     parse --> chunks["Page-aware chunks"]
     extract --> db[("SQLite: contracts.db")]
@@ -111,23 +113,22 @@ Every step is resumable and logged to `pipeline_runs`.
 
 1. **Inventory**: profile all 389 PDFs inside the zip. This records text layer versus scan, encryption, upload
    wrappers, malformed files, exact duplicates, and contract families inferred from file-name contract numbers.
-2. **Sample**: draw a deterministic stratified sample of 100 files (fixed seed). Edge cases are always included:
-   wrapped, encrypted and malformed files, exact duplicates, the longest text and the largest scan. The two largest
-   contract families contribute one file per document type, so a contract's lifecycle is visible. The remaining
-   slots are allocated across document type × text profile, spread along document length.
+2. **Stage**: copy every PDF out of the zip into `data/pdfs`, stripping the upload wrapper (bytes before the PDF
+   header). A staged file whose name is no longer in the archive is deleted. The processed set is the whole
+   archive: 389 files, 381 unique documents, and 8 exact duplicates.
 3. **Parse**: read the PyMuPDF text layer first, then run Tesseract OCR (LSTM, 300 dpi, orientation detection) on
-   pages with little or garbled text. 599 of the 1,488 pages were OCR'd. 5 documents parsed partially and were
+   pages with little or garbled text. 1,648 of the 4,530 pages were OCR'd. 22 documents parsed partially and were
    flagged; none failed.
 4. **Chunk**: build page-bounded, heading-aware passages (at most 230 tokens, 40 overlapping) sized to the
    retrieval model's 300-token window.
 5. **Extract**: make one structured-output call per document. Documents over 160k characters instead get their
    first and last pages plus the pages that best match each field. Each field returns a status, value, verbatim
    quote, page and confidence. Quotes are checked against the page text, dates and renewal terms are checked for
-   consistency, and flagged fields are re-read once with more reasoning effort (5 documents). Exact duplicates copy
-   their twin's values. Eight documents carry review flags: unverified quote, low confidence, inconsistent dates,
+   consistency, and flagged fields are re-read once with more reasoning effort (25 documents). Exact duplicates copy
+   their twin's values. 32 documents carry review flags: unverified quote, low confidence, inconsistent dates,
    contract number differing from the file name, partial parse, or low OCR confidence.
 6. **Index**: encode passages with `lightonai/answerai-colbert-small-v1`, which keeps a 96-dimensional vector per
-   token (714,538 vectors, 223 MB on disk). Build a FastPLAID index for candidate search and a BM25 index as the
+   token (2,103,458 vectors, 657 MB on disk). Build a FastPLAID index for candidate search and a BM25 index as the
    baseline.
 7. **Export** the CSV and XLSX files, then **evaluate**.
 
@@ -154,14 +155,15 @@ Every step is resumable and logged to `pipeline_runs`.
   averaged away, and paraphrases still match. "Twenty million dollars" finds "$20,000,000", and "walk away early
   without a reason" finds the termination-for-convenience clause; BM25 misses both. The cost is memory: one vector
   per token instead of one per passage. PLAID compression keeps candidate search scalable, and the exact rerank
-  restores full precision on the shortlist.
+  restores full precision on the shortlist. The evaluation runs four modes; BM25 is the baseline, and the app
+  searches with PLAID plus that exact rerank.
 - **A relevance gate that measures the question's own words.** Full MaxSim scores include about 25 query-expansion
   ([MASK]) tokens that match almost anything, so off-topic questions scored about as high (≈0.95 normalized) as
   answerable ones. The gate instead uses the mean best match over the question's own tokens. Its threshold (0.88)
   sits below every answerable test question (the lowest is 0.897), so it only skips clearly off-topic questions;
   the answer model's evidence check handles the rest.
 - **Evidence before values.** The model has to quote the clause and page before giving a value. This makes every
-  value checkable in one click and lets the pipeline verify quotes automatically (99.9% of the 974 extracted values
+  value checkable in one click and lets the pipeline verify quotes automatically (99.8% of the 3,775 extracted values
   verify). A blank is preferred to a guess.
 - **No generated SQL.** The model only fills a typed plan; code executes it. Counts are reproducible, the database
   can't be injected into, and the plan is logged for audit.
@@ -174,7 +176,7 @@ Every step is resumable and logged to `pipeline_runs`.
 
 - **Files**: encrypted PDFs are opened with the empty user password, upload wrappers (bytes before the PDF header)
   are stripped, and malformed files are repaired. Pages with no usable text are OCR'd; documents that still have
-  gaps are marked `partial` and flagged. No file in the sample failed to load.
+  gaps are marked `partial` and flagged. No file failed to load.
 - **Model calls**: retried with backoff and paced under the account's request and token limits. Failures are
   recorded per document without stopping the run, and every call is logged with cost and latency.
 - **Questions**: empty, overlong (over 600 characters) and too-frequent (over 6 a minute per session) questions get a
@@ -219,12 +221,12 @@ with `uv run contracts evaluate`.
 | | Precision / recall / F1 on stated values | 91% / 88% / 89% |
 | | Values invented for fields the document doesn't state | 3% |
 | | Quotes verified verbatim / cited page exact | 100% / 97% |
-| Retrieval | Page recall@5, late interaction vs BM25 | 75% vs 65% |
-| | File recall@5 / MRR@10 | 95% vs 85% / 0.54 vs 0.48 |
-| Chat | Judged answers correct / grounded | 11 of 11 / 9 of 11 |
-| | Correct refusals (unknown contract, clause absent, off-topic) | 3 of 3 |
-| | Routed as labeled | 11 of 13 (both exceptions still answered correctly) |
-| | Median / p90 latency, mean cost | 2.5 s / 7.5 s, $0.0013 per question |
+| Retrieval | Page recall@5, late interaction vs BM25 | 60% vs 55% |
+| | File recall@5 / MRR@10 | 75% vs 75% / 0.39 vs 0.39 |
+| Chat | Judged answers correct / grounded | 10 of 11 / 7 of 11 |
+| | Correct refusals (unknown contract, clause absent, off-topic) | 2 of 3 |
+| | Routed as labeled | 11 of 13 |
+| | Median / p90 latency, mean cost | 2.9 s / 6.9 s, $0.0014 per question |
 
 **What the results say.**
 
@@ -237,9 +239,9 @@ with `uv run contracts evaluate`.
   Human review should focus on these.
 - **Confidence alone is not a review trigger.** Reviewing every value below "high" confidence (10% of values) would
   catch only 36% of the errors. The review queue should also target OCR'd and computed dates and high-value fields.
-- **Retrieval.** Late interaction wins on paraphrase; BM25 wins on exact names ("Virginia law"), which points to a
-  hybrid of the two. Compressed PLAID search scores the same as exact MaxSim. At 100 documents exact search is
-  actually faster (77 ms vs 200 ms); PLAID is there for scale.
+- **Retrieval.** On the full archive, late interaction finds the answer page in the top 5 for 60% of the test
+  questions, versus 55% for BM25. File recall and MRR are tied. PLAID finds candidates; the exact rerank is what
+  the app serves.
 
 **Caveats.**
 
@@ -288,7 +290,7 @@ Proposed:
 - **Secrets** live only in `.env`, which is git-ignored and never packaged. They are loaded as `SecretStr` and never
   logged.
 - **Source material** stays on the local machine. `contracts.zip` and the brief are git-ignored. The packaging
-  script ships only the 100 processed sample PDFs and data derived from them, leaves out the response cache, and
+  script ships the staged PDFs (the whole archive) and data derived from them, leaves out the response cache, and
   refuses to write the zip if it would contain `.env`, any `.zip`, the brief, or a secret value set in `.env`.
 - **Model provider**: OpenAI Responses API calls use `store=false`. For production, use a zero-data-retention
   agreement or Azure OpenAI inside the firm's tenant, over private networking.
@@ -302,7 +304,6 @@ These are public procurement records, but the design assumes deal-confidential d
 
 ## Limitations
 
-- Only 100 of the 389 files were processed, so findings hold at sample level.
 - The test labels are AI-drafted and not yet audited, the judge shares the extractor's model family, and the test
   sets are small.
 - On scanned pages, the quote is shown above the page image rather than highlighted on it.
@@ -324,7 +325,6 @@ These are public procurement records, but the design assumes deal-confidential d
    than stated value.
 3. **A production platform**, consisting of:
    - hybrid retrieval (BM25 plus late interaction, since each wins different questions);
-   - the full 389-file run;
    - Postgres with a managed vector index;
    - SSO with per-deal access;
    - an in-tenant model endpoint;
@@ -342,10 +342,10 @@ source, which needs Tesseract and its headers installed first (`brew install tes
 uv sync --group ocr
 uv run contracts setup-ocr     # English LSTM and orientation models into data/tessdata
 uv run contracts inventory     # profile all 389 PDFs in the zip
-uv run contracts sample        # stage the deterministic 100-file sample in data/sample_pdfs
+uv run contracts stage         # copy every PDF into data/pdfs
 uv run contracts parse         # text layer plus OCR
 uv run contracts chunk
-uv run contracts extract       # about $1.10 with gpt-5-mini; cached and resumable
+uv run contracts extract       # about $4.40 with gpt-5-mini; cached and resumable
 uv run contracts index         # downloads the retrieval model on first run
 uv run contracts export
 uv run contracts evaluate      # about $0.07 of judge calls
@@ -355,7 +355,7 @@ uv run python scripts/package_submission.py   # reviewer zip in dist/
 ```
 
 **Hosting on Fly.** `scripts/deploy_fly.py` publishes the app to `https://berkshire-contracts.fly.dev`. It does
-not use `fly launch`. The image includes the database, index and sample PDFs. Secrets stay in Fly and are not
+not use `fly launch`. The image includes the database, index and staged PDFs. Secrets stay in Fly and are not
 printed. `MCP_TOKEN` in `.env` is the bearer token for `https://berkshire-contracts.fly.dev/mcp`, which Claude
 Tag calls. The `claude-tag/` folder is the plugin to attach in the Claude Tag admin console for the Slack
 workspace. `presentation/` is not part of the image.
@@ -363,17 +363,6 @@ workspace. `presentation/` is not part of the image.
 ```bash
 uv run python scripts/deploy_fly.py
 ```
-
-**Optional Hugging Face Space.** `scripts/deploy_space.py` publishes a protected Space instead. Protected
-visibility needs a Hugging Face PRO account. With PRO, set `HF_TOKEN` (write scope), `APP_USERNAME` and
-`APP_PASSWORD` in `.env`, then run:
-
-```bash
-uv run python scripts/deploy_space.py --repo-id <user>/contract-intelligence
-```
-
-The script uploads the code, database, index, sample PDFs, exports and evaluation results, and sets the secrets from
-`.env` without printing them.
 
 ## Configuration
 
@@ -383,7 +372,6 @@ Settings come from environment variables or `.env`; defaults are in
 | Variable | Default | Purpose |
 |---|---|---|
 | `OPENAI_API_KEY` | — | Extraction, chat answers and judged evaluation (without it, chat shows passages) |
-| `HF_TOKEN` | — | Optional hosting only |
 | `APP_USERNAME`, `APP_PASSWORD` | unset | App login (no login screen when unset) |
 | `MCP_TOKEN` | unset | Bearer token for the Fly `/mcp` endpoint (Claude Tag) |
 | `EXTRACTION_MODEL`, `ESCALATION_MODEL`, `ROUTER_MODEL`, `CHAT_MODEL`, `JUDGE_MODEL` | `gpt-5-mini` | Model for each step |
@@ -395,15 +383,15 @@ Settings come from environment variables or `.env`; defaults are in
 
 ## Cost
 
-Building and evaluating everything cost **$1.24** in OpenAI usage across 235 API calls (cache hits excluded):
+Building and evaluating everything cost **$4.58** in OpenAI usage across 580 API calls (cache hits excluded):
 
 | Item | Cost |
 |---|---|
-| Extraction of 100 documents, including escalations | $1.12 |
-| Judge calls during evaluation | $0.07 |
-| Routing and answers across all testing | $0.05 |
+| Extraction of 389 documents, including escalations | $4.41 |
+| Judge calls during evaluation | $0.08 |
+| Routing and answers across all testing | $0.08 |
 
-A typical question costs about $0.0013. `uv run contracts status` and the app's data-quality tab show live totals.
+A typical question costs about $0.0014. `uv run contracts status` and the app's data-quality tab show live totals.
 
 ## Repository layout
 
@@ -414,7 +402,7 @@ src/berkshire_contracts/
   config.py                    settings from the environment or .env, model prices
   db.py                        SQLite schema (SQLAlchemy)
   schemas.py                   Pydantic schemas for model outputs and query plans
-  ingestion/                   inventory, sampling, PDF repair, parsing and OCR, chunking
+  ingestion/                   inventory, staging, PDF repair, parsing and OCR, chunking
   extraction/                  field definitions, prompts, OpenAI client (structured outputs, cache, cost), extractor
   retrieval/                   late-interaction encoder; PLAID, exact MaxSim and BM25 search
   chat/                        router, deterministic filters, grounded answers, assistant service
@@ -425,10 +413,9 @@ eval/ground_truth/             labeled test sets
 eval/results/                  report.md, summary.json, per-case CSVs
 scripts/package_submission.py  build the reviewer zip: code plus prebuilt data, no secrets
 scripts/deploy_fly.py          publish to Fly.io (https://berkshire-contracts.fly.dev)
-scripts/deploy_space.py        optional: publish to a protected Hugging Face Space (needs PRO)
 claude-tag/                    plugin and skill for Claude Tag in Slack
 tests/                         offline unit tests (throwaway database, no model calls or downloads)
-data/                          generated, not in version control: database, index, sample PDFs, exports
+data/                          generated, not in version control: database, index, staged PDFs, exports
 ```
 
 Run the tests with `uv run pytest`.

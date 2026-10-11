@@ -71,7 +71,7 @@ def render_answer(r: AssistantResponse) -> str:
         "structured": "Answered from the extracted contract database",
         "clause_search": "Answered from contract text (late-interaction search)",
         "hybrid": "Filtered the database, then read matching clauses",
-        "out_of_scope": "Outside the contract sample",
+        "out_of_scope": "Outside these contracts",
         "rejected": "",
     }.get(r.route, r.route)
     parts = [r.answer]
@@ -216,14 +216,14 @@ def export_paths() -> dict[str, str | None]:
     return {k: str(v) if v.exists() else None for k, v in files.items()}
 
 
-with gr.Blocks(title="Contract Intelligence · Lake County sample", fill_width=True) as demo:
+with gr.Blocks(title="Contract Intelligence · Lake County", fill_width=True) as demo:
     session_id = gr.State("")
     sources_state = gr.State([])
     contract_state = gr.State({})
 
     gr.Markdown(
         "## Contract Intelligence PoC\n"
-        "100 Lake County, IL procurement documents → 19 evidence-backed fields per document, "
+        "389 Lake County procurement documents → 19 evidence-backed fields per document, "
         "searchable with late-interaction (ColBERT) retrieval. Every value links to the page it came from."
     )
 
@@ -461,7 +461,7 @@ if __name__ == "__main__":
         auth_message="Berkshire Partners contract intelligence demo. Use the credentials shared with you.",
         theme=THEME,
         css=CSS,
-        allowed_paths=[str(settings.sample_pdf_dir), str(settings.exports_dir), str(settings.db_path)],
+        allowed_paths=[str(settings.pdf_dir), str(settings.exports_dir), str(settings.db_path)],
         server_name=os.environ.get("GRADIO_SERVER_NAME", "127.0.0.1"),
         show_error=False,
     )
