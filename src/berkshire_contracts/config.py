@@ -48,7 +48,7 @@ class Settings(BaseSettings):
     data_dir: Path = PROJECT_ROOT / "data"
     eval_dir: Path = PROJECT_ROOT / "eval"
 
-    sample_size: int = 100
+    sample_size: int = 389
     sample_seed: str = "berkshire-partners-2026"
 
     ocr_dpi: int = 300
