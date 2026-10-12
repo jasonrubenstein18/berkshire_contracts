@@ -10,6 +10,9 @@ BP Take-Home_vShare.pdf
 # Local presentation (deck, assets, and generator stay on this machine)
 presentation/
 
+# Local out-of-sample test set (never committed or deployed)
+eval/holdout/
+
 # Generated data (rebuild with the `contracts` pipeline in the README; packed for reviewers by scripts/package_submission.py)
 data/
 !data/.gitkeep
