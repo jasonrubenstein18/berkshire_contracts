@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from berkshire_contracts.chat import service
+from berkshire_contracts.chat import filters, service
 from berkshire_contracts.chat.answer import MIN_RELEVANCE, AnswerResult, answer_question
 from berkshire_contracts.chat.filters import (
     apply_filter,
@@ -107,6 +107,40 @@ def test_product_names_match_file_names_and_short_names_match_whole_words():
     assert list(resolve_scope(df, [], ["Sympro"])["file_id"]) == ["b"]
     assert list(resolve_scope(df, [], ["CTI"])["file_id"]) == ["d"]
     assert resolve_scope(df.assign(vendor_name="Lake Construction Co."), [], ["CTI"]).empty
+
+
+def appin_frame() -> pd.DataFrame:
+    return frame().assign(
+        filename=["21163_Agreement.pdf", "22143_Agreement.pdf", "DFM_Agreement.pdf", "Blain_Agreement.pdf"],
+        family_id=["21163", "22143", None, None],
+        contract_number=["21163", "22143", None, None],
+        vendor_name=["Appin Associates", "Appin Associates", "DFM ASSOCIATES", "Blain & Associates"],
+    )
+
+
+def test_contract_numbers_take_precedence_over_the_vendor_and_vendor_words_must_all_match():
+    df = appin_frame()
+    assert list(resolve_scope(df, ["21163"], ["Appin Associates"])["file_id"]) == ["a"]
+    assert list(resolve_scope(df, [], ["Appin Associates"])["file_id"]) == ["a", "b"]
+    assert list(resolve_scope(df, ["21163"], ["Blain and Associates"])["file_id"]) == ["a", "d"]
+
+    total = run_structured(
+        plan(metric="sum_award", scope_contract_numbers=["21163"], scope_vendor_names=["Appin Associates"]),
+        df.assign(award_group=df["file_id"]),
+    )
+    assert "**$1,000,000** across 1 distinct award (1 matching document;" in total.summary
+    assert "**Appin Associates**" in total.summary and "`21163_Agreement.pdf`" in total.summary
+
+
+def test_vendor_and_product_names_match_documents_that_mention_the_product(monkeypatch):
+    df = frame().assign(
+        vendor_name=["Grey Wall Software, LLC", "Grey Wall Software, LLC", "Motorola Solutions", None]
+    )
+    texts = {"a": "Grey Wall Software licenses the Veoci platform.", "b": "Renewal letter for the next term."}
+    monkeypatch.setattr(filters, "page_text", lambda file_ids: {f: texts[f] for f in file_ids if f in texts})
+    assert list(resolve_scope(df, [], ["Grey Wall Veoci"])["file_id"]) == ["a"]
+    assert list(resolve_scope(df, [], ["Grey Wall"])["file_id"]) == ["a", "b"]
+    assert resolve_scope(df, [], ["Grey Wall Starbucks"]).empty
 
 
 def test_answer_fields_show_values_and_unmatched_names_return_nothing():
@@ -282,25 +316,100 @@ def test_out_of_scope_and_planner_failure_paths(assistant, monkeypatch):
     assert "Showing the most relevant passages" in degraded.answer and degraded.sources
 
 
-def test_unmatched_named_contract_falls_back_to_text_search(assistant, monkeypatch):
-    named = plan(scope_vendor_names=["Starbucks"])
+class FakeIndex:
+    def __init__(self, text: str):
+        self.chunks = [hit(0.93, text).chunk]
+        self.searched: list[set[str] | None] = []
+        self.queries: list[str] = []
+
+    def search(self, query, k, file_ids=None, mode=None):
+        self.searched.append(file_ids)
+        self.queries.append(query)
+        return [hit(0.93)]
+
+
+@pytest.mark.parametrize("intent", ["clause_search", "structured", "hybrid"])
+def test_named_vendor_that_no_document_mentions_is_declined_without_search(assistant, monkeypatch, intent):
+    named = plan(
+        intent=intent,
+        scope_vendor_names=["Starbucks Coffee"],
+        filters=[cond("vendor_name", "equals", "starbucks coffee")],
+        search_query="price increases",
+    )
     monkeypatch.setattr(service, "plan_question", lambda q, c, budget_usd=None: (named, CallStats("m")))
     monkeypatch.setattr(service, "run_structured", lambda p: run_structured(p, frame()))
+    monkeypatch.setattr(service, "load_contracts_frame", frame)
+    index = FakeIndex("Price increases are limited to the CPI. Coffee service is excluded.")
+    monkeypatch.setattr(service, "load_index", lambda: index)
+    monkeypatch.setattr(service, "answer_question", lambda *a, **k: pytest.fail("answer model was called"))
+    response = assistant.ask("What does the Starbucks coffee supply agreement say about price increases?")
+    assert response.insufficient_evidence and not index.searched and not response.sources
+    assert response.answer.startswith("I couldn't find “Starbucks Coffee” in these documents")
 
-    class FakeIndex:
-        def search(self, query, k, file_ids=None, mode=None):
-            assert file_ids is None
-            return [hit(0.93)]
 
-    monkeypatch.setattr(service, "load_index", lambda: FakeIndex())
-    monkeypatch.setattr(
-        service,
-        "answer_question",
-        lambda *a, **k: AnswerResult("Not in these documents.", [], True, [], None),
+def capture_answers(monkeypatch) -> list[str | None]:
+    notes: list[str | None] = []
+
+    def fake_answer(question, hits, client, context_note=None, budget_usd=None):
+        notes.append(context_note)
+        return AnswerResult("Sixty days' notice [S1].", ["S1"], False, [], None)
+
+    monkeypatch.setattr(service, "answer_question", fake_answer)
+    return notes
+
+
+def test_named_vendor_found_only_in_page_text_searches_only_the_files_that_mention_it(assistant, monkeypatch):
+    named = plan(
+        intent="clause_search", scope_vendor_names=["Grey Wall Veoci"], search_query="termination notice"
     )
-    response = assistant.ask("What liability cap applies to the Starbucks agreement?")
-    assert response.route == "clause_search" and response.insufficient_evidence
-    assert "no extracted record matched, so the contract text was searched instead" in response.notes
+    monkeypatch.setattr(service, "plan_question", lambda q, c, budget_usd=None: (named, CallStats("m")))
+    monkeypatch.setattr(service, "load_contracts_frame", frame)
+    index = FakeIndex("Grey Wall Software, LLC licenses the Veoci platform to the County.")
+    monkeypatch.setattr(service, "load_index", lambda: index)
+    notes = capture_answers(monkeypatch)
+    response = assistant.ask("How much notice cancels the Grey Wall Veoci agreement without cause?")
+    assert index.searched == [{"a"}] and index.queries == ["termination notice"]
+    assert not response.insufficient_evidence and "Grey Wall Veoci" in notes[0]
+    assert any("couldn't match Grey Wall Veoci" in n for n in response.notes)
+
+
+def test_descriptive_filters_that_remove_every_named_document_are_dropped(assistant, monkeypatch):
+    named = plan(
+        scope_contract_numbers=["16249"],
+        filters=[
+            cond("document_type", "equals", "amendment_modification"),
+            cond("contract_description", "contains", "Modification 2"),
+        ],
+        answer_fields=["award_amount_usd"],
+    )
+    monkeypatch.setattr(service, "plan_question", lambda q, c, budget_usd=None: (named, CallStats("m")))
+    monkeypatch.setattr(
+        service, "run_structured", lambda p: run_structured(p, frame().assign(contract_description="Lease"))
+    )
+    monkeypatch.setattr(service, "answer_question", lambda *a, **k: pytest.fail("answer model was called"))
+    response = assistant.ask("How much did Modification 2 to agreement 16249 add?")
+    assert response.route == "structured" and response.matched_file_ids == ["c"]
+    assert "Award amount (USD): **$250,000**" in response.answer
+    assert any("no document for 16249 matched document type equals" in n for n in response.notes)
+
+
+def test_value_filters_that_remove_every_named_document_search_those_documents(assistant, monkeypatch):
+    named = plan(
+        scope_contract_numbers=["16249"],
+        filters=[cond("auto_renewal", "is_true")],
+        answer_fields=["award_amount_usd"],
+    )
+    monkeypatch.setattr(service, "plan_question", lambda q, c, budget_usd=None: (named, CallStats("m")))
+    monkeypatch.setattr(service, "run_structured", lambda p: run_structured(p, frame()))
+    monkeypatch.setattr(service, "load_contracts_frame", frame)
+    index = FakeIndex("Modification 2 adds $14,400.")
+    monkeypatch.setattr(service, "load_index", lambda: index)
+    notes = capture_answers(monkeypatch)
+    response = assistant.ask("Does lease 16249 renew automatically?")
+    assert response.route == "clause_search" and index.searched == [{"c"}]
+    assert index.queries == ["Does lease renew automatically?"]
+    assert "limited to the documents for 16249" in notes[0]
+    assert any("none of the documents for 16249 matched every condition" in n for n in response.notes)
 
 
 def test_missing_index_fails_gracefully(assistant, monkeypatch):

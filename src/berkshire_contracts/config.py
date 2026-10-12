@@ -59,9 +59,9 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = 40
 
     openai_api_key: SecretStr | None = None
-    # Escalation re-reads flagged documents with more reasoning effort. The judge only grades free-text fields and
-    # chat answers (everything else is scored deterministically); point JUDGE_MODEL at a different model family
-    # when quota allows so those grades are not self-assessed.
+    # Escalation re-reads flagged documents with more reasoning effort. The judge only gives a second opinion on
+    # chat answers next to the human grade; point JUDGE_MODEL at a different model family when quota allows so
+    # those grades are not self-assessed.
     extraction_model: str = "gpt-5-mini"
     extraction_reasoning_effort: str = "medium"
     escalation_model: str = "gpt-5-mini"

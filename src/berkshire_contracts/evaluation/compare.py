@@ -10,7 +10,6 @@ from rapidfuzz import fuzz
 
 from berkshire_contracts.extraction.fields import FIELD_BY_NAME
 
-JUDGED_TEXT_FIELDS = {"contract_description", "renewal_options", "liability_cap", "insurance_requirements"}
 _COMPANY_SUFFIXES = {"inc", "llc", "corp", "corporation", "company", "co", "ltd", "the", "incorporated", "lp"}
 
 
@@ -37,8 +36,8 @@ def to_comparable(field: str, value: Any) -> Any:
     return str(value)
 
 
-def deterministic_match(field: str, predicted: Any, expected: Any) -> bool | None:
-    """True/False for fields with an objective comparison; None when a semantic judgment is needed."""
+def deterministic_match(field: str, predicted: Any, expected: Any) -> bool:
+    """Amounts within 0.5%, exact days/flags/dates/types, normalized names and governing law."""
     if predicted is None or expected is None:
         return predicted is None and expected is None
     kind = FIELD_BY_NAME[field].kind
@@ -58,10 +57,4 @@ def deterministic_match(field: str, predicted: Any, expected: Any) -> bool | Non
     if field == "governing_law":
         p, e = _norm(str(predicted)), _norm(str(expected))
         return e in p or p in e
-    if field in JUDGED_TEXT_FIELDS:
-        return None
     return _norm(str(predicted)) == _norm(str(expected))
-
-
-def fuzzy_text_match(predicted: str, expected: str) -> bool:
-    return fuzz.token_set_ratio(_norm(predicted), _norm(expected)) >= 75

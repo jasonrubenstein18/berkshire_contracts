@@ -1,0 +1,556 @@
+{
+  "meta": {
+    "generated_at": "2026-10-12 13:39 UTC",
+    "chat_run_at": "2026-10-12 13:06 UTC",
+    "extraction_model": "gpt-5-mini",
+    "router_model": "gpt-5-mini",
+    "chat_model": "gpt-5-mini",
+    "judge_model": "gpt-5-mini",
+    "judge_prompt_version": "judge-v3",
+    "colbert_model": "lightonai/answerai-colbert-small-v1",
+    "labels_changed_after_results": 0
+  },
+  "extraction": {
+    "overall": {
+      "labels": 100,
+      "correct": 95,
+      "accuracy": 0.95,
+      "filled": 66,
+      "precision": 0.939,
+      "required": 52,
+      "recall": 0.981,
+      "not_stated": 38,
+      "invented": 4,
+      "invented_rate": 0.105,
+      "missed": 1,
+      "wrong": 0,
+      "documents": 10,
+      "accuracy_95ci": [
+        0.888,
+        0.978
+      ],
+      "quote_verified": 1.0,
+      "page_checked": 62,
+      "page_exact": 1.0,
+      "changed_after_results": 0
+    },
+    "by_field": [
+      {
+        "field": "Document type",
+        "labels": 10,
+        "correct": 10,
+        "accuracy": 1.0,
+        "filled": 10,
+        "precision": 1.0,
+        "required": 10,
+        "recall": 1.0,
+        "not_stated": 0,
+        "invented": 0,
+        "invented_rate": null,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Vendor",
+        "labels": 10,
+        "correct": 10,
+        "accuracy": 1.0,
+        "filled": 10,
+        "precision": 1.0,
+        "required": 10,
+        "recall": 1.0,
+        "not_stated": 0,
+        "invented": 0,
+        "invented_rate": null,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Effective date",
+        "labels": 10,
+        "correct": 9,
+        "accuracy": 0.9,
+        "filled": 9,
+        "precision": 0.889,
+        "required": 7,
+        "recall": 1.0,
+        "not_stated": 2,
+        "invented": 1,
+        "invented_rate": 0.5,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Expiration date",
+        "labels": 10,
+        "correct": 10,
+        "accuracy": 1.0,
+        "filled": 7,
+        "precision": 1.0,
+        "required": 4,
+        "recall": 1.0,
+        "not_stated": 3,
+        "invented": 0,
+        "invented_rate": 0.0,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Auto-renewal",
+        "labels": 10,
+        "correct": 10,
+        "accuracy": 1.0,
+        "filled": 6,
+        "precision": 1.0,
+        "required": 4,
+        "recall": 1.0,
+        "not_stated": 4,
+        "invented": 0,
+        "invented_rate": 0.0,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Renewal notice (days)",
+        "labels": 10,
+        "correct": 10,
+        "accuracy": 1.0,
+        "filled": 3,
+        "precision": 1.0,
+        "required": 2,
+        "recall": 1.0,
+        "not_stated": 8,
+        "invented": 0,
+        "invented_rate": 0.0,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Award amount (USD)",
+        "labels": 10,
+        "correct": 9,
+        "accuracy": 0.9,
+        "filled": 6,
+        "precision": 1.0,
+        "required": 5,
+        "recall": 0.8,
+        "not_stated": 3,
+        "invented": 0,
+        "invented_rate": 0.0,
+        "missed": 1,
+        "wrong": 0
+      },
+      {
+        "field": "Termination for convenience",
+        "labels": 10,
+        "correct": 9,
+        "accuracy": 0.9,
+        "filled": 5,
+        "precision": 0.8,
+        "required": 3,
+        "recall": 1.0,
+        "not_stated": 6,
+        "invented": 1,
+        "invented_rate": 0.167,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Termination notice (days)",
+        "labels": 10,
+        "correct": 9,
+        "accuracy": 0.9,
+        "filled": 5,
+        "precision": 0.8,
+        "required": 4,
+        "recall": 1.0,
+        "not_stated": 6,
+        "invented": 1,
+        "invented_rate": 0.167,
+        "missed": 0,
+        "wrong": 0
+      },
+      {
+        "field": "Governing law",
+        "labels": 10,
+        "correct": 9,
+        "accuracy": 0.9,
+        "filled": 5,
+        "precision": 0.8,
+        "required": 3,
+        "recall": 1.0,
+        "not_stated": 6,
+        "invented": 1,
+        "invented_rate": 0.167,
+        "missed": 0,
+        "wrong": 0
+      }
+    ],
+    "by_text": [
+      {
+        "text": "native",
+        "documents": 5,
+        "labels": 50,
+        "correct": 49,
+        "accuracy": 0.98,
+        "filled": 28,
+        "precision": 1.0,
+        "required": 24,
+        "recall": 0.958,
+        "not_stated": 22,
+        "invented": 0,
+        "invented_rate": 0.0,
+        "missed": 1,
+        "wrong": 0
+      },
+      {
+        "text": "scanned",
+        "documents": 5,
+        "labels": 50,
+        "correct": 46,
+        "accuracy": 0.92,
+        "filled": 38,
+        "precision": 0.895,
+        "required": 28,
+        "recall": 1.0,
+        "not_stated": 16,
+        "invented": 4,
+        "invented_rate": 0.25,
+        "missed": 0,
+        "wrong": 0
+      }
+    ],
+    "by_confidence": [
+      {
+        "confidence": "high",
+        "values": 55,
+        "right": 0.964
+      },
+      {
+        "confidence": "medium",
+        "values": 11,
+        "right": 0.818
+      }
+    ]
+  },
+  "chat": {
+    "cases": 10,
+    "by_type": {
+      "clause": 4,
+      "structured": 2,
+      "negative": 2,
+      "hybrid": 1,
+      "out_of_scope": 1
+    },
+    "answer_cases": 6,
+    "graded": 6,
+    "graded_by": "human",
+    "correct": 1,
+    "partially_correct": 2,
+    "supported": 4,
+    "supported_of": 4,
+    "pages_expected": 6,
+    "pages_found": 4,
+    "files_expected": 6,
+    "files_cited": 3,
+    "should_decline": 3,
+    "correct_declines": 2,
+    "answerable": 7,
+    "wrong_declines": 2,
+    "median_latency_s": 4.35,
+    "p90_latency_s": 11.73,
+    "mean_cost_usd": 0.00146,
+    "total_cost_usd": 0.0146,
+    "errors": 0,
+    "judge_vs_human": {
+      "correct": {
+        "compared": 9,
+        "agree": 8
+      },
+      "supported": {
+        "compared": 5,
+        "agree": 3
+      },
+      "declined": {
+        "compared": 9,
+        "agree": 7
+      }
+    },
+    "filter_ok": 1,
+    "filter_checked": 1,
+    "list_precision": 1.0,
+    "list_recall": 0.889
+  },
+  "headline_markdown": "**Table extraction:** 95 of 100 labeled fields correct (95%) across 10 documents; precision 94%, recall 98%; invented a value for 4 of 38 fields the document doesn't state.  \n**Chat:** 1 of 6 answers correct and 2 partially correct (graded by a person); declined 2 of 3 unanswerable questions but also 2 of 7 answerable ones; expected page found 4/6.  \n<sub>Labels verified by a person against the PDFs; chat run fresh 2026-10-12 13:06 UTC. Details in eval/results/report.md.</sub>",
+  "extraction_by_field": [
+    {
+      "field": "Document type",
+      "labels": 10,
+      "accuracy": 1.0,
+      "invented": 0,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Vendor",
+      "labels": 10,
+      "accuracy": 1.0,
+      "invented": 0,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Effective date",
+      "labels": 10,
+      "accuracy": 0.9,
+      "invented": 1,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Expiration date",
+      "labels": 10,
+      "accuracy": 1.0,
+      "invented": 0,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Auto-renewal",
+      "labels": 10,
+      "accuracy": 1.0,
+      "invented": 0,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Renewal notice (days)",
+      "labels": 10,
+      "accuracy": 1.0,
+      "invented": 0,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Award amount (USD)",
+      "labels": 10,
+      "accuracy": 0.9,
+      "invented": 0,
+      "missed": 1,
+      "wrong": 0
+    },
+    {
+      "field": "Termination for convenience",
+      "labels": 10,
+      "accuracy": 0.9,
+      "invented": 1,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Termination notice (days)",
+      "labels": 10,
+      "accuracy": 0.9,
+      "invented": 1,
+      "missed": 0,
+      "wrong": 0
+    },
+    {
+      "field": "Governing law",
+      "labels": 10,
+      "accuracy": 0.9,
+      "invented": 1,
+      "missed": 0,
+      "wrong": 0
+    }
+  ],
+  "chat_cases": [
+    {
+      "Case": "q01",
+      "Question": "Which contracts have auto-renewal clauses?",
+      "Correct": "partially correct",
+      "Supported": "yes",
+      "Declined": "no",
+      "Source found": "list P 100% / R 89%",
+      "Cited": "",
+      "Seconds": "4.1"
+    },
+    {
+      "Case": "q02",
+      "Question": "Which contracts expire in 2026?",
+      "Correct": "n/a",
+      "Supported": "n/a",
+      "Declined": "no",
+      "Source found": "filter ok",
+      "Cited": "",
+      "Seconds": "2.9"
+    },
+    {
+      "Case": "q03",
+      "Question": "How much notice does the County need to give to cancel the Grey Wall Veoci agreement without cause?",
+      "Correct": "incorrect",
+      "Supported": "n/a",
+      "Declined": "yes",
+      "Source found": "0/1",
+      "Cited": "0/1",
+      "Seconds": "12.9"
+    },
+    {
+      "Case": "q04",
+      "Question": "What is the total not-to-exceed cost of Appin Associates agreement 21163, including travel?",
+      "Correct": "incorrect",
+      "Supported": "yes",
+      "Declined": "no",
+      "Source found": "1/1",
+      "Cited": "1/1",
+      "Seconds": "4.6"
+    },
+    {
+      "Case": "q05",
+      "Question": "How much did Modification 2 to agreement 21144 add, and what is the new total?",
+      "Correct": "incorrect",
+      "Supported": "n/a",
+      "Declined": "yes",
+      "Source found": "1/1 (rank 1)",
+      "Cited": "0/1",
+      "Seconds": "10.0"
+    },
+    {
+      "Case": "q06",
+      "Question": "What renewal options does the Pat Davis Design Group agreement 23018 give the County?",
+      "Correct": "correct",
+      "Supported": "yes",
+      "Declined": "no",
+      "Source found": "1/1",
+      "Cited": "1/1",
+      "Seconds": "3.6"
+    },
+    {
+      "Case": "q07",
+      "Question": "For the Motorola tower site leases, can Motorola terminate early, and on how much notice?",
+      "Correct": "partially correct",
+      "Supported": "yes",
+      "Declined": "no",
+      "Source found": "1/2 (rank 3)",
+      "Cited": "1/2",
+      "Seconds": "11.6"
+    },
+    {
+      "Case": "q08",
+      "Question": "What does the Starbucks coffee supply agreement say about price increases?",
+      "Correct": "incorrect",
+      "Supported": "no",
+      "Declined": "no (should decline)",
+      "Source found": "",
+      "Cited": "",
+      "Seconds": "10.5"
+    },
+    {
+      "Case": "q09",
+      "Question": "What liability cap applies to Ciosek Tree Service's tree removal contract?",
+      "Correct": "correct",
+      "Supported": "n/a",
+      "Declined": "yes (should decline)",
+      "Source found": "",
+      "Cited": "",
+      "Seconds": "3.7"
+    },
+    {
+      "Case": "q10",
+      "Question": "Who won the World Series last year?",
+      "Correct": "correct",
+      "Supported": "n/a",
+      "Declined": "yes (should decline)",
+      "Source found": "",
+      "Cited": "",
+      "Seconds": "2.9"
+    }
+  ],
+  "extraction_failures": [
+    {
+      "item": "a1cb292b0738 award_amount_usd",
+      "document": "23018_Fully_Executed_Agreement_3_16_23.pdf",
+      "field": "Award amount (USD)",
+      "problem": "left blank: expected 48000, got not stated",
+      "cause": "The fee table on p.2 is an image on a page that also has a text layer, so the page was not OCR'd and $48,000 never reached the model.",
+      "category": "Image-only table not read"
+    },
+    {
+      "item": "dd25def4b937 effective_date",
+      "document": "2022__2024_Vendor_Disclosure_Statement.pdf",
+      "field": "Effective date",
+      "problem": "invented a value: expected not stated, got 2022-06-09",
+      "cause": "Took the form's signature date (June 9, 2022) as an effective date; a vendor disclosure has no contract term.",
+      "category": "Wrong date taken as effective date"
+    },
+    {
+      "item": "e02574a8a789 termination_for_convenience",
+      "document": "23173_1_Task_Order_A__Fully_Executed.pdf",
+      "field": "Termination for convenience",
+      "problem": "invented a value: expected not stated, got true",
+      "cause": "Read the termination clause from the attached subconsultant terms (p.6), not from the County's task order.",
+      "category": "Attached third-party terms read as the contract"
+    },
+    {
+      "item": "e02574a8a789 termination_notice_days",
+      "document": "23173_1_Task_Order_A__Fully_Executed.pdf",
+      "field": "Termination notice (days)",
+      "problem": "invented a value: expected not stated, got 30",
+      "cause": "Same clause; the 30-day notice is in the subconsultant terms on p.6.",
+      "category": "Attached third-party terms read as the contract"
+    },
+    {
+      "item": "e02574a8a789 governing_law",
+      "document": "23173_1_Task_Order_A__Fully_Executed.pdf",
+      "field": "Governing law",
+      "problem": "invented a value: expected not stated, got Illinois",
+      "cause": "Same attachment; p.6 names the law of the subconsultant's place of business, which the model turned into Illinois.",
+      "category": "Attached third-party terms read as the contract"
+    }
+  ],
+  "chat_failures": [
+    {
+      "item": "q01",
+      "question": "Which contracts have auto-renewal clauses?",
+      "problem": "partially correct; missed 1 of the expected contracts",
+      "cause": "The Axon contract is 129 pages, so extraction reads retrieved excerpts; the auto-renewal clause on p.97 was not among them (it cited a Sourcewell extension clause on p.1 instead).",
+      "category": "Clause missed in a very long document"
+    },
+    {
+      "item": "q03",
+      "question": "How much notice does the County need to give to cancel the Grey Wall Veoci agreement without cause?",
+      "problem": "declined an answerable question; incorrect; expected page retrieved 0/1; expected document cited 0/1",
+      "cause": "The planner scoped to a vendor named 'Grey Wall Veoci' (vendor plus product), which matched no record, so the table's correct 60-day value was skipped; the fallback search over all documents did not retrieve p.10, and the answer declined.",
+      "category": "Question scoped to the wrong documents"
+    },
+    {
+      "item": "q04",
+      "question": "What is the total not-to-exceed cost of Appin Associates agreement 21163, including travel?",
+      "problem": "incorrect",
+      "cause": "Vendor scoping matched 'Associates' loosely and pulled in other vendors' contracts, and the planner chose a sum, so the headline added three contracts ($514,587); the 21163 row itself shows the right $152,550.",
+      "category": "Question scoped to the wrong documents"
+    },
+    {
+      "item": "q05",
+      "question": "How much did Modification 2 to agreement 21144 add, and what is the new total?",
+      "problem": "declined an answerable question; incorrect; expected document cited 0/1",
+      "cause": "The right page was the top search result, but the answer model said Modification 2 was not in the documents, apparently misled by the file name (Modification_1) on a page headed Modification No. 2. In the discarded first run the planner used the table and answered correctly.",
+      "category": "Answer ignored or invented evidence"
+    },
+    {
+      "item": "q07",
+      "question": "For the Motorola tower site leases, can Motorola terminate early, and on how much notice?",
+      "problem": "partially correct; expected page retrieved 1/2; expected document cited 1/2",
+      "cause": "The Waukegan lease is recorded as an 'agreement' even though its own evidence quote says 'site lease', so the planner's lease filter dropped it and only Libertyville was answered.",
+      "category": "Question scoped to the wrong documents"
+    },
+    {
+      "item": "q08",
+      "question": "What does the Starbucks coffee supply agreement say about price increases?",
+      "problem": "answered instead of declining; incorrect; claims not backed by the cited pages",
+      "cause": "There is no Starbucks document; search returned other contracts' price-increase clauses and the answer model presented one as the Starbucks terms instead of declining. The discarded first run declined correctly.",
+      "category": "Answer ignored or invented evidence"
+    }
+  ],
+  "review_notes": "- The pattern: the table is mostly right, but the chat layer loses that accuracy. Of the six chat failures, three\n  come from how the planner scopes the question (q03 matched no vendor, q04 matched too many, q07 filtered out a\n  lease), and in q03 the table already held the right answer. Two come from the answer step (q05 ignored the page\n  it retrieved; q08 answered about a document that doesn't exist). One is an extraction miss in a 129-page\n  document (q01).\n- Every failure was reviewed against the PDF. All of them are pipeline errors; no label was found to be wrong, so\n  none was changed after the results were seen.\n- A first chat run was discarded before grading: the scorer did not credit answers from the contracts table for\n  the evidence pages they quote. After the fix, all 10 questions were run again from scratch, and that run is the\n  one graded here.\n- The two runs differed. In the first, q05 was answered correctly from the table and q08 (Starbucks) was declined;\n  in the graded run both failed. With one run per question, a single chat result is a sample, not a fixed property.\n- The AI grader judged the same answers as the person, without seeing the person's grades, so its agreement\n  measures how far it can be trusted for routine monitoring."
+}

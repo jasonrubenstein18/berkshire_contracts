@@ -48,9 +48,12 @@ CSS = """
 .kpi-label {font-size:12px; color:#5b6b7f; margin-top:4px; text-transform:uppercase; letter-spacing:.04em;}
 .disclaimer {font-size:12px; color:#5b6b7f;}
 .source-box {max-height:420px; overflow-y:auto;}
+footer[aria-label="Gradio footer navigation"] img {display:none;}
 """
 
 THEME = gr.themes.Soft(primary_hue="blue", neutral_hue="slate")
+# Gradio shows Runs, API docs, "Built with Gradio", and Settings unless this list says otherwise.
+FOOTER_LINKS = ["api", "runs"]
 
 
 def _warm_up() -> None:
@@ -196,12 +199,21 @@ def _eval_sections() -> tuple[str, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     if not summary:
         pending = pd.DataFrame({"Status": ["Not run yet: `contracts evaluate`"]})
         return "_Evaluation results not generated yet (`contracts evaluate`)._", pending, pending, pending
-    md = summary.get("headline_markdown", "")
+    fields = pd.DataFrame(summary.get("extraction_by_field", []))
+    if "accuracy" in fields:
+        fields["accuracy"] = fields["accuracy"].map(lambda v: f"{v:.0%}")
+    failures = [
+        {"What": f"{f['document']}: {f['field']}", "Problem": f["problem"], "Cause": f["cause"]}
+        for f in summary.get("extraction_failures", [])
+    ] + [
+        {"What": f"{f['item']}: {f['question']}", "Problem": f["problem"], "Cause": f["cause"]}
+        for f in summary.get("chat_failures", [])
+    ]
     return (
-        md,
-        pd.DataFrame(summary.get("extraction_by_field", [])),
-        pd.DataFrame(summary.get("retrieval", [])),
+        summary.get("headline_markdown", ""),
+        fields,
         pd.DataFrame(summary.get("chat_cases", [])),
+        pd.DataFrame(failures or [{"What": "No failures"}]),
     )
 
 
@@ -338,27 +350,30 @@ with gr.Blocks(title="Contract Intelligence · Lake County", fill_width=True) as
             gr.Markdown("#### Extraction coverage and evidence verification by field")
             q_fields = gr.Dataframe(interactive=False)
             gr.Markdown(
-                "#### Evaluation against labeled ground truth (AI-labeled from the source text; human audit pending)"
+                "#### Evaluation: 10 documents and 10 questions, answer key verified against the PDFs"
             )
             eval_md = gr.Markdown()
-            eval_fields = gr.Dataframe(interactive=False, label="Field accuracy")
-            eval_retrieval = gr.Dataframe(interactive=False, label="Retrieval: late interaction vs BM25")
-            eval_chat = gr.Dataframe(interactive=False, wrap=True, label="Chat test cases")
+            eval_fields = gr.Dataframe(interactive=False, label="Table extraction accuracy by field")
+            eval_chat = gr.Dataframe(interactive=False, wrap=True, label="Chat test questions")
+            eval_failures = gr.Dataframe(interactive=False, wrap=True, label="Failures and their causes")
             gr.Markdown("#### Model usage and cost")
             q_cost = gr.Dataframe(interactive=False)
             gr.Markdown("#### Downloads")
-            with gr.Row():
-                dl_csv = gr.DownloadButton("Contracts table (CSV, one row per file)", size="sm")
-                dl_xlsx = gr.DownloadButton("Contracts workbook (XLSX + data dictionary)", size="sm")
-                dl_evidence = gr.DownloadButton("Field evidence (CSV)", size="sm")
-                dl_db = gr.DownloadButton("SQLite database", size="sm")
+            # Gradio 6 only downloads a file attached when the button is created. A path
+            # applied later, in demo.load, never gets a URL, so the click does nothing.
+            contracts_csv = export_paths()["csv"]
+            gr.DownloadButton(
+                "Contracts table (CSV, one row per file)",
+                value=contracts_csv,
+                visible=contracts_csv is not None,
+                size="sm",
+            )
 
     def load_all():
         df = ui.load_contracts_frame()
         figs = ui.overview_figures(df)
         quality = ui.quality_tables()
-        e_md, e_fields, e_ret, e_chat = _eval_sections()
-        paths = export_paths()
+        e_md, e_fields, e_chat, e_failures = _eval_sections()
         table = ui.explorer_table()
         return (
             uuid.uuid4().hex,
@@ -379,12 +394,8 @@ with gr.Blocks(title="Contract Intelligence · Lake County", fill_width=True) as
             quality["cost"],
             e_md,
             e_fields,
-            e_ret,
             e_chat,
-            gr.update(value=paths["csv"], visible=paths["csv"] is not None),
-            gr.update(value=paths["xlsx"], visible=paths["xlsx"] is not None),
-            gr.update(value=paths["evidence"], visible=paths["evidence"] is not None),
-            gr.update(value=paths["db"], visible=paths["db"] is not None),
+            e_failures,
         )
 
     demo.load(
@@ -408,12 +419,8 @@ with gr.Blocks(title="Contract Intelligence · Lake County", fill_width=True) as
             q_cost,
             eval_md,
             eval_fields,
-            eval_retrieval,
             eval_chat,
-            dl_csv,
-            dl_xlsx,
-            dl_evidence,
-            dl_db,
+            eval_failures,
         ],
     )
 
@@ -461,6 +468,7 @@ if __name__ == "__main__":
         auth_message="Berkshire Partners contract intelligence demo. Use the credentials shared with you.",
         theme=THEME,
         css=CSS,
+        footer_links=FOOTER_LINKS,
         allowed_paths=[str(settings.pdf_dir), str(settings.exports_dir), str(settings.db_path)],
         server_name=os.environ.get("GRADIO_SERVER_NAME", "127.0.0.1"),
         show_error=False,

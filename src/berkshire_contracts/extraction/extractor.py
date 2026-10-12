@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from datetime import date
@@ -42,6 +43,12 @@ LONG_DOC_HEAD_PAGES = 4
 LONG_DOC_TAIL_PAGES = 2
 LONG_DOC_CHUNKS_PER_FIELD = 3
 LONG_DOC_CHAR_BUDGET = 110_000
+
+LEASE_TITLE = re.compile(r"\blease\b", re.IGNORECASE)
+AUTO_RENEW_WORDING = re.compile(
+    r"\b(automatically\s+renew|renew(s|ed)?\s+automatically|(will|shall)\s+(be\s+)?automatically\s+(renew|extend))",
+    re.IGNORECASE,
+)
 
 
 @dataclass
@@ -200,9 +207,29 @@ def postprocess(
             check.score,
             problem=None if check.verified else "evidence quote not found in document",
         )
+    doc_type = results["document_type"]
+    if doc_type.value == "agreement" and doc_type.quote and LEASE_TITLE.search(doc_type.quote):
+        doc_type.value = doc_type.value_text = "lease"
     doc = DocumentResult(ctx.file_id, results, model, version)
-    doc.consistency_issues = consistency_issues(results)
+    doc.consistency_issues = consistency_issues(results) + renewal_wording_issues(results, ctx)
     return doc
+
+
+def renewal_wording_issues(fields: dict[str, FieldResult], ctx: DocumentContext) -> list[str]:
+    """Explicit "will automatically renew" wording the model didn't record as auto-renewal, so escalation
+    re-reads it. Looser phrases ("automatic renewal") also appear in clauses that only allow renewal."""
+    if fields["auto_renewal"].value is True:
+        return []
+    for page in ctx.context_pages:
+        text = " ".join(ctx.pages.get(page, "").split())
+        match = AUTO_RENEW_WORDING.search(text)
+        if match:
+            snippet = text[max(0, match.start() - 80) : match.end() + 80]
+            return [
+                f"auto_renewal is {fields['auto_renewal'].value_text or 'not found'} but p.{page} says "
+                f"“{snippet}”; recheck auto_renewal and renewal_type"
+            ]
+    return []
 
 
 def consistency_issues(fields: dict[str, FieldResult]) -> list[str]:
@@ -233,7 +260,10 @@ def flags_for(doc: DocumentResult) -> dict[str, str]:
 
 
 def merge_escalation(
-    first: DocumentResult, second: DocumentResult, flagged: dict[str, str]
+    first: DocumentResult,
+    second: DocumentResult,
+    flagged: dict[str, str],
+    ctx: DocumentContext | None = None,
 ) -> DocumentResult:
     merged = dict(first.fields)
     for name in flagged:
@@ -248,7 +278,7 @@ def merge_escalation(
             new.escalated = True
             merged[name] = new
     doc = DocumentResult(first.file_id, merged, second.model, second.prompt_version, escalated=True)
-    doc.consistency_issues = consistency_issues(merged)
+    doc.consistency_issues = consistency_issues(merged) + (renewal_wording_issues(merged, ctx) if ctx else [])
     return doc
 
 
@@ -297,7 +327,8 @@ def _extract(
         prompt_version=version,
         file_id=ctx.file_id,
         reasoning_effort=effort,
-        max_output_tokens=24000,
+        # High-effort re-reads of long documents spend most of the output budget on reasoning.
+        max_output_tokens=64000 if escalate_flags else 24000,
     )
     return postprocess(parsed, ctx, model, version)
 
@@ -455,7 +486,7 @@ def run_extraction(
         if doc is None:
             log.warning("escalation failed for %s (%s); keeping first-pass result", fid, error)
             return
-        final[fid] = merge_escalation(first_pass[fid], doc, chosen[fid])
+        final[fid] = merge_escalation(first_pass[fid], doc, chosen[fid], contexts[fid])
         escalated += 1
         persist(fid, final[fid])
 

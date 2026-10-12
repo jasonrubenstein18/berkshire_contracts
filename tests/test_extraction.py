@@ -7,11 +7,13 @@ import pytest
 
 from berkshire_contracts.db import Contract
 from berkshire_contracts.extraction.extractor import (
+    DocumentContext,
     DocumentResult,
     FieldResult,
     consistency_issues,
     flags_for,
     merge_escalation,
+    postprocess,
     review_reasons,
 )
 from berkshire_contracts.extraction.llm import RateLimiter, _retryable
@@ -25,7 +27,7 @@ from berkshire_contracts.extraction.normalize import (
     parse_iso_date,
     verify_quote,
 )
-from berkshire_contracts.schemas import EXTRACTION_FIELDS
+from berkshire_contracts.schemas import EXTRACTION_FIELDS, ContractExtraction
 
 PAGES = {
     1: norm_text("PROFESSIONAL SERVICES AGREEMENT between Lake County and DLR Group, Inc."),
@@ -118,6 +120,82 @@ def test_flags_and_escalation_merge_keep_better_answer():
     merged = merge_escalation(first, second, flags)
     assert merged.fields["vendor_name"].value == "DLR Group, Inc." and merged.fields["vendor_name"].escalated
     assert merged.fields["liability_cap"].value == "$1M"
+
+
+def extraction_with(**found) -> ContractExtraction:
+    data = {
+        name: {
+            "status": "not_found",
+            "evidence_quote": None,
+            "evidence_page": None,
+            "value": None,
+            "confidence": "low",
+        }
+        for name in EXTRACTION_FIELDS
+    }
+    for name, (value, quote, page) in found.items():
+        data[name] = {
+            "status": "found",
+            "evidence_quote": quote,
+            "evidence_page": page,
+            "value": value,
+            "confidence": "high",
+        }
+    return ContractExtraction.model_validate(data)
+
+
+def context(pages: dict[int, str]) -> DocumentContext:
+    return DocumentContext(
+        "f1", "f.pdf", len(pages), pages, sorted(pages), False, {p: norm_text(t) for p, t in pages.items()}
+    )
+
+
+def test_documents_titled_as_leases_are_typed_as_leases():
+    ctx = context(
+        {
+            1: 'THIS WIRELESS COMMUNICATIONS SITE LEASE ("Lease") is made as of July 1, 2016.',
+            2: "MASTER SERVICES AGREEMENT between Lake County and Acme, Inc.",
+        }
+    )
+    titled = extraction_with(document_type=("agreement", "THIS WIRELESS COMMUNICATIONS SITE LEASE", 1))
+    assert postprocess(titled, ctx, "m", "v").fields["document_type"].value == "lease"
+    plain = extraction_with(document_type=("agreement", "MASTER SERVICES AGREEMENT", 2))
+    assert postprocess(plain, ctx, "m", "v").fields["document_type"].value == "agreement"
+
+
+def test_explicit_auto_renew_wording_escalates_a_false_auto_renewal():
+    ctx = context(
+        {
+            1: "The County may renew this Agreement by mutual written agreement.",
+            97: "Upon completion of the Subscription Term, the Subscription Term will automatically renew for "
+            "an additional 5 years.",
+        }
+    )
+    first = postprocess(
+        extraction_with(
+            auto_renewal=(False, "The County may renew this Agreement by mutual written agreement", 1)
+        ),
+        ctx,
+        "m",
+        "v",
+    )
+    flags = flags_for(first)
+    assert {"auto_renewal", "renewal_type"} <= set(flags) and "p.97" in flags["auto_renewal"]
+
+    second = postprocess(
+        extraction_with(auto_renewal=(True, "the Subscription Term will automatically renew", 97)),
+        ctx,
+        "m",
+        "v",
+    )
+    merged = merge_escalation(first, second, flags, ctx)
+    assert merged.fields["auto_renewal"].value is True and not merged.consistency_issues
+
+    loose = context({10: "Automatic renewal is subject to approval by the County Board."})
+    doc = postprocess(
+        extraction_with(auto_renewal=(False, "Automatic renewal is subject to approval", 10)), loose, "m", "v"
+    )
+    assert "auto_renewal" not in flags_for(doc)
 
 
 def test_review_reasons_flag_contract_number_mismatch():

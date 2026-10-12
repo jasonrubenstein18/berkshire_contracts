@@ -10,8 +10,8 @@ statement that the documents don't say.
 - **Evidence-first extraction**: every value carries a verbatim quote, a page number, a confidence level, and the
   model and prompt version that produced it.
 - **No model-written SQL**: the model fills in a validated query plan and deterministic code runs it.
-- **Measured end to end**: extraction, retrieval and chat are scored against labeled test sets
-  ([`eval/results/report.md`](eval/results/report.md)).
+- **Measured against a human-checked answer key**: table extraction and chat answers are scored on 10 documents
+  and 10 questions, with every failure traced to a cause ([`eval/results/report.md`](eval/results/report.md)).
 
 ## Try it
 
@@ -139,8 +139,13 @@ Every step is resumable and logged to `pipeline_runs`.
   answer needs, and a search query. If the router fails, the app searches the text directly.
 - **Data cuts**: deterministic filters over the `contracts` table. Award totals are de-duplicated by contract family
   and vendor, so restatements and task orders count once. Documents that don't state a field are reported as
-  unknown, never counted as "no". Small results list each document with the asked-for value and its quote. If a
-  named contract isn't in the extracted data, the app searches the contract text instead.
+  unknown, never counted as "no". Small results list each document with the asked-for value and its quote. A named
+  contract number outranks a vendor name, and a vendor name matches only when all its words match; a vendor plus
+  product ("Grey Wall Veoci") matches that vendor's documents that mention the product. If the planner's
+  descriptive filters (document type, description) remove every named document, they are dropped; if other
+  filters do, the app searches those documents' text. If a named vendor or contract isn't in the extracted data,
+  the app searches only the documents whose pages or file names mention it. If none does, it says so without
+  calling the model, rather than answer from other contracts.
 - **Clause questions**: PLAID returns 200 candidates, which are re-scored with exact MaxSim on full-precision token
   vectors. The top 8 passages (capped per file for diversity) pass a relevance gate before the answer model sees
   them. The answer model (gpt-5-mini) must use only those sources, cite every sentence as `[S#]`, and say so when the
@@ -155,12 +160,12 @@ Every step is resumable and logged to `pipeline_runs`.
   averaged away, and paraphrases still match. "Twenty million dollars" finds "$20,000,000", and "walk away early
   without a reason" finds the termination-for-convenience clause; BM25 misses both. The cost is memory: one vector
   per token instead of one per passage. PLAID compression keeps candidate search scalable, and the exact rerank
-  restores full precision on the shortlist. The evaluation runs four modes; BM25 is the baseline, and the app
-  searches with PLAID plus that exact rerank.
+  restores full precision on the shortlist. The app searches with PLAID plus that exact rerank; `RETRIEVAL_MODE`
+  switches to PLAID alone, exact MaxSim or BM25.
 - **A relevance gate that measures the question's own words.** Full MaxSim scores include about 25 query-expansion
   ([MASK]) tokens that match almost anything, so off-topic questions scored about as high (≈0.95 normalized) as
   answerable ones. The gate instead uses the mean best match over the question's own tokens. Its threshold (0.88)
-  sits below every answerable test question (the lowest is 0.897), so it only skips clearly off-topic questions;
+  was set below every answerable question in an earlier test set, so it only skips clearly off-topic questions;
   the answer model's evidence check handles the rest.
 - **Evidence before values.** The model has to quote the clause and page before giving a value. This makes every
   value checkable in one click and lets the pipeline verify quotes automatically (99.8% of the 3,775 extracted values
@@ -189,82 +194,107 @@ Every step is resumable and logged to `pipeline_runs`.
 
 ## Evaluation
 
-Test sets are in [`eval/ground_truth/`](eval/ground_truth); results are in [`eval/results/`](eval/results). Re-run
-with `uv run contracts evaluate`.
+The answer key is in [`eval/ground_truth/`](eval/ground_truth) and the results are in
+[`eval/results/`](eval/results); [`report.md`](eval/results/report.md) lists every case and failure. The AI
+assistant that built the pipeline drafted the labels from the page text, and a person checked every one against the
+PDF before any results were seen. No label was changed afterwards.
 
-| Test set | Size | Coverage |
+| Test set | Size | What it covers |
 |---|---|---|
-| Extraction | 261 labeled values, 14 documents | Native, OCR, long-form, amendments, renewals, encrypted, wrapped and mostly blank documents, including fields that should stay blank |
-| Retrieval | 20 questions | Paraphrased questions with known answer pages |
-| Chat | 13 cases | Data cuts, clause lookups, hybrid, unanswerable and off-topic questions |
+| Table extraction | 100 values: 10 documents × 10 fields | Documents sampled at random within each document type, five scanned and five digital, including fields the document doesn't state, which should stay blank |
+| Chat | 10 questions | A list question, a date filter, four clause lookups, one question combining the table and a clause, and three the documents can't answer (a missing contract, a missing clause, an off-topic question) |
+
+**Running it.** `uv run contracts evaluate` scores the table against the labels and runs the chat questions fresh,
+never reusing cached model output. A person then grades each answer in `eval/results/chat_grading.csv` (an easier
+view is `chat_grading.md`), and `uv run contracts evaluate --report-only` rescores without calling any model. See
+[`eval/ground_truth/README.md`](eval/ground_truth/README.md).
 
 **Metrics and why.**
 
-- **Extraction**
-  - Accuracy, including correct blanks: does the table say the right thing?
-  - Precision, recall and F1 on stated values.
-  - Hallucination rate on fields the document doesn't state: a wrong value costs more than a blank.
+- **Table extraction** is scored by code, with no AI grader, so the score is reproducible: amounts within 0.5%,
+  dates, day counts, yes/no and document type exactly, vendor names ignoring suffixes like "Inc.".
+  - Accuracy, counting correct blanks: does the table say the right thing?
+  - Precision and recall on stated values, reported separately because the errors cost differently: a wrong value
+    misleads, a blank only sends the reader to the PDF.
+  - Values invented for fields the document doesn't state: the hallucination measure.
   - Quote verification and page accuracy: can a reviewer check the value in one click?
-  - Dates, amounts, enums and booleans are compared deterministically; an LLM judge grades only the free-text
-    fields.
-- **Retrieval**: page recall@1/5/10, file recall@5, MRR@10 and latency, against a BM25 baseline.
-- **Chat**
-  - Routing accuracy.
-  - Judge-rated correctness and groundedness.
-  - Correct refusals on unanswerable questions, scored separately because a confident wrong answer is the costly
-    failure.
-  - Whether the expected source was cited, plan correctness for data cuts, and latency and cost per question.
+- **Chat** is graded by a person, because ten answers are few enough to read.
+  - Correct and supported (every claim backed by a cited page) are graded apart, because a right answer with no
+    support can't be trusted.
+  - Declines are scored both ways: an assistant that refused everything would ace the unanswerable questions.
+  - Whether the expected page was found and the expected document cited, which separates search failures from
+    answer-writing failures.
+  - Latency and cost per question, because a slow or expensive answer fails in use.
+  - An AI grader gives a blind second opinion; its agreement with the person shows how far it can be trusted to
+    screen answers at scale.
 
 | Area | Metric | Result |
 |---|---|---|
-| Extraction | Accuracy, including correct blanks (strict) | 93% (91%) |
-| | Precision / recall / F1 on stated values | 91% / 88% / 89% |
-| | Values invented for fields the document doesn't state | 3% |
-| | Quotes verified verbatim / cited page exact | 100% / 97% |
-| Retrieval | Page recall@5, late interaction vs BM25 | 60% vs 55% |
-| | File recall@5 / MRR@10 | 75% vs 75% / 0.39 vs 0.39 |
-| Chat | Judged answers correct / grounded | 10 of 11 / 7 of 11 |
-| | Correct refusals (unknown contract, clause absent, off-topic) | 2 of 3 |
-| | Routed as labeled | 11 of 13 |
-| | Median / p90 latency, mean cost | 2.9 s / 6.9 s, $0.0014 per question |
+| Table extraction | Accuracy, including correct blanks (95% range) | 95% (89–98%) |
+| | Precision / recall on stated values | 94% / 98% |
+| | Values invented for fields the document doesn't state | 4 of 38 |
+| | Scanned / digital documents | 92% / 98% |
+| | Quotes verified verbatim / cited page exact | 100% / 100% |
+| Chat | Answers fully correct (and partly correct) | 1 of 6 (2 more) |
+| | Answers whose claims are all backed by a cited page | 4 of 4 |
+| | Unanswerable questions declined / answerable ones wrongly declined | 2 of 3 / 2 of 7 |
+| | Expected page found / expected document cited | 4 of 6 / 3 of 6 |
+| | List question precision / recall; date filter | 100% / 89%; correct |
+| | Median / p90 latency, mean cost | 4.35 s / 11.73 s, $0.0015 per question |
+| | AI grader agreeing with the person on correctness | 8 of 9 |
+
+The chat figures above are from the graded run before the scoping fixes, kept in
+[`eval/results/run2_before_scope_fix/`](eval/results/run2_before_scope_fix). The current
+[`report.md`](eval/results/report.md) reruns all ten questions after the fixes. The AI grader marks every answer
+correct there, but a person hasn't graded it yet.
 
 **What the results say.**
 
-- **Weakest fields.**
-  - Dates (77%): handwritten signature dates are garbled by OCR, and some end dates have to be computed from a
-    duration.
-  - Insurance requirements (71%): summaries drop statutory workers' compensation.
-  - Pricing basis (86%).
-
-  Human review should focus on these.
-- **Confidence alone is not a review trigger.** Reviewing every value below "high" confidence (10% of values) would
-  catch only 36% of the errors. The review queue should also target OCR'd and computed dates and high-value fields.
-- **Retrieval.** On the full archive, late interaction finds the answer page in the top 5 for 60% of the test
-  questions, versus 55% for BM25. File recall and MRR are tied. PLAID finds candidates; the exact rerank is what
-  the app serves.
+- **The table is reliable; the chat layer is the weak link.** The five extraction errors have three causes:
+  - an attached subconsultant agreement read as the County's terms (three errors, all in one task order);
+  - a fee table stored as an image on a page with a text layer, so it was never OCR'd;
+  - a signature date taken as an effective date.
+- **Most chat failures happen before the answer is written.**
+  - Three questions were scoped to the wrong documents by the planner. One vendor name matched nothing ("Grey
+    Wall Veoci"), a loose match on "Associates" summed three contracts, and a lease recorded as an "agreement" was
+    dropped by the planner's lease filter.
+  - Twice the answer step failed. Once it declined although the answer was the top search result; once it
+    presented another contract's price clause as the Starbucks agreement's.
+  - One answer missed Axon's auto-renewal. Extraction read the 129-page contract in excerpts that included the p.97
+    "will automatically renew" clause, but the model recorded a Sourcewell extension clause on p.1 instead.
+  - Fixes since then: contract numbers outrank vendor names, and vendor names must match word for word. Planner
+    filters that drop every named document are relaxed. Documents titled as leases are typed as leases, and explicit
+    "will automatically renew" wording sends a "no auto-renewal" value to a high-effort re-read.
+- **Confidence alone is not a review trigger.** Two of the four invented values were marked high confidence. Review
+  should also target attached terms, long documents and high-value fields.
 
 **Caveats.**
 
-- The test labels were drafted from the source text by the AI assistant that built the pipeline, before extraction
-  results were seen, and have not yet been audited by a person.
-- The judge is the same model family as the extractor. It grades only free-text fields and chat answers; set
-  `JUDGE_MODEL` to another family when quota allows.
-- Rubric `judge-v2` added guidance for descriptions and insurance after reviewing `judge-v1` disagreements. No
-  labels were edited after results were seen; the report discloses this.
-- The test sets are small, so treat every figure as directional.
+- Ten documents and ten questions, each chat question run once. Chat answers change between runs: two of the ten
+  differed between a discarded first run and the graded one. One answer moves a chat figure by 17 points, so read
+  the chat results as a map of where it fails, not as rates.
+- Only ten fields with clear right answers are scored. Free-text fields (description, renewal options, liability
+  cap, insurance) are not.
+- One person checked the labels and graded the answers. The AI grader is the same model family as the pipeline;
+  set `JUDGE_MODEL` to another family when quota allows.
 
 ### Monitoring in production
 
-- **Regression gate**: rerun the test sets on every prompt, model or parser change, and block the release on any drop.
+- **Release gate**: rerun this test set fresh on every prompt, model or parser change, and weekly with no change to
+  catch provider-side drift. Block a release that lowers accuracy or declines, or raises invented values. Prompts
+  are versioned in the database; pin dated model snapshots rather than aliases.
 - **Drift signals, weekly**, all derivable from `field_evidence`, `llm_calls` and `chat_logs`:
   - per-field fill rate and quote-verified rate;
   - OCR share and OCR confidence;
   - document-type mix;
-  - the retrieval relevance distribution;
-  - refusal and routing mix;
+  - the top retrieval score per question;
+  - refusal rate, uncited answers and route mix;
   - cost and latency per question.
-- **Human signals**: reviewer corrections and thumbs-down answers become new test cases (proposed), plus a monthly
-  audit of a 5% sample.
+
+  A drop in one field suggests new templates or clause wording; a drop across fields points to the model or prompt.
+- **Human audit**: a person grades a weekly sample of real questions, with the AI grader screening more;
+  grader-human agreement decides how far the grader is trusted. Answers users mark wrong and documents unlike
+  anything in the test set become new test cases.
 
 ## Guardrails and human checkpoints
 
@@ -304,27 +334,28 @@ These are public procurement records, but the design assumes deal-confidential d
 
 ## Limitations
 
-- The test labels are AI-drafted and not yet audited, the judge shares the extractor's model family, and the test
-  sets are small.
+- The test sets are small (10 documents, 10 questions), and chat answers are not yet reliable: 1 of 6 was fully
+  right in testing (see [Evaluation](#evaluation)).
 - On scanned pages, the quote is shown above the page image rather than highlighted on it.
 - De-duplicating awards across restatements and task orders (by family and vendor, keeping the largest) is a
   heuristic.
 - Each document is extracted on its own. There is no "current state" per contract family yet: an amendment that
   extends an agreement doesn't update that agreement's end date.
-- The router follows the labeled route 85% of the time; fallbacks catch the misses tested so far.
+- The router's scoping was the weakest step: three of the six graded chat failures came from scoping the question
+  to the wrong documents. The fixes cover those cases, but the router still varies from run to run.
 - The app is a single local process on SQLite with on-device model inference: fine for a demo, not for many
   concurrent users.
 
 ## Top three improvements
 
-1. **A human review queue and audited test labels.** Send flagged values (OCR'd and computed dates, low confidence,
-   unverified quotes, high-value fields) to reviewers who confirm or correct them in the app. Corrections update the
-   database and become test cases. Audit the existing labels first.
+1. **A human review queue and a larger answer key.** Send flagged values (attached terms, long documents, low
+   confidence, unverified quotes, high-value fields) to reviewers who confirm or correct them in the app.
+   Corrections update the database and become test cases, growing the answer key beyond 10 documents.
 2. **A contract-family "current state".** Merge each agreement with its amendments, renewal letters and task orders
    into one current term, value and notice date. That is the basis for an act-by calendar and for committed rather
    than stated value.
 3. **A production platform**, consisting of:
-   - hybrid retrieval (BM25 plus late interaction, since each wins different questions);
+   - hybrid retrieval (BM25 plus late interaction, so exact names and paraphrases both match);
    - Postgres with a managed vector index;
    - SSO with per-deal access;
    - an in-tenant model endpoint;
@@ -348,7 +379,7 @@ uv run contracts chunk
 uv run contracts extract       # about $4.40 with gpt-5-mini; cached and resumable
 uv run contracts index         # downloads the retrieval model on first run
 uv run contracts export
-uv run contracts evaluate      # about $0.07 of judge calls
+uv run contracts evaluate      # about $0.03: ten fresh chat answers plus the AI grader
 uv run contracts status        # what is in the database, including total model spend
 uv run contracts ask "Which contracts auto-renew?"
 uv run python scripts/package_submission.py   # reviewer zip in dist/
@@ -383,15 +414,15 @@ Settings come from environment variables or `.env`; defaults are in
 
 ## Cost
 
-Building and evaluating everything cost **$4.58** in OpenAI usage across 580 API calls (cache hits excluded):
+Building and evaluating everything cost **$4.64** in OpenAI usage across 600 API calls (cache hits excluded):
 
 | Item | Cost |
 |---|---|
 | Extraction of 389 documents, including escalations | $4.41 |
-| Judge calls during evaluation | $0.08 |
-| Routing and answers across all testing | $0.08 |
+| AI grader calls during evaluation | $0.11 |
+| Routing and answers across all testing | $0.11 |
 
-A typical question costs about $0.0014. `uv run contracts status` and the app's data-quality tab show live totals.
+A typical question costs about $0.0015. `uv run contracts status` and the app's data-quality tab show live totals.
 
 ## Repository layout
 
@@ -406,11 +437,11 @@ src/berkshire_contracts/
   extraction/                  field definitions, prompts, OpenAI client (structured outputs, cache, cost), extractor
   retrieval/                   late-interaction encoder; PLAID, exact MaxSim and BM25 search
   chat/                        router, deterministic filters, grounded answers, assistant service
-  evaluation/                  scoring against the test sets, retriever comparison, report
+  evaluation/                  answer-key loading, scoring, grading sheet, report
   app_support.py               overview charts, page rendering with highlights
   exports.py                   CSV and XLSX exports
-eval/ground_truth/             labeled test sets
-eval/results/                  report.md, summary.json, per-case CSVs
+eval/ground_truth/             human-checked answer key
+eval/results/                  report.md, summary.json, per-case CSVs, chat grading sheet, failure causes
 scripts/package_submission.py  build the reviewer zip: code plus prebuilt data, no secrets
 scripts/deploy_fly.py          publish to Fly.io (https://berkshire-contracts.fly.dev)
 claude-tag/                    plugin and skill for Claude Tag in Slack

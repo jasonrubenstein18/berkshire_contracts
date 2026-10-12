@@ -252,17 +252,3 @@ class JudgeVerdict(BaseModel):
     grounded: bool = Field(description="true if every factual claim is supported by the cited source text.")
     abstained: bool = Field(description="true if the answer declined for lack of evidence.")
     rationale: str
-
-
-class FieldMatch(BaseModel):
-    model_config = _STRICT
-
-    field: str
-    equivalent: bool
-    rationale: str
-
-
-class FieldMatchBatch(BaseModel):
-    model_config = _STRICT
-
-    verdicts: list[FieldMatch]

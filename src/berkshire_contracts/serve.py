@@ -42,6 +42,7 @@ def _start_gradio() -> None:
         auth_message="Berkshire Partners contract intelligence demo. Use the credentials shared with you.",
         theme=gradio_app.THEME,
         css=gradio_app.CSS,
+        footer_links=gradio_app.FOOTER_LINKS,
         allowed_paths=[
             str(settings.pdf_dir),
             str(settings.exports_dir),

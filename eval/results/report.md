@@ -1,102 +1,100 @@
 # Evaluation report
 
-Generated 2026-10-11 21:12 UTC · extraction model `gpt-5-mini` · judge `gpt-5-mini` (rubric judge-v2) · retriever `lightonai/answerai-colbert-small-v1`.
+Chat run 2026-10-12 15:01 UTC; report generated 2026-10-12 15:11 UTC. Models: extraction `gpt-5-mini`, chat `gpt-5-mini` / `gpt-5-mini`, AI grader `gpt-5-mini` (judge-v3); search `lightonai/answerai-colbert-small-v1`. Cached model output was not reused.
 
-Ground truth was labeled from the source text by the AI assistant that built the pipeline, before extraction results were viewed; it has not yet been independently audited. Labels were not edited after results were seen; rubric judge-v2 added field guidance for descriptions after reviewing judge-v1 disagreements.
+## Results
 
-## Field extraction
+- **Table extraction:** 95 of 100 field values correct (**95%**, 95% interval 89%–98%) across 10 documents. Of the values the table filled in, 94% were right (precision); of the values the documents clearly state, it got 98% (recall). It invented a value for **4 of 38** fields the document doesn't state. Correct values cite the label's page 100% of the time; 100% of evidence quotes were found word for word in the page text.
+- **Chat answers:** 6 of 6 correct, graded by the AI grader (human grades pending). 6 of 6 answers were fully supported by the pages they cite.
+- **Refusals:** declined 2 of 3 questions the documents can't answer, and wrongly declined 0 of 7 answerable questions.
+- **Finding the source:** the expected page was among the retrieved passages or the evidence quotes shown for 6 of 6 expected pages, and the answer cited the expected document 6 of 6 times. The list question returned contracts with precision 100% and recall 100%.
+- **Speed and cost:** median 4.04s per answer (p90 7.55s), $0.0010 per question.
+- No human grades yet, so grader agreement isn't measured.
 
-- 261 labeled fields across 14 documents (native, OCR, long-form, amendments, renewals, encrypted, upload-wrapper and null-heavy forms).
-- Accuracy (value or accepted alternative, including correct blanks): **93%**; strict: 91%.
-- Value precision 91%, recall 88%, F1 89%.
-- Hallucination rate on fields the document does not state: **3%**.
-- Evidence quotes verified verbatim in the source: 100%; cited page exact 97%, within one page 99%.
-- Confidence as a review trigger: sending every value below high confidence to review (10% of values) catches 36% of wrong values, so confidence alone is not a sufficient review gate (see the table below).
+## What was tested
 
-| field                          |   labels |   accuracy |   value_precision |   value_recall |   hallucination_rate |
-|:-------------------------------|---------:|-----------:|------------------:|---------------:|---------------------:|
-| Contract #                     |       14 |      1     |             1     |          1     |                0     |
-| Document type                  |       14 |      0.929 |             0.929 |          0.929 |                0     |
-| Vendor                         |       14 |      0.929 |             1     |          0.929 |                0     |
-| Description                    |       14 |      0.929 |             0.923 |          0.923 |                0     |
-| Effective date                 |       13 |      0.769 |             0.7   |          0.778 |                0.25  |
-| Expiration date                |       13 |      0.769 |             0.625 |          0.833 |                0.286 |
-| Renewal type                   |       14 |      1     |             1     |          1     |                0     |
-| Renewal options                |       14 |      0.929 |             0.889 |          0.889 |                0     |
-| Auto-renewal                   |       14 |      0.929 |             1     |          0.667 |                0     |
-| Renewal notice (days)          |       13 |      1     |             1     |          1     |                0     |
-| Award amount (USD)             |       13 |      1     |             1     |          1     |                0     |
-| Pricing basis                  |       14 |      0.857 |             1     |          0.727 |                0     |
-| Termination for convenience    |       14 |      1     |             1     |          1     |                0     |
-| Termination notice (days)      |       14 |      1     |             1     |          1     |                0     |
-| Liability cap                  |       13 |      0.923 |             0.667 |          0.667 |                0     |
-| Indemnification                |       14 |      1     |             1     |          1     |                0     |
-| Insurance requirements         |       14 |      0.714 |             0.429 |          0.375 |                0     |
-| Governing law                  |       14 |      1     |             1     |          1     |                0     |
-| Assignment / change of control |       14 |      1     |             1     |          1     |                0     |
+- **Extraction:** 100 field labels, 10 decision-critical fields on each of 10 documents drawn at random (fixed seed) by document type from files not used in earlier testing, covering agreements, renewals, an amendment, an award letter, a vendor disclosure, a lease and a task order, including scanned files. An AI assistant drafted each label with its page and quote; a person checked every one against the PDF. 0 labels were changed after results were seen (logged in the label file).
+- **Chat:** 10 questions with reference answers: 2 answered from the table, 4 clause lookups, 1 needing both, and 3 the system should decline (a vendor that doesn't exist, a clause the contract doesn't have, an off-topic question).
 
-| confidence   |   values |   accuracy |
-|:-------------|---------:|-----------:|
-| high         |      138 |      0.935 |
-| medium       |       15 |      0.733 |
-| low          |        1 |      0     |
+## Table extraction by field
 
-| category          |   documents |   labels |   accuracy |   value_f1 |
-|:------------------|------------:|---------:|-----------:|-----------:|
-| agreement         |           5 |       90 |      0.9   |      0.89  |
-| amendment         |           2 |       38 |      0.974 |      0.917 |
-| award_notice      |           1 |       19 |      0.947 |      0.96  |
-| encrypted         |           1 |       19 |      1     |      0.909 |
-| form_fields       |           1 |       19 |      0.947 |      0.941 |
-| lease             |           1 |       19 |      0.842 |      0.833 |
-| long_form         |           2 |       33 |      0.818 |      0.82  |
-| malformed         |           1 |       19 |      0.947 |      0.938 |
-| mixed             |           3 |       52 |      0.885 |      0.835 |
-| native            |           7 |      133 |      0.955 |      0.926 |
-| null_heavy        |           1 |       19 |      0.947 |      0.8   |
-| ocr               |           4 |       76 |      0.921 |      0.893 |
-| partial           |           1 |       19 |      0.842 |      0.833 |
-| price_adjustment  |           1 |       19 |      1     |      1     |
-| renewal           |           2 |       38 |      0.974 |      0.916 |
-| selected_context  |           1 |       14 |      0.857 |      0.857 |
-| task_order_sow    |           1 |       19 |      0.895 |      0.8   |
-| upload_wrapper    |           1 |       19 |      0.947 |      0.941 |
-| vendor_disclosure |           1 |       19 |      0.947 |      0.8   |
+| field                       |   labels | accuracy   |   invented |   missed |   wrong |
+|:----------------------------|---------:|:-----------|-----------:|---------:|--------:|
+| Document type               |       10 | 100%       |          0 |        0 |       0 |
+| Vendor                      |       10 | 100%       |          0 |        0 |       0 |
+| Effective date              |       10 | 90%        |          1 |        0 |       0 |
+| Expiration date             |       10 | 100%       |          0 |        0 |       0 |
+| Auto-renewal                |       10 | 100%       |          0 |        0 |       0 |
+| Renewal notice (days)       |       10 | 100%       |          0 |        0 |       0 |
+| Award amount (USD)          |       10 | 90%        |          0 |        1 |       0 |
+| Termination for convenience |       10 | 90%        |          1 |        0 |       0 |
+| Termination notice (days)   |       10 | 90%        |          1 |        0 |       0 |
+| Governing law               |       10 | 90%        |          1 |        0 |       0 |
 
-## Retrieval
+| text    |   documents |   labels | accuracy   | precision   | recall   |
+|:--------|------------:|---------:|:-----------|:------------|:---------|
+| native  |           5 |       50 | 98%        | 100%        | 96%      |
+| scanned |           5 |       50 | 92%        | 90%         | 100%     |
 
-20 paraphrased questions with known answer pages; a hit is a chunk from the right page.
+Extraction failures:
 
-| retriever                                   |   page_recall@1 |   page_recall@5 |   page_recall@10 |   file_recall@5 |   MRR@10 |   median_latency_ms |
-|:--------------------------------------------|----------------:|----------------:|-----------------:|----------------:|---------:|--------------------:|
-| BM25 (lexical baseline)                     |            0.25 |            0.55 |             0.55 |            0.75 |    0.388 |                 0.3 |
-| PLAID only (compressed late interaction)    |            0.25 |            0.6  |             0.6  |            0.75 |    0.36  |               204.8 |
-| Exact MaxSim (brute-force late interaction) |            0.3  |            0.6  |             0.6  |            0.75 |    0.393 |               203.3 |
-| PLAID + exact MaxSim rerank (deployed)      |            0.3  |            0.6  |             0.6  |            0.75 |    0.393 |               194.4 |
+- **23018_Fully_Executed_Agreement_3_16_23.pdf, Award amount (USD)**: left blank: expected 48000, got not stated — The fee table on p.2 is an image on a page that also has a text layer, so the page was not OCR'd and $48,000 never reached the model.
+- **2022__2024_Vendor_Disclosure_Statement.pdf, Effective date**: invented a value: expected not stated, got 2022-06-09 — Took the form's signature date (June 9, 2022) as an effective date; a vendor disclosure has no contract term.
+- **23173_1_Task_Order_A__Fully_Executed.pdf, Termination for convenience**: invented a value: expected not stated, got true — Read the termination clause from the attached subconsultant terms (p.6), not from the County's task order.
+- **23173_1_Task_Order_A__Fully_Executed.pdf, Termination notice (days)**: invented a value: expected not stated, got 30 — Same clause; the 30-day notice is in the subconsultant terms on p.6.
+- **23173_1_Task_Order_A__Fully_Executed.pdf, Governing law**: invented a value: expected not stated, got Illinois — Same attachment; p.6 names the law of the subconsultant's place of business, which the model turned into Illinois.
 
-Late interaction (deployed) finds the answer page in the top 5 for 60% of questions versus 55% for BM25 (MRR 0.39 vs 0.39).
+## Chat cases
 
-Best retriever on page recall@5: PLAID only (compressed late interaction).
+| Case   | Question                                                                                            | Correct   | Supported   | Declined             | Source found         | Cited   |   Seconds |
+|:-------|:----------------------------------------------------------------------------------------------------|:----------|:------------|:---------------------|:---------------------|:--------|----------:|
+| q01    | Which contracts have auto-renewal clauses?                                                          | correct   | yes         | no                   | list P 100% / R 100% |         |       4.2 |
+| q02    | Which contracts expire in 2026?                                                                     | n/a       | n/a         | no                   | filter ok            |         |       3.1 |
+| q03    | How much notice does the County need to give to cancel the Grey Wall Veoci agreement without cause? | correct   | yes         | no                   | 1/1                  | 1/1     |       5.7 |
+| q04    | What is the total not-to-exceed cost of Appin Associates agreement 21163, including travel?         | correct   | yes         | no                   | 1/1                  | 1/1     |       3.2 |
+| q05    | How much did Modification 2 to agreement 21144 add, and what is the new total?                      | correct   | yes         | no                   | 1/1                  | 1/1     |       6.5 |
+| q06    | What renewal options does the Pat Davis Design Group agreement 23018 give the County?               | correct   | yes         | no                   | 1/1                  | 1/1     |       4.7 |
+| q07    | For the Motorola tower site leases, can Motorola terminate early, and on how much notice?           | correct   | yes         | no                   | 2/2 (rank 5)         | 2/2     |      16.6 |
+| q08    | What does the Starbucks coffee supply agreement say about price increases?                          | correct   | n/a         | yes (should decline) |                      |         |       3.9 |
+| q09    | What liability cap applies to Ciosek Tree Service's tree removal contract?                          | correct   | yes         | no (should decline)  |                      |         |       3.4 |
+| q10    | Who won the World Series last year?                                                                 | correct   | n/a         | yes (should decline) |                      |         |       1.8 |
 
-## End-to-end chat
+Chat failures:
 
-- 13 cases (structured, clause lookup, hybrid, negative and out-of-scope).
-- Routing accuracy 85%; judge-rated correct 91% (correct or partially correct 91%); grounded 64%.
-- Correct abstention on unanswerable questions: 67%; expected source cited: 83%.
-- Median latency 2.93s (p90 6.85s); mean cost $0.0014 per question.
+- **q09**: answered instead of declining — The answer lists all three Ciosek Tree Service documents with "Liability cap: not stated in this document", which the grading guide counts as a decline; the AI grader marked it as answered. It needs the person's grade.
 
-| id   | type         | route         | route_ok   | judge_correctness   |   judge_grounded |   abstained_ok |   source_cited |   set_recall |   plan_ok |   latency_s |
-|:-----|:-------------|:--------------|:-----------|:--------------------|-----------------:|---------------:|---------------:|-------------:|----------:|------------:|
-| c01  | structured   | structured    | True       | correct             |                1 |            nan |            nan |            1 |       nan |        3.77 |
-| c02  | structured   | structured    | True       | nan                 |              nan |            nan |            nan |          nan |         1 |        1.96 |
-| c03  | structured   | structured    | True       | nan                 |              nan |            nan |            nan |          nan |         1 |        2.89 |
-| c04  | clause       | structured    | False      | correct             |                1 |            nan |              1 |          nan |       nan |        2.93 |
-| c05  | clause       | clause_search | True       | correct             |                1 |            nan |              1 |          nan |       nan |        6.76 |
-| c06  | clause       | structured    | True       | correct             |                1 |            nan |              1 |          nan |       nan |        2.82 |
-| c07  | clause       | hybrid        | True       | correct             |                1 |            nan |              1 |          nan |       nan |        6.87 |
-| c08  | clause       | clause_search | True       | incorrect           |                0 |            nan |              0 |          nan |       nan |       13.08 |
-| c09  | hybrid       | structured    | True       | correct             |                1 |            nan |            nan |          nan |       nan |        3.38 |
-| c10  | negative     | clause_search | True       | correct             |                0 |              1 |            nan |          nan |       nan |        6.37 |
-| c11  | negative     | structured    | False      | correct             |                0 |              0 |            nan |          nan |       nan |        2.51 |
-| c12  | out_of_scope | out_of_scope  | True       | correct             |                0 |              1 |            nan |          nan |       nan |        2.72 |
-| c13  | clause       | structured    | True       | correct             |                1 |            nan |              1 |          nan |       nan |        2.49 |
+## Reviewer notes
+
+- This run follows fixes to the six chat failures of the previous run, which is kept with its notes in
+  `run2_before_scope_fix/`. All 10 questions were run again from scratch, and the AI grader marked every graded
+  answer correct. A person has not graded this run yet.
+- What changed:
+  - Scoping: a named contract number now outranks the vendor name (q04). Vendor names match only when every word
+    matches, so "Appin Associates" no longer pulls in other "Associates" firms. A vendor plus product name such as
+    "Grey Wall Veoci" matches that vendor's documents that mention the product (q03).
+  - Filters the planner adds to describe a named contract (document type, description) are dropped when they
+    remove all of its documents (q05). A named vendor with no extracted record is searched only in the documents
+    that mention it.
+  - Extraction: two documents titled as leases were stored as agreements (q07), and Axon's "will automatically
+    renew" clause on p.97 was recorded as no auto-renewal (q01). Two narrow rules fixed both, and only those three
+    documents were re-extracted. None of them is in the extraction test set.
+- q03, q04, q05, q07 and q09 were also asked several more times without cached output. q03, q04, q07 and q09 were
+  right every time. q05 failed two of three times until the descriptive-filter fix, then passed five of five.
+
+## How it is measured, and why
+
+- **Extraction** is compared by code, not an AI grader, so the score is reproducible: amounts within 0.5%, dates, day counts, yes/no and document type exactly, vendor names ignoring suffixes like "Inc.". Precision and recall are separate because the errors cost differently: a wrong value misleads, a blank only sends the reader to the PDF. The invented-value rate is the hallucination measure. Page accuracy and verified quotes show whether a value can be checked.
+- **Chat** is graded by a person against the reference: *correct* (the key facts) and *supported* (every claim backed by a cited page; not applicable when it declines), because a right answer with no support can't be trusted. *Source found / cited* separates search failures from answer-writing failures. *Refusals* are scored both ways, since a system that refused everything would ace the unanswerable questions. Latency and cost are reported because a slow or expensive answer fails in use. The route is logged for diagnosis, not scored.
+
+## Monitoring in production
+
+- **Drift signals already logged.** Per answer: route, retrieved pages and scores, refusal flag, latency, cost. Per extracted value: quote, page, confidence, and whether the quote appears in the page text. Track weekly: refusal rate, uncited answers, top retrieval score, fill rate and quote-verified rate per field, OCR confidence. A drop in one field suggests new templates or clause wording; a drop across fields points to the model or prompt.
+- **Release gate and reruns.** Rerun this set fresh on every prompt, model or parser change, and weekly with no change to catch provider-side drift; block a release that lowers accuracy or refusals or raises invented values. Prompts are versioned in the database; pin dated model snapshots rather than aliases.
+- **Human audit and feedback.** A person reviews a weekly sample, with the AI grader screening more; grader-human agreement decides how far the grader is trusted. Answers users mark wrong and documents unlike anything in the test set become new test cases.
+
+## Limitations
+
+- The sample is small: one chat question moves chat accuracy by 17 points, and the 95% interval on extraction accuracy is 89%–98%. Read the numbers as a map of where the pipeline fails, and the harness as something to grow, not as a precise score.
+- An AI assistant drafted the labels and a person verified them, so the draft can anchor the reviewer.
+- Free-text fields (description, renewal options, liability cap, insurance) are not scored here because they need judgment; the chat questions cover some of the same clauses.
+- Each question was graded on one run, and chat answers change between runs. Running each question several times and reporting how often the outcome holds would give a steadier chat score.

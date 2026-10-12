@@ -13,7 +13,7 @@ from datetime import UTC, datetime
 from typing import Any, TypeVar
 
 from openai import APIConnectionError, APIStatusError, OpenAI, RateLimitError
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from sqlalchemy import func
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
@@ -114,10 +114,13 @@ def spend_today(purposes: tuple[str, ...] | None = None) -> float:
 
 
 class LlmClient:
-    def __init__(self, settings: Settings | None = None, log_calls: bool = True) -> None:
+    def __init__(
+        self, settings: Settings | None = None, log_calls: bool = True, read_cache: bool = True
+    ) -> None:
         self.settings = settings or get_settings()
         self._client = OpenAI(api_key=self.settings.require_openai_key(), max_retries=2, timeout=240)
         self.log_calls = log_calls
+        self.read_cache = read_cache
         self._lock = threading.Lock()
         self.settings.llm_cache_dir.mkdir(parents=True, exist_ok=True)
 
@@ -188,7 +191,7 @@ class LlmClient:
         }
         key = self.cache_key(payload)
         cache_path = self.settings.llm_cache_dir / f"{key}.json"
-        if use_cache and cache_path.exists():
+        if use_cache and self.read_cache and cache_path.exists():
             cached = json.loads(cache_path.read_text())
             stats = CallStats(model=model, cache_hit=True, cost_usd=0.0)
             self._log(purpose, stats, prompt_version, file_id)
@@ -220,6 +223,15 @@ class LlmClient:
                 purpose, stats, prompt_version, file_id, error=f"{exc.status_code}: {exc.message}"[:500]
             )
             raise LlmError(f"OpenAI API error {exc.status_code}: {exc.message}") from exc
+        except ValidationError as exc:
+            # The SDK parses the output itself, so output cut off at max_output_tokens surfaces here, without usage.
+            stats = CallStats(
+                model=model, latency_ms=int((time.perf_counter() - started) * 1000), cost_usd=None
+            )
+            self._log(purpose, stats, prompt_version, file_id, error="output was not complete JSON")
+            raise LlmError(
+                f"model output was not complete JSON (max_output_tokens={max_output_tokens})"
+            ) from exc
         latency = int((time.perf_counter() - started) * 1000)
 
         usage = getattr(response, "usage", None)

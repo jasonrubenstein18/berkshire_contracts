@@ -135,12 +135,20 @@ def export() -> None:
 
 @app.command()
 def evaluate(
-    judge: bool = typer.Option(True, help="Use the LLM judge for free-text fields and chat answers."),
+    report_only: bool = typer.Option(
+        False, help="Rescore the saved chat run with the human grades in chat_grading.csv; no model calls."
+    ),
+    judge: bool = typer.Option(True, help="Ask the AI grader for a second opinion on each chat answer."),
 ) -> None:
-    """Score extraction, retrieval (late interaction vs BM25) and chat against eval/ground_truth."""
+    """Score extraction against the verified labels and run the chat test questions fresh (no cached output)."""
+    from berkshire_contracts.evaluation.ground_truth import UnverifiedLabels
     from berkshire_contracts.evaluation.runner import run_evaluation
 
-    _run_step("evaluate", lambda: run_evaluation(use_judge=judge))
+    try:
+        _run_step("evaluate", lambda: run_evaluation(report_only=report_only, use_judge=judge))
+    except UnverifiedLabels as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(1) from exc
 
 
 @app.command()

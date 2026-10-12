@@ -12,7 +12,7 @@ import plotly.graph_objects as go
 from rapidfuzz import fuzz
 from sqlalchemy import select
 
-from berkshire_contracts.db import Contract, FieldEvidence, get_engine
+from berkshire_contracts.db import Contract, FieldEvidence, Page, get_engine
 from berkshire_contracts.extraction.fields import ENUM_LABELS, FIELD_BY_NAME
 from berkshire_contracts.schemas import FilterCondition, QueryPlan
 
@@ -231,9 +231,47 @@ def apply_filter(df: pd.DataFrame, cond: FilterCondition) -> tuple[pd.DataFrame,
     return df, f"ignored filter {col} {op} {cond.value!r}"
 
 
+_NAME_FILLER = _VENDOR_NOISE | {"and", "dba"}
+
+
+def name_words(text: str) -> list[str]:
+    """Lowercase words with legal suffixes and "and"/"&" dropped and plurals singularized, so "Blain & Associates"
+    and "Blain and Associate, Inc." compare equal."""
+    tokens = re.sub(r"[^a-z0-9]", " ", str(text).lower()).split()
+    return [t[:-1] if len(t) > 3 and t.endswith("s") else t for t in tokens if t not in _NAME_FILLER]
+
+
+def page_text(file_ids: list[str]) -> dict[str, str]:
+    if not file_ids:
+        return {}
+    with get_engine().connect() as conn:
+        rows = conn.execute(select(Page.file_id, Page.text).where(Page.file_id.in_(file_ids))).all()
+    texts: dict[str, list[str]] = {}
+    for r in rows:
+        texts.setdefault(r.file_id, []).append(r.text or "")
+    return {fid: "\n".join(parts) for fid, parts in texts.items()}
+
+
+def _vendor_product_mask(df: pd.DataFrame, words: list[str], vendor_words: pd.Series) -> pd.Series:
+    """Names like "Grey Wall Veoci" join a vendor and a product: the longest run of leading words that names exactly
+    one vendor picks the vendor, and its documents must mention the remaining words."""
+    none = pd.Series(False, index=df.index)
+    for n in range(len(words) - 1, 0, -1):
+        lead, rest = set(words[:n]), set(words[n:])
+        mask = vendor_words.map(lambda v, lead=lead: lead <= v)
+        if not mask.any():
+            continue
+        if vendor_groups(df.loc[mask, "vendor_name"]).nunique() != 1:
+            return none
+        texts = page_text(df.loc[mask, "file_id"].tolist())
+        mentions = {fid for fid, text in texts.items() if rest <= set(name_words(text))}
+        return mask & df["file_id"].isin(mentions)
+    return none
+
+
 def _name_mask(df: pd.DataFrame, name: str, fuzzy: bool = True) -> pd.Series:
-    """Rows whose vendor matches `name`, or whose file name contains it (products like "Sympro" often appear
-    only in the file name, not in the vendor's legal name)."""
+    """Rows whose vendor has every word of `name`, or whose file name contains it (products like "Sympro" often
+    appear only in the file name, not in the vendor's legal name). `fuzzy=False` keeps plain substring matching."""
     target = re.sub(r"[_\-.]+", " ", name.lower()).strip()
     if not target:
         return pd.Series(False, index=df.index)
@@ -243,29 +281,40 @@ def _name_mask(df: pd.DataFrame, name: str, fuzzy: bool = True) -> pd.Series:
         # Short names ("GTL", "CTI") must match a whole word, or "cti" would match "construction".
         word = rf"\b{re.escape(target)}\b"
         return vendors.str.contains(word, regex=True) | filenames.str.contains(word, regex=True)
-    if fuzzy:
-        mask = vendors.map(lambda s: bool(s) and fuzz.partial_ratio(s, target) >= 85)
-    else:
-        mask = vendors.str.contains(target, regex=False)
-    return mask | filenames.str.contains(target, regex=False)
+    by_file = filenames.str.contains(target, regex=False)
+    if not fuzzy:
+        return vendors.str.contains(target, regex=False) | by_file
+    words = name_words(target)
+    if not words:
+        return by_file
+    vendor_words = df["vendor_name"].map(lambda v: set(name_words(v)) if isinstance(v, str) else set())
+    mask = vendor_words.map(lambda v: set(words) <= v) | by_file
+    if mask.any() or len(words) < 2:
+        return mask
+    return _vendor_product_mask(df, words, vendor_words)
 
 
 def resolve_scope(df: pd.DataFrame, contract_numbers: list[str], vendor_names: list[str]) -> pd.DataFrame:
+    """Named contract numbers win: a vendor only adds documents when none of the numbered ones are its own, so
+    "contract 21163 with Appin" doesn't pull in Appin's other contracts."""
     if not contract_numbers and not vendor_names:
         return df
-    mask = pd.Series(False, index=df.index)
+    number_mask = pd.Series(False, index=df.index)
     numbers = df["contract_number"].fillna("").astype(str).str.lower().str.replace("-", "")
     filenames = df["filename"].str.lower()
     for number in contract_numbers:
         digits = "".join(ch for ch in number if ch.isalnum()).lower()
         if not digits:
             continue
-        mask |= numbers.str.contains(digits, regex=False)
+        number_mask |= numbers.str.contains(digits, regex=False)
         if len(digits) >= 5 and digits[:5].isdigit():
-            mask |= df["family_id"].fillna("").astype(str).eq(digits[:5])
-            mask |= filenames.str.contains(digits[:5], regex=False)
+            number_mask |= df["family_id"].fillna("").astype(str).eq(digits[:5])
+            number_mask |= filenames.str.contains(digits[:5], regex=False)
+    mask = number_mask.copy()
     for vendor in vendor_names:
-        mask |= _name_mask(df, vendor)
+        vendor_mask = _name_mask(df, vendor)
+        if not (vendor_mask & number_mask).any():
+            mask |= vendor_mask
     return df[mask]
 
 
@@ -438,13 +487,20 @@ def run_structured(plan: QueryPlan, df: pd.DataFrame | None = None) -> Structure
     if plan.metric == "count":
         summary = f"**{len(filtered)}** of {total} documents match."
     elif plan.metric in {"sum_award", "avg_award"}:
-        amounts = dedupe_awards(filtered)["award_amount_usd"]
+        awards = dedupe_awards(filtered)
+        amounts = awards["award_amount_usd"]
         value = amounts.sum() if plan.metric == "sum_award" else (amounts.mean() if len(amounts) else 0.0)
         word = "Total" if plan.metric == "sum_award" else "Average"
         summary = (
-            f"{word} stated award amount: **${value:,.0f}** across {len(amounts)} distinct awards "
-            f"({len(filtered)} matching documents; awards restated in several documents are counted once)."
+            f"{word} stated award amount: **${value:,.0f}** across {len(amounts)} distinct "
+            f"award{'' if len(amounts) == 1 else 's'} ({len(filtered)} matching "
+            f"document{'' if len(filtered) == 1 else 's'}; awards restated in several documents are counted once)."
         )
+        if 0 < len(awards) <= 8:
+            award_evidence = load_evidence(awards["file_id"].tolist(), ["award_amount_usd"])
+            summary += "\n\n" + "\n".join(
+                _describe(row, ["award_amount_usd"], award_evidence) for _, row in awards.iterrows()
+            )
     else:
         summary = f"**{len(filtered)}** of {total} documents match."
 

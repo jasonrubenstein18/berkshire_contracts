@@ -1,0 +1,12 @@
+item,category,cause
+a1cb292b0738 award_amount_usd,Image-only table not read,"The fee table on p.2 is an image on a page that also has a text layer, so the page was not OCR'd and $48,000 never reached the model."
+dd25def4b937 effective_date,Wrong date taken as effective date,"Took the form's signature date (June 9, 2022) as an effective date; a vendor disclosure has no contract term."
+e02574a8a789 termination_for_convenience,Attached third-party terms read as the contract,"Read the termination clause from the attached subconsultant terms (p.6), not from the County's task order."
+e02574a8a789 termination_notice_days,Attached third-party terms read as the contract,Same clause; the 30-day notice is in the subconsultant terms on p.6.
+e02574a8a789 governing_law,Attached third-party terms read as the contract,"Same attachment; p.6 names the law of the subconsultant's place of business, which the model turned into Illinois."
+q01,Clause misread in a very long document,"The Axon contract is 129 pages, so extraction reads retrieved excerpts. They included the p.97 clause (""will automatically renew for an additional 5 years""), but the model recorded auto-renewal as false, citing a Sourcewell extension clause on p.1 instead."
+q03,Question scoped to the wrong documents,"The planner scoped to a vendor named 'Grey Wall Veoci' (vendor plus product), which matched no record, so the table's correct 60-day value was skipped; the fallback search over all documents did not retrieve p.10, and the answer declined."
+q04,Question scoped to the wrong documents,"Vendor scoping matched 'Associates' loosely and pulled in other vendors' contracts, and the planner chose a sum, so the headline added three contracts ($514,587); the 21163 row itself shows the right $152,550."
+q05,Answer ignored or invented evidence,"The right page was the top search result, but the answer model said Modification 2 was not in the documents, apparently misled by the file name (Modification_1) on a page headed Modification No. 2. In the discarded first run the planner used the table and answered correctly."
+q07,Question scoped to the wrong documents,"The Waukegan lease is recorded as an 'agreement' even though its own evidence quote says 'site lease', so the planner's lease filter dropped it and only Libertyville was answered."
+q08,Answer ignored or invented evidence,There is no Starbucks document; search returned other contracts' price-increase clauses and the answer model presented one as the Starbucks terms instead of declining. The discarded first run declined correctly.
