@@ -15,7 +15,10 @@ statement that the documents don't say.
 
 ## Try it
 
-The app runs locally. You need [uv](https://docs.astral.sh/uv/getting-started/installation/), which installs
+Open **[berkshire-contracts.fly.dev](https://berkshire-contracts.fly.dev/)** in a browser and sign in with the
+username and password you were given. Nothing needs to be installed.
+
+To run it locally instead, you need [uv](https://docs.astral.sh/uv/getting-started/installation/), which installs
 Python 3.12 if it's missing. From the unzipped submission folder:
 
 ```bash
