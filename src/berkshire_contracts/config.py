@@ -87,11 +87,27 @@ class Settings(BaseSettings):
 
     app_username: str | None = None
     app_password: SecretStr | None = None
-    # Bearer token for the remote MCP server used by Claude Tag. Unset locally; set on Fly.
+    # Tokens for the remote MCP server: Claude Tag (Slack) and Copilot Studio (Teams). Unset locally; set on Fly.
     mcp_token: SecretStr | None = None
+    copilot_mcp_token: SecretStr | None = None
     max_questions_per_minute: int = 6
     max_question_chars: int = 600
     daily_llm_budget_usd: float = 5.0
+
+    # Daily expiry email, sent through Resend when POST /tasks/remind carries REMIND_TOKEN.
+    remind_token: SecretStr | None = None
+    resend_api_key: SecretStr | None = None
+    # Resend only sends from a verified domain; onboarding@resend.dev delivers only to the account's own address.
+    reminder_from: str | None = None
+    # Comma-separated recipient addresses.
+    reminder_to: str = ""
+    reminder_days: int = 14
+    reminder_timezone: str = "America/New_York"
+    app_url: str = "https://berkshire-contracts.fly.dev"
+
+    @property
+    def reminder_recipients(self) -> list[str]:
+        return [address.strip() for address in self.reminder_to.split(",") if address.strip()]
 
     @property
     def db_path(self) -> Path:

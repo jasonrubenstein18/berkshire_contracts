@@ -2,7 +2,8 @@
 
 Stages code, a checkpoint of the database, the index, the staged PDFs, exports and evaluation
 results. Never stages .env, contracts.zip, the brief, or presentation/. Secrets are sent to Fly
-on stdin and are never printed. MCP_TOKEN is written to .env when it is missing.
+on stdin and are never printed. MCP_TOKEN, COPILOT_MCP_TOKEN and REMIND_TOKEN are written to .env
+when they are missing.
 
     uv run python scripts/deploy_fly.py
 """
@@ -37,6 +38,7 @@ COPY_FILES = (
     "fly.toml",
     ".dockerignore",
 )
+TOKENS = ("MCP_TOKEN", "COPILOT_MCP_TOKEN", "REMIND_TOKEN")
 DATA_DIRS = ("index", "pdfs", "exports")
 EVAL_DIRS = ("ground_truth", "results")
 
@@ -88,21 +90,22 @@ def stage() -> Path:
     return STAGE
 
 
-def ensure_mcp_token() -> str:
-    """Return the bearer token, generating one into .env when it is missing. Never print it."""
+def ensure_token(name: str) -> str:
+    """Return the token `name` from .env, generating one into .env when it is missing. Never print it."""
     path = ROOT / ".env"
     text = path.read_text() if path.exists() else ""
-    match = re.search(r"^MCP_TOKEN=(.*)$", text, re.MULTILINE)
+    pattern = rf"^{re.escape(name)}=(.*)$"
+    match = re.search(pattern, text, re.MULTILINE)
     current = match.group(1).strip() if match else ""
     if current:
         return current
     token = secrets.token_urlsafe(32)
     if match:
-        text = re.sub(r"^MCP_TOKEN=.*$", f"MCP_TOKEN={token}", text, count=1, flags=re.MULTILINE)
+        text = re.sub(pattern, f"{name}={token}", text, count=1, flags=re.MULTILINE)
     else:
         if text and not text.endswith("\n"):
             text += "\n"
-        text += f"MCP_TOKEN={token}\n"
+        text += f"{name}={token}\n"
     path.write_text(text)
     get_settings.cache_clear()
     return token
@@ -128,19 +131,29 @@ def set_secrets() -> None:
     password = settings.app_password.get_secret_value().strip() if settings.app_password else ""
     if not key or not username or not password:
         raise SystemExit("OPENAI_API_KEY, APP_USERNAME and APP_PASSWORD must be set in .env")
-    token = ensure_mcp_token()
-    payload = "".join(
-        f"{name}={value}\n"
-        for name, value in (
-            ("OPENAI_API_KEY", key),
-            ("APP_USERNAME", username),
-            ("APP_PASSWORD", password),
-            ("MCP_TOKEN", token),
-        )
+    pairs = [
+        ("OPENAI_API_KEY", key),
+        ("APP_USERNAME", username),
+        ("APP_PASSWORD", password),
+        *((name, ensure_token(name)) for name in TOKENS),
+    ]
+    settings = get_settings()
+    resend_key = settings.resend_api_key.get_secret_value().strip() if settings.resend_api_key else ""
+    optional = (
+        ("RESEND_API_KEY", resend_key),
+        ("REMINDER_FROM", (settings.reminder_from or "").strip()),
+        ("REMINDER_TO", settings.reminder_to.strip()),
     )
+    pairs += [(name, value) for name, value in optional if value]
+    payload = "".join(f"{name}={value}\n" for name, value in pairs)
     imported = _fly("secrets", "import", "--app", APP, "--stage", input_text=payload)
     _require(imported, "fly secrets import")
-    print("MCP_TOKEN is in .env. Copy it into the Claude Tag connector. It was not printed here.")
+    print(f"{', '.join(TOKENS)} are in .env. None were printed here.")
+    print("  MCP_TOKEN goes in the Claude Tag connector, COPILOT_MCP_TOKEN in Copilot Studio,")
+    print("  REMIND_TOKEN in the GitHub repository secret of the same name.")
+    missing = [name for name, value in optional if not value]
+    if missing:
+        print(f"Not set in .env, so the daily email is built but not sent: {', '.join(missing)}")
 
 
 def deploy() -> None:

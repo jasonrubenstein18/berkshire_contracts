@@ -5,6 +5,9 @@
 	handle /mcp* {
 		reverse_proxy 127.0.0.1:8000
 	}
+	handle /tasks/* {
+		reverse_proxy 127.0.0.1:8000
+	}
 	handle {
 		reverse_proxy 127.0.0.1:7860
 	}

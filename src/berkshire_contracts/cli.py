@@ -170,6 +170,29 @@ def ask(question: str) -> None:
 
 
 @app.command()
+def remind(
+    days: int | None = typer.Option(None, help="Look-ahead window in days (default REMINDER_DAYS, 14)."),
+    send: bool = typer.Option(False, "--send", help="Send the email through Resend instead of printing it."),
+) -> None:
+    """Build the daily expiry email; print it, or send it with --send."""
+    from berkshire_contracts import reminders
+
+    days = get_settings().reminder_days if days is None else days
+    today = reminders.local_today()
+    if send:
+        result = reminders.run(days, today)
+        console.print_json(json.dumps(result))
+        if result.get("error"):
+            raise typer.Exit(1)
+        return
+    rows = reminders.expiring(days, today)
+    subject, _, text = reminders.render(rows, today, days)
+    console.print(f"[bold]Subject:[/bold] {subject}\n")
+    console.print(text, markup=False, highlight=False)
+    console.print("\n[dim]Not sent. Add --send to email it through Resend.[/dim]")
+
+
+@app.command()
 def status() -> None:
     """Summarize what is in the database."""
     from sqlalchemy import func

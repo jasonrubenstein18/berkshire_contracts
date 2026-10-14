@@ -1,0 +1,31 @@
+name: Contract expiry reminders
+
+# Triggers the daily expiry email on the Fly app. The app holds the database, builds the email and sends it
+# through Resend; this job only calls the protected endpoint. Needs the REMIND_TOKEN repository secret.
+on:
+  schedule:
+    - cron: "0 13 * * *" # 9:00 New York in summer, 8:00 in winter
+  workflow_dispatch: {}
+
+permissions: {}
+
+concurrency:
+  group: contract-reminders
+  cancel-in-progress: false
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger reminder email
+        env:
+          REMIND_TOKEN: ${{ secrets.REMIND_TOKEN }}
+          REMIND_URL: https://berkshire-contracts.fly.dev/tasks/remind
+        run: |
+          if [ -z "$REMIND_TOKEN" ]; then
+            echo "::error::Add the REMIND_TOKEN repository secret (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          curl --fail-with-body -sS --retry 3 --retry-all-errors --max-time 120 -X POST "$REMIND_URL" \
+            -H "Authorization: Bearer $REMIND_TOKEN"

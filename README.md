@@ -392,11 +392,41 @@ uv run python scripts/package_submission.py   # reviewer zip in dist/
 not use `fly launch`. The image includes the database, index and staged PDFs. Secrets stay in Fly and are not
 printed. `MCP_TOKEN` in `.env` is the bearer token for `https://berkshire-contracts.fly.dev/mcp`, which Claude
 Tag calls. The `claude-tag/` folder is the plugin to attach in the Claude Tag admin console for the Slack
-workspace. `presentation/` is not part of the image.
+workspace. `presentation/` is not part of the image. The script writes `MCP_TOKEN`, `COPILOT_MCP_TOKEN` and
+`REMIND_TOKEN` to `.env` when they are missing.
 
 ```bash
 uv run python scripts/deploy_fly.py
 ```
+
+**Microsoft Teams (Copilot Studio).** Teams uses the same `/mcp` endpoint with its own token, so Slack and Teams
+can be revoked separately and each gets its own rate limit. In [Copilot Studio](https://copilotstudio.microsoft.com):
+
+1. Create an agent. Paste [`copilot-studio/instructions.md`](copilot-studio/instructions.md) into its instructions.
+2. Under **Tools**, add a tool, choose **Model Context Protocol** (MCP server), and set the server URL to
+   `https://berkshire-contracts.fly.dev/mcp`.
+3. For authentication choose **API key**, type **Header**, header name `X-API-Key`. When asked to create the
+   connection, paste `COPILOT_MCP_TOKEN` from `.env`. The server also accepts `Authorization: Bearer <token>`.
+4. Test in the Copilot Studio test pane (for example "Which contracts expire in 2026?"), then **Publish** and add
+   the **Microsoft Teams** channel. A Teams admin may need to approve the app before it shows up for others.
+
+**Daily expiry email.** A GitHub Actions cron
+([`.github/workflows/contract-reminders.yml`](.github/workflows/contract-reminders.yml)) calls
+`POST https://berkshire-contracts.fly.dev/tasks/remind` at 13:00 UTC. The Fly app holds the database, so it builds
+one email listing every contract whose latest expiration is within `REMINDER_DAYS` (14), and sends it through
+[Resend](https://resend.com). With nothing due it still sends a short "nothing expires" note, so a silent day
+means the job did not run. Each line shows vendor, contract number, the "act by" date when a notice period is
+stated, and the cited file and page. Setup:
+
+1. Add the repository secret: `gh secret set REMIND_TOKEN` and paste `REMIND_TOKEN` from `.env`.
+2. When ready to send, add `RESEND_API_KEY`, `REMINDER_FROM` (a sender on a domain verified in Resend) and
+   `REMINDER_TO` (comma-separated) to `.env`, then redeploy. Until then the endpoint answers `"sent": false` with
+   the reason.
+3. Test from the repo's **Actions** tab with **Run workflow**. The same day's reruns reuse a Resend idempotency
+   key, so they do not send a second copy.
+
+Preview locally with `uv run contracts remind`; add `--send` to send it. GitHub pauses scheduled workflows after 60
+days without repository activity, so re-enable it from the Actions tab if that happens.
 
 ## Configuration
 
@@ -408,6 +438,12 @@ Settings come from environment variables or `.env`; defaults are in
 | `OPENAI_API_KEY` | — | Extraction, chat answers and judged evaluation (without it, chat shows passages) |
 | `APP_USERNAME`, `APP_PASSWORD` | unset | App login (no login screen when unset) |
 | `MCP_TOKEN` | unset | Bearer token for the Fly `/mcp` endpoint (Claude Tag) |
+| `COPILOT_MCP_TOKEN` | unset | Token for the same endpoint from Copilot Studio (`X-API-Key` header) |
+| `REMIND_TOKEN` | unset | Bearer token for `POST /tasks/remind`, called by the GitHub Actions cron |
+| `RESEND_API_KEY` | unset | Resend key for the daily expiry email (built but not sent when unset) |
+| `REMINDER_FROM`, `REMINDER_TO` | unset | Sender on a Resend-verified domain; comma-separated recipients |
+| `REMINDER_DAYS`, `REMINDER_TIMEZONE` | 14, `America/New_York` | Look-ahead window and the time zone for "today" |
+| `APP_URL` | `https://berkshire-contracts.fly.dev` | Link in the reminder email |
 | `EXTRACTION_MODEL`, `ESCALATION_MODEL`, `ROUTER_MODEL`, `CHAT_MODEL`, `JUDGE_MODEL` | `gpt-5-mini` | Model for each step |
 | `MAX_QUESTIONS_PER_MINUTE` | 6 | Per-session rate limit |
 | `DAILY_LLM_BUDGET_USD` | 5 | Daily cap on chat spend |
@@ -443,11 +479,15 @@ src/berkshire_contracts/
   evaluation/                  answer-key loading, scoring, grading sheet, report
   app_support.py               overview charts, page rendering with highlights
   exports.py                   CSV and XLSX exports
+  mcp_server.py                /mcp endpoint (ask_contracts) and POST /tasks/remind
+  reminders.py                 daily expiry email (Resend)
 eval/ground_truth/             human-checked answer key
 eval/results/                  report.md, summary.json, per-case CSVs, chat grading sheet, failure causes
 scripts/package_submission.py  build the reviewer zip: code plus prebuilt data, no secrets
 scripts/deploy_fly.py          publish to Fly.io (https://berkshire-contracts.fly.dev)
 claude-tag/                    plugin and skill for Claude Tag in Slack
+copilot-studio/                agent instructions for Copilot Studio in Teams
+.github/workflows/             daily expiry email cron
 tests/                         offline unit tests (throwaway database, no model calls or downloads)
 data/                          generated, not in version control: database, index, staged PDFs, exports
 ```
