@@ -22,7 +22,7 @@ from berkshire_contracts.config import get_settings  # noqa: E402
 from berkshire_contracts.db import snapshot_db  # noqa: E402
 
 FILES = ("app.py", "pyproject.toml", "uv.lock", "README.md", ".env.example", ".gitignore")
-CODE_DIRS = ("src/berkshire_contracts", "tests", "scripts")
+CODE_DIRS = ("src/berkshire_contracts", "tests", "scripts", "docs")
 DATA_DIRS = ("index", "pdfs", "exports")
 EVAL_DIRS = ("ground_truth", "results")
 SKIP_PARTS = {"__pycache__", ".DS_Store"}

@@ -1,15 +1,15 @@
 # Evaluation report
 
-Chat run 2026-10-12 15:01 UTC; report generated 2026-10-12 15:11 UTC. Models: extraction `gpt-5-mini`, chat `gpt-5-mini` / `gpt-5-mini`, AI grader `gpt-5-mini` (judge-v3); search `lightonai/answerai-colbert-small-v1`. Cached model output was not reused.
+Chat run 2026-10-12 15:01 UTC; report generated 2026-10-14 01:16 UTC. Models: extraction `gpt-5-mini`, chat `gpt-5-mini` / `gpt-5-mini`, AI grader `gpt-5-mini` (judge-v3); search `lightonai/answerai-colbert-small-v1`. Cached model output was not reused.
 
 ## Results
 
 - **Table extraction:** 95 of 100 field values correct (**95%**, 95% interval 89%–98%) across 10 documents. Of the values the table filled in, 94% were right (precision); of the values the documents clearly state, it got 98% (recall). It invented a value for **4 of 38** fields the document doesn't state. Correct values cite the label's page 100% of the time; 100% of evidence quotes were found word for word in the page text.
-- **Chat answers:** 6 of 6 correct, graded by the AI grader (human grades pending). 6 of 6 answers were fully supported by the pages they cite.
-- **Refusals:** declined 2 of 3 questions the documents can't answer, and wrongly declined 0 of 7 answerable questions.
+- **Chat answers:** 6 of 6 correct, graded by a person. 6 of 6 answers were fully supported by the pages they cite.
+- **Refusals:** declined 3 of 3 questions the documents can't answer, and wrongly declined 0 of 7 answerable questions.
 - **Finding the source:** the expected page was among the retrieved passages or the evidence quotes shown for 6 of 6 expected pages, and the answer cited the expected document 6 of 6 times. The list question returned contracts with precision 100% and recall 100%.
 - **Speed and cost:** median 4.04s per answer (p90 7.55s), $0.0010 per question.
-- No human grades yet, so grader agreement isn't measured.
+- The AI grader agreed with the person on 9 of 9 correctness grades.
 
 ## What was tested
 
@@ -56,18 +56,18 @@ Extraction failures:
 | q06    | What renewal options does the Pat Davis Design Group agreement 23018 give the County?               | correct   | yes         | no                   | 1/1                  | 1/1     |       4.7 |
 | q07    | For the Motorola tower site leases, can Motorola terminate early, and on how much notice?           | correct   | yes         | no                   | 2/2 (rank 5)         | 2/2     |      16.6 |
 | q08    | What does the Starbucks coffee supply agreement say about price increases?                          | correct   | n/a         | yes (should decline) |                      |         |       3.9 |
-| q09    | What liability cap applies to Ciosek Tree Service's tree removal contract?                          | correct   | yes         | no (should decline)  |                      |         |       3.4 |
+| q09    | What liability cap applies to Ciosek Tree Service's tree removal contract?                          | correct   | n/a         | yes (should decline) |                      |         |       3.4 |
 | q10    | Who won the World Series last year?                                                                 | correct   | n/a         | yes (should decline) |                      |         |       1.8 |
 
 Chat failures:
 
-- **q09**: answered instead of declining — The answer lists all three Ciosek Tree Service documents with "Liability cap: not stated in this document", which the grading guide counts as a decline; the AI grader marked it as answered. It needs the person's grade.
+No failures.
 
 ## Reviewer notes
 
 - This run follows fixes to the six chat failures of the previous run, which is kept with its notes in
-  `run2_before_scope_fix/`. All 10 questions were run again from scratch, and the AI grader marked every graded
-  answer correct. A person has not graded this run yet.
+  `run2_before_scope_fix/`. All 10 questions were run again from scratch. A person graded all 10 answers against
+  the reference answers and the PDFs; the AI grader's verdicts are kept alongside for comparison.
 - What changed:
   - Scoping: a named contract number now outranks the vendor name (q04). Vendor names match only when every word
     matches, so "Appin Associates" no longer pulls in other "Associates" firms. A vendor plus product name such as

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-10-12 15:11 UTC",
+    "generated_at": "2026-10-14 01:16 UTC",
     "chat_run_at": "2026-10-12 15:01 UTC",
     "extraction_model": "gpt-5-mini",
     "router_model": "gpt-5-mini",
@@ -244,7 +244,7 @@
     },
     "answer_cases": 6,
     "graded": 6,
-    "graded_by": "AI grader",
+    "graded_by": "human",
     "correct": 6,
     "partially_correct": 0,
     "supported": 6,
@@ -254,7 +254,7 @@
     "files_expected": 6,
     "files_cited": 6,
     "should_decline": 3,
-    "correct_declines": 2,
+    "correct_declines": 3,
     "answerable": 7,
     "wrong_declines": 0,
     "median_latency_s": 4.04,
@@ -264,16 +264,16 @@
     "errors": 0,
     "judge_vs_human": {
       "correct": {
-        "compared": 0,
-        "agree": 0
+        "compared": 9,
+        "agree": 9
       },
       "supported": {
-        "compared": 0,
-        "agree": 0
+        "compared": 6,
+        "agree": 6
       },
       "declined": {
-        "compared": 0,
-        "agree": 0
+        "compared": 9,
+        "agree": 8
       }
     },
     "filter_ok": 1,
@@ -281,7 +281,7 @@
     "list_precision": 1.0,
     "list_recall": 1.0
   },
-  "headline_markdown": "**Table extraction:** 95 of 100 labeled fields correct (95%) across 10 documents; precision 94%, recall 98%; invented a value for 4 of 38 fields the document doesn't state.  \n**Chat:** 6 of 6 answers correct and 0 partially correct (graded by the AI grader (human grades pending)); declined 2 of 3 unanswerable questions but also 0 of 7 answerable ones; expected page found 6/6.  \n<sub>Labels verified by a person against the PDFs; chat run fresh 2026-10-12 15:01 UTC. Details in eval/results/report.md.</sub>",
+  "headline_markdown": "**Table extraction:** 95 of 100 labeled fields correct (95%) across 10 documents; precision 94%, recall 98%; invented a value for 4 of 38 fields the document doesn't state.  \n**Chat:** 6 of 6 answers correct and 0 partially correct (graded by a person); declined 3 of 3 unanswerable questions but also 0 of 7 answerable ones; expected page found 6/6.  \n<sub>Labels verified by a person against the PDFs; chat run fresh 2026-10-12 15:01 UTC. Details in eval/results/report.md.</sub>",
   "extraction_by_field": [
     {
       "field": "Document type",
@@ -449,8 +449,8 @@
       "Case": "q09",
       "Question": "What liability cap applies to Ciosek Tree Service's tree removal contract?",
       "Correct": "correct",
-      "Supported": "yes",
-      "Declined": "no (should decline)",
+      "Supported": "n/a",
+      "Declined": "yes (should decline)",
       "Source found": "",
       "Cited": "",
       "Seconds": "3.4"
@@ -508,14 +508,6 @@
       "category": "Attached third-party terms read as the contract"
     }
   ],
-  "chat_failures": [
-    {
-      "item": "q09",
-      "question": "What liability cap applies to Ciosek Tree Service's tree removal contract?",
-      "problem": "answered instead of declining",
-      "cause": "The answer lists all three Ciosek Tree Service documents with \"Liability cap: not stated in this document\", which the grading guide counts as a decline; the AI grader marked it as answered. It needs the person's grade.",
-      "category": "Decline counted by the AI grader only"
-    }
-  ],
-  "review_notes": "- This run follows fixes to the six chat failures of the previous run, which is kept with its notes in\n  `run2_before_scope_fix/`. All 10 questions were run again from scratch, and the AI grader marked every graded\n  answer correct. A person has not graded this run yet.\n- What changed:\n  - Scoping: a named contract number now outranks the vendor name (q04). Vendor names match only when every word\n    matches, so \"Appin Associates\" no longer pulls in other \"Associates\" firms. A vendor plus product name such as\n    \"Grey Wall Veoci\" matches that vendor's documents that mention the product (q03).\n  - Filters the planner adds to describe a named contract (document type, description) are dropped when they\n    remove all of its documents (q05). A named vendor with no extracted record is searched only in the documents\n    that mention it.\n  - Extraction: two documents titled as leases were stored as agreements (q07), and Axon's \"will automatically\n    renew\" clause on p.97 was recorded as no auto-renewal (q01). Two narrow rules fixed both, and only those three\n    documents were re-extracted. None of them is in the extraction test set.\n- q03, q04, q05, q07 and q09 were also asked several more times without cached output. q03, q04, q07 and q09 were\n  right every time. q05 failed two of three times until the descriptive-filter fix, then passed five of five."
+  "chat_failures": [],
+  "review_notes": "- This run follows fixes to the six chat failures of the previous run, which is kept with its notes in\n  `run2_before_scope_fix/`. All 10 questions were run again from scratch. A person graded all 10 answers against\n  the reference answers and the PDFs; the AI grader's verdicts are kept alongside for comparison.\n- What changed:\n  - Scoping: a named contract number now outranks the vendor name (q04). Vendor names match only when every word\n    matches, so \"Appin Associates\" no longer pulls in other \"Associates\" firms. A vendor plus product name such as\n    \"Grey Wall Veoci\" matches that vendor's documents that mention the product (q03).\n  - Filters the planner adds to describe a named contract (document type, description) are dropped when they\n    remove all of its documents (q05). A named vendor with no extracted record is searched only in the documents\n    that mention it.\n  - Extraction: two documents titled as leases were stored as agreements (q07), and Axon's \"will automatically\n    renew\" clause on p.97 was recorded as no auto-renewal (q01). Two narrow rules fixed both, and only those three\n    documents were re-extracted. None of them is in the extraction test set.\n- q03, q04, q05, q07 and q09 were also asked several more times without cached output. q03, q04, q07 and q09 were\n  right every time. q05 failed two of three times until the descriptive-filter fix, then passed five of five."
 }

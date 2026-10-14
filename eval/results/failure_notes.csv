@@ -4,4 +4,3 @@ dd25def4b937 effective_date,Wrong date taken as effective date,"Took the form's 
 e02574a8a789 termination_for_convenience,Attached third-party terms read as the contract,"Read the termination clause from the attached subconsultant terms (p.6), not from the County's task order."
 e02574a8a789 termination_notice_days,Attached third-party terms read as the contract,Same clause; the 30-day notice is in the subconsultant terms on p.6.
 e02574a8a789 governing_law,Attached third-party terms read as the contract,"Same attachment; p.6 names the law of the subconsultant's place of business, which the model turned into Illinois."
-q09,Decline counted by the AI grader only,"The answer lists all three Ciosek Tree Service documents with ""Liability cap: not stated in this document"", which the grading guide counts as a decline; the AI grader marked it as answered. It needs the person's grade."

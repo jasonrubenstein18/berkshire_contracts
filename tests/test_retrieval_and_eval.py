@@ -15,6 +15,7 @@ from berkshire_contracts.evaluation.ground_truth import (
     load_chat_cases,
     load_extraction_labels,
 )
+from berkshire_contracts.evaluation.retrieval import first_hit_rank, summarize
 from berkshire_contracts.evaluation.runner import (
     _outcome,
     _plan_matches,
@@ -348,6 +349,21 @@ def test_plan_only_case_is_not_graded_for_correctness():
     frame = score_chat(pd.DataFrame([row]), [_case("q2", plan=plan, type="structured")], {})
     assert frame.loc[0, "filter_ok"] and frame.loc[0, "correct"] == "n/a"
     assert summarize_chat(frame)["answer_cases"] == 0
+
+
+def test_retrieval_benchmark_ranks_and_summary():
+    expected = frozenset({("a", 5), ("b", 2)})
+    assert first_hit_rank([("a", 1), ("b", 2), ("a", 5)], expected) == 2
+    assert first_hit_rank([("a", 1), ("c", 2)], expected) is None
+    results = pd.DataFrame(
+        [
+            {"set": "s", "id": "1", "mode": "exact", "rank": 1, "latency_ms": 10.0},
+            {"set": "s", "id": "2", "mode": "exact", "rank": 4, "latency_ms": 30.0},
+            {"set": "s", "id": "3", "mode": "exact", "rank": None, "latency_ms": 20.0},
+        ]
+    )
+    row = summarize(results).iloc[0]
+    assert (row["top_1"], row["top_8"], row["mrr"], row["median_ms"]) == ("1/3", "2/3", 0.417, 20.0)
 
 
 def test_grading_sheet_is_never_overwritten(tmp_path):

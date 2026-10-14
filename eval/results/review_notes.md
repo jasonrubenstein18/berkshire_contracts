@@ -1,6 +1,6 @@
 - This run follows fixes to the six chat failures of the previous run, which is kept with its notes in
-  `run2_before_scope_fix/`. All 10 questions were run again from scratch, and the AI grader marked every graded
-  answer correct. A person has not graded this run yet.
+  `run2_before_scope_fix/`. All 10 questions were run again from scratch. A person graded all 10 answers against
+  the reference answers and the PDFs; the AI grader's verdicts are kept alongside for comparison.
 - What changed:
   - Scoping: a named contract number now outranks the vendor name (q04). Vendor names match only when every word
     matches, so "Appin Associates" no longer pulls in other "Associates" firms. A vendor plus product name such as
